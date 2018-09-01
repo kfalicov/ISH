@@ -44,6 +44,8 @@ void Game::HandleEvents() {
 	SDL_Event event;
 	SDL_PollEvent(&event);
 
+	activeState->HandleEvents(this, event);
+
 	switch (event.type) {
 	case SDL_QUIT:
 		isRunning = false;
@@ -54,6 +56,7 @@ void Game::HandleEvents() {
 }
 
 void Game::Update() {
+	activeState->Update(this);
 }
 
 void Game::Render(float interpolation) {
@@ -64,15 +67,7 @@ void Game::Render(float interpolation) {
 	SDL_RenderDrawLine(renderer, 400, 0, 400, 600);
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
-	SDL_Surface *surface = IMG_Load("Assets/loaded.png");
-	SDL_Rect srcRect = surface->clip_rect;
-	SDL_Rect destRect = surface->clip_rect;
-	destRect.h = 100;
-	destRect.w = 100;
-	SDL_Texture *S = SDL_CreateTextureFromSurface(renderer, surface);
-	SDL_RenderCopy(renderer, S, &srcRect, &destRect);
-	SDL_DestroyTexture(S);
-	SDL_FreeSurface(surface);
+	activeState->Render(this);
 
 	SDL_RenderPresent(renderer);
 }

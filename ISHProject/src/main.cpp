@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include "Game.h"
+#include "MainMenu.h"
 
 Game *game = nullptr;
 
@@ -16,6 +17,7 @@ int main(int argc, char *argv[]) {
 
 	game = new Game();
 	game->Init("ISH", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, false);
+	game->ChangeState(MainMenu::Instance());
 
 	while (game->Running()) {
 		loops = 0;

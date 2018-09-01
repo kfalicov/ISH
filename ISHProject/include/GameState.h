@@ -20,7 +20,7 @@ public:
 	virtual void PushSubState(GameState *substate) { substates.push_back(substate); };
 	virtual void PopSubState() { substates.pop_back(); };
 
-	virtual char* getName() = 0;
+	virtual const char* getName() = 0;
 
 	void ChangeState(Game *game, GameState *state) {
 		game->ChangeState(state);
