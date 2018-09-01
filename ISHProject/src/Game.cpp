@@ -1,6 +1,7 @@
-#include "../Include/Game.h"
 #include <SDL.h>
 #include <SDL_image.h>
+#include "Game.h"
+#include "GameState.h"
 
 Game::Game() {
 }
@@ -24,12 +25,19 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 			std::cout << "Renderer created..." << std::endl;
 		}
 
-		framerate = 60;
 		isRunning = true;
 	}
 	else {
 		isRunning = false;
 	}
+}
+
+void Game::ChangeState(GameState *state) {
+	//if (activeState != nullptr) {
+	//	delete activeState;
+	//}
+	activeState = state;
+	std::cout << "Changing GameState to " << state->getName() << std::endl;
 }
 
 void Game::HandleEvents() {
@@ -48,7 +56,7 @@ void Game::HandleEvents() {
 void Game::Update() {
 }
 
-void Game::Render() {
+void Game::Render(float interpolation) {
 	SDL_RenderClear(renderer);
 	
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
@@ -77,6 +85,3 @@ void Game::Clean() {
 }
 
 bool Game::Running() { return isRunning; }
-
-void Game::SetFPS(int fps) { framerate = fps; }
-int Game::GetFPS() { return framerate; }
