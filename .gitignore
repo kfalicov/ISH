@@ -27,6 +27,7 @@ bld/
 *.exe
 *.o
 *.so
+*.vcxproj
 
 # Packages #
 ############
