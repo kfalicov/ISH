@@ -10,9 +10,9 @@ Camera::~Camera()
 
 }
 
-void Camera::TrackTo(vec2 target)
+void Camera::TrackTo(vec2 dest)
 {
-	target = target;
+	target = dest-(size/2); //offsets so that the camera is tracking by its own center
 }
 
 vec2 Camera::getPos()
