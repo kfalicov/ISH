@@ -1,4 +1,6 @@
 #include "MainMenu.h"
+#include "Sprite.h"
+#include "AssetHandler.h"
 
 MainMenu* MainMenu::instance;
 
@@ -30,19 +32,17 @@ void MainMenu::HandleEvents(Game * game, SDL_Event event)
 {
 }
 
-void MainMenu::Update(Game * game)
+void MainMenu::Update(Game *game)
 {
 }
 
-void MainMenu::Render(Game * game)
+void MainMenu::Render(Game *game)
 {
-	SDL_Surface *surface = IMG_Load("Assets/loaded.png");
-	SDL_Rect srcRect = surface->clip_rect;
-	SDL_Rect destRect = surface->clip_rect;
-	destRect.h = 100;
-	destRect.w = 100;
-	SDL_Texture *S = SDL_CreateTextureFromSurface(game->renderer, surface);
-	SDL_RenderCopy(game->renderer, S, &srcRect, &destRect);
-	SDL_DestroyTexture(S);
-	SDL_FreeSurface(surface);
+	Sprite *spr = game->assetHandler->GetSprite("Assets/AnimTest.png", AssetHandler::Tiles::GRASS);
+	int pos[2] = { 200, 200 };
+	game->assetHandler->RenderSprite(spr, pos);
+
+	Sprite *spr2 = game->assetHandler->GetSprite("Assets/AnimTest.png", AssetHandler::Tiles::SAND);
+	int pos2[2] = { 300, 200 };
+	game->assetHandler->RenderSprite(spr2, pos2);
 }

@@ -2,6 +2,7 @@
 #include <SDL_image.h>
 #include "Game.h"
 #include "GameState.h"
+#include "AssetHandler.h"
 
 Game::Game() {
 }
@@ -25,6 +26,8 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 			std::cout << "Renderer created..." << std::endl;
 		}
 
+		assetHandler = AssetHandler::Instance();
+		assetHandler->Init(this);
 		isRunning = true;
 	}
 	else {
@@ -33,9 +36,6 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 }
 
 void Game::ChangeState(GameState *state) {
-	//if (activeState != nullptr) {
-	//	delete activeState;
-	//}
 	activeState = state;
 	std::cout << "Changing GameState to " << state->getName() << std::endl;
 }
