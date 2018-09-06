@@ -6,6 +6,7 @@
 *.suo
 *.user
 *.sln.docstates
+*.vcxproj
 
 # Build results
 [Dd]ebug/
@@ -27,7 +28,6 @@ bld/
 *.exe
 *.o
 *.so
-*.vcxproj
 
 # Packages #
 ############

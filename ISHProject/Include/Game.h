@@ -3,6 +3,7 @@
 #include <SDL_image.h>
 #include <iostream>
 
+class AssetHandler;
 class GameState;
 
 class Game
@@ -24,6 +25,7 @@ public:
 
 	SDL_Renderer *renderer;
 	SDL_Window *window;
+	AssetHandler *assetHandler;
 
 private:
 	GameState *activeState;

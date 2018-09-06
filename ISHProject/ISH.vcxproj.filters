@@ -31,6 +31,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Util.cpp">
+    <ClCompile Include="src\Sprite.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AssetHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -48,6 +52,10 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Util.h">
+    <ClInclude Include="include\Sprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AssetHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
