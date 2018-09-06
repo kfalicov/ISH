@@ -1,22 +1,60 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="src\Util.cpp" />
-    <ClCompile Include="src\Camera.cpp" />
-    <ClCompile Include="src\AssetHandler.cpp" />
-    <ClCompile Include="src\Game.cpp" />
-    <ClCompile Include="src\GameState.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\MainMenu.cpp" />
-    <ClCompile Include="src\Sprite.cpp" />
+    <ClCompile Include="src\AssetHandler.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Camera.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameState.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MainMenu.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Sprite.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Util.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Camera.h" />
-    <ClInclude Include="include\AssetHandler.h" />
-    <ClInclude Include="include\Game.h" />
-    <ClInclude Include="include\GameState.h" />
-    <ClInclude Include="include\Util.h" />
-    <ClInclude Include="include\MainMenu.h" />
-    <ClInclude Include="include\Sprite.h" />
+    <ClInclude Include="include\AssetHandler.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Camera.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GameState.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MainMenu.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Sprite.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Util.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{b662de36-573a-47e1-8c59-f6df167f9651}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{6ab8181c-9230-4e55-bc8c-da74213b3c54}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
