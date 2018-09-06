@@ -57,3 +57,4 @@ bld/
 .Trashes
 ehthumbs.db
 Thumbs.db
+*.props
