@@ -6,7 +6,7 @@
 *.suo
 *.user
 *.sln.docstates
-*.vcxproj
+*.props
 
 # Build results
 [Dd]ebug/
