@@ -61,4 +61,6 @@ protected:
 	int seed;
 public:
 	noise();
+	void SetSeed();
+
 };
