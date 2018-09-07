@@ -3,10 +3,17 @@
 #include <SDL_image.h>
 #include "Game.h"
 #include "MainMenu.h"
+#include "Util.h"
 
 Game *game = nullptr;
 
 int main(int argc, char *argv[]) {
+
+	vec2 pos = vec2(16, 28);
+	std::cout << (pos += vec2(10,-4)) << std::endl;
+	std::cout << pos*4 << std::endl;
+
+
 	const int TICKS_PER_SECOND = 30;
 	const int SKIP_TICKS = 1000 / TICKS_PER_SECOND;
 	const int MAX_FRAMESKIP = 10;

@@ -25,7 +25,11 @@
     <ClCompile Include="src\Util.cpp">
       <Filter>src</Filter>
     </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="World.cpp">
+=======
     <ClCompile Include="src\Entity.cpp">
+>>>>>>> master
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -51,16 +55,27 @@
     <ClInclude Include="include\Util.h">
       <Filter>include</Filter>
     </ClInclude>
+<<<<<<< HEAD
+    <ClInclude Include="World.h">
+=======
     <ClInclude Include="include\Entity.h">
+>>>>>>> master
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
+<<<<<<< HEAD
+      <UniqueIdentifier>{b662de36-573a-47e1-8c59-f6df167f9651}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{6ab8181c-9230-4e55-bc8c-da74213b3c54}</UniqueIdentifier>
+=======
       <UniqueIdentifier>{5098aef0-6b0b-4c66-9ef6-76c9c8b8a4cc}</UniqueIdentifier>
     </Filter>
     <Filter Include="include">
       <UniqueIdentifier>{491351a9-050b-4f64-869a-d5e4fd22beb5}</UniqueIdentifier>
+>>>>>>> master
     </Filter>
   </ItemGroup>
 </Project>
