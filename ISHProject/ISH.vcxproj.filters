@@ -25,6 +25,9 @@
     <ClCompile Include="src\Util.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AssetHandler.h">
@@ -46,6 +49,9 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\Util.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

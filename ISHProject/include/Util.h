@@ -31,6 +31,7 @@ public:
 	vec2& operator -= (const vec2& v);	// decrementation by a vec2
 	vec2& operator *= (const double d);	// multiplication by a constant
 	vec2& operator /= (const double d);	// division by a constant
+	double operator [] (int i) const;
 	double& operator [] (int i);		// indexing
 
 	// special functions
@@ -51,4 +52,13 @@ public:
 	friend vec2 minv(const vec2& a, const vec2& b);		    // min(v1, v2)
 	friend vec2 maxv(const vec2& a, const vec2& b);		    // max(v1, v2)
 	friend vec2 prod(const vec2& a, const vec2& b);		    // term by term *
+	friend std::ostream& operator << (std::ostream& os, const vec2& a);	// for use in cout
+};
+
+class noise
+{
+protected:
+	int seed;
+public:
+	noise();
 };
