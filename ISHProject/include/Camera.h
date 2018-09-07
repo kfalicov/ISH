@@ -13,7 +13,6 @@ public:
 	void RenderSprite(Sprite sprite, vec2 position);
 
 	void TrackTo(vec2 target);
-	vec2 setCenter(vec2 dest);
 	vec2 getPos();
 	vec2 getCenter();
 	vec2 getSize();
