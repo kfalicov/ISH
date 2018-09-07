@@ -1,6 +1,8 @@
 #include "MainMenu.h"
 #include "Sprite.h"
 #include "AssetHandler.h"
+#include "Camera.h"
+#include "Util.h"
 
 MainMenu* MainMenu::instance;
 
@@ -38,11 +40,7 @@ void MainMenu::Update(Game *game)
 
 void MainMenu::Render(Game *game)
 {
-	Sprite *spr = game->assetHandler->GetSprite("Assets/AnimTest.png", AssetHandler::Tiles::GRASS);
-	int pos[2] = { 200, 200 };
-	game->assetHandler->RenderSprite(spr, pos);
-
-	Sprite *spr2 = game->assetHandler->GetSprite("Assets/AnimTest.png", AssetHandler::Tiles::SAND);
-	int pos2[2] = { 300, 200 };
-	game->assetHandler->RenderSprite(spr2, pos2);
+	Sprite* spr = game->assetHandler->GetSprite("Assets/AnimTest.png", AssetHandler::Tiles::GRASS);
+	vec2 pos = vec2(0, 0);
+	game->mainCamera->RenderSprite((*spr), pos);
 }

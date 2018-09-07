@@ -16,7 +16,6 @@ public:
 	void Clean();
 
 	Sprite* GetSprite(const char* spriteSheet, int spriteIndex);
-	void RenderSprite(Sprite* sprite, int position[2]);
 
 	static const enum Tiles{ GRASS, SAND, STONE };
 	static const enum Weapons{ DAGGER, SWORD, AXE };
@@ -28,7 +27,7 @@ private:
 
 	Game* game;
 
-	std::map<const char*, SDL_Texture*> loadedSpriteSheets;
+	std::map<const char*, SDL_Surface*> loadedSpriteSheets;
 	
 	AssetHandler();
 

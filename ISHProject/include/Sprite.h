@@ -4,9 +4,9 @@
 
 class Sprite {
 public:
-	Sprite(SDL_Texture* spriteSheet, SDL_Rect* srcRect);
+	Sprite(SDL_Surface* spriteSheet, SDL_Rect srcRect);
 	~Sprite();
 
-	SDL_Texture* spriteSheet;
-	SDL_Rect* srcRect;
+	SDL_Surface* spriteSheet;
+	SDL_Rect srcRect;
 };
