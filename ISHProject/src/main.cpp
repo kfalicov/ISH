@@ -33,7 +33,6 @@ int main(int argc, char *argv[]) {
 			/ float(SKIP_TICKS);
 
 		game->Render(interpolation);
-
 	}
 
 	game->Clean();

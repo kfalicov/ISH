@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "GameState.h"
 #include "AssetHandler.h"
+#include "Camera.h"
 
 Game::Game() {
 }
@@ -28,6 +29,7 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 
 		assetHandler = AssetHandler::Instance();
 		assetHandler->Init(this);
+		mainCamera = new Camera(this, vec2(0,0), 256, 256);
 		isRunning = true;
 	}
 	else {
@@ -61,15 +63,48 @@ void Game::Update() {
 
 void Game::Render(float interpolation) {
 	SDL_RenderClear(renderer);
-	
+	SDL_FillRect(mainCamera->cameraSurface, &mainCamera->cameraSurface->clip_rect,
+		SDL_MapRGBA(mainCamera->cameraSurface->format, 0,0,0,0));
+
+	activeState->Render(this);
+
+	SDL_Texture *camTex = SDL_CreateTextureFromSurface(renderer, mainCamera->cameraSurface);
+	SDL_Rect windowRect = SDL_Rect();
+	int w, h = 0;
+	SDL_GetRendererOutputSize(renderer, &w, &h);
+	windowRect.x = windowRect.y = 0;
+	windowRect.w = w;
+	windowRect.h = h;
+
+	windowRect = mainCamera->cameraSurface->clip_rect; //Debug camera surface dimensions
+
+	SDL_RenderCopy(renderer, camTex,
+		&mainCamera->cameraSurface->clip_rect,
+		&windowRect);
+
+	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+	SDL_RenderDrawLine(renderer, windowRect.x, windowRect.y,
+									windowRect.x + windowRect.w, windowRect.y);
+	SDL_RenderDrawLine(renderer, windowRect.x, windowRect.y,
+									windowRect.x, windowRect.y + windowRect.h);
+	SDL_RenderDrawLine(renderer, windowRect.x + windowRect.w, windowRect.y,
+									windowRect.x + windowRect.w, windowRect.y + windowRect.h);
+	SDL_RenderDrawLine(renderer, windowRect.x, windowRect.y + windowRect.h,
+									windowRect.x + windowRect.w, windowRect.y + windowRect.h);
+	SDL_SetRenderDrawColor(renderer, 255, 105, 180, 255);
+	SDL_RenderDrawLine(renderer, windowRect.x + windowRect.w / 2, windowRect.y,
+		windowRect.x + windowRect.w / 2, windowRect.y + windowRect.h);
+	SDL_RenderDrawLine(renderer, windowRect.x, windowRect.y + windowRect.h / 2,
+		windowRect.x + windowRect.w, windowRect.y + windowRect.h / 2);
+
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 	SDL_RenderDrawLine(renderer, 0, 300, 800, 300);
 	SDL_RenderDrawLine(renderer, 400, 0, 400, 600);
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
-	activeState->Render(this);
 
 	SDL_RenderPresent(renderer);
+	SDL_DestroyTexture(camTex);
 }
 
 void Game::Clean() {

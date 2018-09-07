@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Util.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\AssetHandler.cpp" />
@@ -33,6 +34,7 @@
     <ClInclude Include="include\AssetHandler.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\GameState.h" />
+    <ClInclude Include="include\Entity.h" />
     <ClInclude Include="include\Util.h" />
     <ClInclude Include="include\MainMenu.h" />
     <ClInclude Include="include\Sprite.h" />
@@ -41,8 +43,8 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{F00A8210-285E-4963-81D3-001803901DF3}</ProjectGuid>
     <RootNamespace>ISH</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
     <ProjectName>ISHProject</ProjectName>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

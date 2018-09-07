@@ -5,6 +5,7 @@
 
 class AssetHandler;
 class GameState;
+class Camera;
 
 class Game
 {
@@ -26,7 +27,9 @@ public:
 	SDL_Renderer *renderer;
 	SDL_Window *window;
 	AssetHandler *assetHandler;
+	Camera *mainCamera;
 
+	const int TILE_SIZE = 16;
 private:
 	GameState *activeState;
 	bool isRunning;
