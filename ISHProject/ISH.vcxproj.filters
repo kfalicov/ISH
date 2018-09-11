@@ -31,6 +31,9 @@
     <ClCompile Include="src\World.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Chunk.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AssetHandler.h">
@@ -58,6 +61,12 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\World.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Chunk.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Tile.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
