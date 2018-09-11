@@ -3,6 +3,9 @@
 Chunk::Chunk()
 {
 	//TODO instantialize a 16x16 chunk
+	//set chunk pos
+	//create array of tiles who are members of the chunk
+	//new Tile(vec2(0-15,0-15), chunk's pos)
 }
 
 Chunk::~Chunk()
@@ -15,6 +18,9 @@ Chunk* Chunk::getEast() {	return neighbors[dir::EAST];}
 Chunk* Chunk::getSouth() {	return neighbors[dir::SOUTH];}
 Chunk* Chunk::getWest() {	return neighbors[dir::WEST];}
 
+/*
+	returns the tile relative to calling chunk's 0,0
+*/
 Tile* Chunk::getTile(vec2 pos) 
 {
 	if (pos[0] > 15)

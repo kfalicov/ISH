@@ -10,3 +10,7 @@ World::~World()
 {
 
 }
+
+Tile* World::getTile(vec2 pos) {
+	return spawn->getTile(pos);
+}
