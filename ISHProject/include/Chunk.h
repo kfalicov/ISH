@@ -6,10 +6,6 @@
 class Chunk {
 public:
 	static enum dir { NORTH, EAST, SOUTH, WEST };
-	static vec2 N;
-	static vec2 E;
-	static vec2 S;
-	static vec2 W;
 
 	Chunk();
 	~Chunk();	//saves data and removes chunk from memory
@@ -33,9 +29,3 @@ private:
 	std::vector<Chunk*> neighbors;
 	std::vector< std::vector<Tile*> > grid; // a row-major matrix of tiles
 };
-
-
-vec2 Chunk::N = vec2(0, -1);
-vec2 Chunk::E = vec2(1, 0);
-vec2 Chunk::S = vec2(0, 1);
-vec2 Chunk::W = vec2(-1, 0);

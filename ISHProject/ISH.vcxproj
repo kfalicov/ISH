@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Entity.cpp" />
+    <ClCompile Include="src\Chunk.cpp" />
     <ClCompile Include="src\Util.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\AssetHandler.cpp" />
@@ -33,9 +34,11 @@
   <ItemGroup>
     <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\AssetHandler.h" />
+    <ClInclude Include="include\Chunk.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\GameState.h" />
     <ClInclude Include="include\Entity.h" />
+    <ClInclude Include="include\Tile.h" />
     <ClInclude Include="include\Util.h" />
     <ClInclude Include="include\MainMenu.h" />
     <ClInclude Include="include\Sprite.h" />
