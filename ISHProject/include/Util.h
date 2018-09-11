@@ -52,3 +52,7 @@ public:
 	friend vec2 maxv(const vec2& a, const vec2& b);		    // max(v1, v2)
 	friend vec2 prod(const vec2& a, const vec2& b);		    // term by term *
 };
+
+static double lerp(double a, double b, double t) {
+	return a * (1 - t) + b * t;
+}

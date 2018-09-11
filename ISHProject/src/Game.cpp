@@ -76,32 +76,49 @@ void Game::Render(float interpolation) {
 	windowRect.w = w;
 	windowRect.h = h;
 
-	windowRect = mainCamera->cameraSurface->clip_rect; //Debug camera surface dimensions
+	float widthRatio = (float)windowRect.w / mainCamera->cameraSurface->clip_rect.w;
+	float heightRatio = (float)windowRect.h / mainCamera->cameraSurface->clip_rect.h;
+	float scaleMultiplier = (widthRatio < heightRatio) ? widthRatio : heightRatio;
+
+	SDL_Rect camDestRect = SDL_Rect();
+	camDestRect.w = scaleMultiplier * mainCamera->cameraSurface->clip_rect.w;
+	camDestRect.h = scaleMultiplier * mainCamera->cameraSurface->clip_rect.h;
+	camDestRect.x = (windowRect.w - camDestRect.w) / 2.0;
+	camDestRect.y = (windowRect.h - camDestRect.h) / 2.0;
+
+	//windowRect = mainCamera->cameraSurface->clip_rect; //Debug camera surface dimensions
 
 	SDL_RenderCopy(renderer, camTex,
 		&mainCamera->cameraSurface->clip_rect,
-		&windowRect);
+		&camDestRect);
 
+	//Debug Lines, Camera Bounding Box
 	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-	SDL_RenderDrawLine(renderer, windowRect.x, windowRect.y,
-									windowRect.x + windowRect.w, windowRect.y);
-	SDL_RenderDrawLine(renderer, windowRect.x, windowRect.y,
-									windowRect.x, windowRect.y + windowRect.h);
-	SDL_RenderDrawLine(renderer, windowRect.x + windowRect.w, windowRect.y,
-									windowRect.x + windowRect.w, windowRect.y + windowRect.h);
-	SDL_RenderDrawLine(renderer, windowRect.x, windowRect.y + windowRect.h,
-									windowRect.x + windowRect.w, windowRect.y + windowRect.h);
+	//Top
+	SDL_RenderDrawLine(renderer, camDestRect.x, camDestRect.y,
+									camDestRect.x + camDestRect.w, camDestRect.y);
+	//Left
+	SDL_RenderDrawLine(renderer, camDestRect.x, camDestRect.y,
+									camDestRect.x, camDestRect.y + camDestRect.h);
+	//Right
+	SDL_RenderDrawLine(renderer, camDestRect.x + camDestRect.w - 1, camDestRect.y,
+									camDestRect.x + camDestRect.w - 1, camDestRect.y + camDestRect.h);
+	//Bottom
+	SDL_RenderDrawLine(renderer, camDestRect.x, camDestRect.y + camDestRect.h - 1,
+									camDestRect.x + camDestRect.w, camDestRect.y + camDestRect.h - 1);
 	SDL_SetRenderDrawColor(renderer, 255, 105, 180, 255);
-	SDL_RenderDrawLine(renderer, windowRect.x + windowRect.w / 2, windowRect.y,
-		windowRect.x + windowRect.w / 2, windowRect.y + windowRect.h);
-	SDL_RenderDrawLine(renderer, windowRect.x, windowRect.y + windowRect.h / 2,
-		windowRect.x + windowRect.w, windowRect.y + windowRect.h / 2);
+	//Vertical Mid
+	SDL_RenderDrawLine(renderer, camDestRect.x + camDestRect.w / 2, camDestRect.y,
+		camDestRect.x + camDestRect.w / 2, camDestRect.y + camDestRect.h);
+	//Horizontal Mid
+	SDL_RenderDrawLine(renderer, camDestRect.x, camDestRect.y + camDestRect.h / 2,
+		camDestRect.x + camDestRect.w, camDestRect.y + camDestRect.h / 2);
 
+	//Window Center
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-	SDL_RenderDrawLine(renderer, 0, 300, 800, 300);
-	SDL_RenderDrawLine(renderer, 400, 0, 400, 600);
+	SDL_RenderDrawLine(renderer, 0, windowRect.h / 2, windowRect.w, windowRect.h / 2);
+	SDL_RenderDrawLine(renderer, windowRect.w / 2, 0, windowRect.w / 2, windowRect.h);
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-
 
 	SDL_RenderPresent(renderer);
 	SDL_DestroyTexture(camTex);

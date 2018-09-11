@@ -8,6 +8,7 @@ MainMenu* MainMenu::instance;
 
 MainMenu::MainMenu()
 {
+	Init();
 }
 
 MainMenu::~MainMenu()
@@ -38,7 +39,7 @@ void MainMenu::Update(Game *game)
 {
 }
 
-void MainMenu::Render(Game *game)
+void MainMenu::Render(Game *game, float interpolation)
 {
 	Sprite* spr = game->assetHandler->GetSprite("Assets/AnimTest.png", AssetHandler::Tiles::GRASS);
 	vec2 pos = vec2(0, 0);

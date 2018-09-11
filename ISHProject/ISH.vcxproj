@@ -19,7 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\ActionManager.cpp" />
     <ClCompile Include="src\Entity.cpp" />
+    <ClCompile Include="src\Overworld.cpp" />
     <ClCompile Include="src\Util.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\AssetHandler.cpp" />
@@ -30,11 +32,13 @@
     <ClCompile Include="src\Sprite.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\ActionManager.h" />
     <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\AssetHandler.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\GameState.h" />
     <ClInclude Include="include\Entity.h" />
+    <ClInclude Include="include\Overworld.h" />
     <ClInclude Include="include\Util.h" />
     <ClInclude Include="include\MainMenu.h" />
     <ClInclude Include="include\Sprite.h" />
