@@ -66,7 +66,7 @@ void Game::Render(float interpolation) {
 	SDL_FillRect(mainCamera->cameraSurface, &mainCamera->cameraSurface->clip_rect,
 		SDL_MapRGBA(mainCamera->cameraSurface->format, 0,0,0,0));
 
-	activeState->Render(this);
+	activeState->Render(this, interpolation);
 
 	SDL_Texture *camTex = SDL_CreateTextureFromSurface(renderer, mainCamera->cameraSurface);
 	SDL_Rect windowRect = SDL_Rect();
