@@ -72,7 +72,6 @@ std::ostream & operator<<(std::ostream & os, const vec2 & a)
 
 static double Lerp(double a, double b, double t) { return a + t * (b - a); }
 
-
 noise::noise() {}
 void noise::SetSeed() {}
 

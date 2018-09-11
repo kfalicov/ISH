@@ -53,7 +53,17 @@ public:
 	friend vec2 maxv(const vec2& a, const vec2& b);		    // max(v1, v2)
 	friend vec2 prod(const vec2& a, const vec2& b);		    // term by term *
 	friend std::ostream& operator << (std::ostream& os, const vec2& a);	// for use in cout
+
+	static vec2 N;
+	static vec2 E;
+	static vec2 S;
+	static vec2 W;
 };
+
+vec2 vec2::N = vec2(0, -1);
+vec2 vec2::E = vec2(1, 0);
+vec2 vec2::S = vec2(0, 1);
+vec2 vec2::W = vec2(-1, 0);
 
 class noise
 {
