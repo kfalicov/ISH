@@ -34,5 +34,4 @@ public:
 private:
 	GameState *activeState;
 	bool isRunning;
-	bool consoleActive;
 };

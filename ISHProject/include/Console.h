@@ -2,6 +2,7 @@
 #include "GameState.h"
 #include "Game.h"
 #include <string>
+#include <SDL_ttf.h>
 
 using std::string;
 
@@ -26,7 +27,13 @@ public:
 protected:
 	static Console* instance;
 	GameState* oldState;
+
+	TTF_Font* consoleFont;
+	SDL_Color fontColor = { 255, 255, 255 };
+
 	string currentCommand;
+	int commandIndex = 0;
+	vector<string> consoleOutput;
 	vector<string> commands;
 
 	Console();

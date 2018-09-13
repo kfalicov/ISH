@@ -36,7 +36,6 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 		//Treat solid black as transparent for the UI.
 		SDL_SetColorKey(UISurface, SDL_TRUE, SDL_MapRGBA(UISurface->format, 0, 0, 0, 0));
 		isRunning = true;
-		consoleActive = false;
 	}
 	else {
 		isRunning = false;
