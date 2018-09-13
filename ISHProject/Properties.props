@@ -5,11 +5,11 @@
   <PropertyGroup />
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>.\include;C:\Users\PaulH\OneDrive\Documents\Development\SDL2_image-devel-2.0.3-VC\SDL2_image-2.0.3\include;C:\Users\PaulH\OneDrive\Documents\Development\SDL2-devel-2.0.8-VC\SDL2-2.0.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\PaulH\OneDrive\Documents\Development\SDL2_ttf-devel-2.0.14-VC\SDL2_ttf-2.0.14\include;.\include;C:\Users\PaulH\OneDrive\Documents\Development\SDL2_image-devel-2.0.3-VC\SDL2_image-2.0.3\include;C:\Users\PaulH\OneDrive\Documents\Development\SDL2-devel-2.0.8-VC\SDL2-2.0.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>C:\Users\PaulH\OneDrive\Documents\Development\SDL2_image-devel-2.0.3-VC\SDL2_image-2.0.3\lib\x86;C:\Users\PaulH\OneDrive\Documents\Development\SDL2-devel-2.0.8-VC\SDL2-2.0.8\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\PaulH\OneDrive\Documents\Development\SDL2_ttf-devel-2.0.14-VC\SDL2_ttf-2.0.14\lib\x86;C:\Users\PaulH\OneDrive\Documents\Development\SDL2_image-devel-2.0.3-VC\SDL2_image-2.0.3\lib\x86;C:\Users\PaulH\OneDrive\Documents\Development\SDL2-devel-2.0.8-VC\SDL2-2.0.8\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup />

@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ActionManager.cpp" />
+    <ClCompile Include="src\Console.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Overworld.cpp" />
     <ClCompile Include="src\Util.cpp" />
@@ -35,6 +36,7 @@
     <ClInclude Include="include\ActionManager.h" />
     <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\AssetHandler.h" />
+    <ClInclude Include="include\Console.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\GameState.h" />
     <ClInclude Include="include\Entity.h" />

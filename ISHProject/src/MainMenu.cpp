@@ -2,6 +2,7 @@
 #include "Sprite.h"
 #include "AssetHandler.h"
 #include "Camera.h"
+#include "Console.h"
 #include "Util.h"
 
 MainMenu* MainMenu::instance;
@@ -33,6 +34,11 @@ void MainMenu::Clean()
 
 void MainMenu::HandleEvents(Game * game, SDL_Event event)
 {
+	if (event.type == SDL_KEYDOWN) {
+		if (event.key.keysym.sym == SDLK_BACKQUOTE) { // Tilde/Backquote key
+			ChangeState(game, Console::Instance(this));
+		}
+	}
 }
 
 void MainMenu::Update(Game *game)
