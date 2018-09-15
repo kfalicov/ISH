@@ -1,11 +1,12 @@
 #pragma once
 #include "GameState.h"
 #include "Game.h"
+#include "ActionManager.h"
 
-class MainMenu : public GameState
+class Overworld : public GameState
 {
 public:
-	static MainMenu* Instance();
+	static Overworld* Instance();
 	void Init() override;
 	void Clean() override;
 
@@ -13,11 +14,12 @@ public:
 	void Update(Game *game) override;
 	void Render(Game *game, float interpolation) override;
 
-	const char* getName() override { return "MainMenu"; }
+	const char* getName() override { return "Overworld"; }
 
-	~MainMenu();
+	~Overworld();
 
 protected:
-	static MainMenu *instance;
-	MainMenu();
+	static Overworld *instance;
+	ActionManager* actionManager;
+	Overworld();
 };

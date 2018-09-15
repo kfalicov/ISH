@@ -15,7 +15,7 @@ public:
 
 	virtual void HandleEvents(Game *game, SDL_Event event) = 0;
 	virtual void Update(Game *game) = 0;
-	virtual void Render(Game *game) = 0;
+	virtual void Render(Game *game, float interpolation) = 0;
 
 	virtual void PushSubState(GameState *substate) { substates.push_back(substate); };
 	virtual void PopSubState() { substates.pop_back(); };

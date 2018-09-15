@@ -37,6 +37,15 @@
     <ClCompile Include="src\Tile.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Overworld.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ActionManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Console.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AssetHandler.h">
@@ -70,6 +79,15 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\Tile.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Overworld.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ActionManager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Console.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

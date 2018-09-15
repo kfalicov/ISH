@@ -28,10 +28,10 @@ public:
 	SDL_Window *window;
 	AssetHandler *assetHandler;
 	Camera *mainCamera;
+	SDL_Surface* UISurface;
 
 	const int TILE_SIZE = 16;
 private:
 	GameState *activeState;
 	bool isRunning;
 };
-
