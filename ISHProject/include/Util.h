@@ -60,11 +60,6 @@ public:
 	static vec2 W;
 };
 
-vec2 vec2::N = vec2(0, -1);
-vec2 vec2::E = vec2(1, 0);
-vec2 vec2::S = vec2(0, 1);
-vec2 vec2::W = vec2(-1, 0);
-
 class noise
 {
 protected:
