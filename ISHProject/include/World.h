@@ -6,6 +6,7 @@ class World
 public:
 	World();
 	~World();
+	Chunk* getChunk(vec2 pos);
 	Tile* getTile(vec2 pos);
 private:
 	Chunk* currentChunk;
