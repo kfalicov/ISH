@@ -1,34 +1,35 @@
 #include <iostream>
 #include <map>
-#include <unordered_map>
 #include <string>
 #include <functional>
+#include <vector>
 
-// Function to 'point' to
-const void foo() {}
-//...
-// Create the 'bar' type for functions with the signature 'const void ...()'
-typedef const void(*bar)();
-//...
-// Store a pointer to the foo() function
-bar ptr = &foo;
+typedef std::string (*funct)(std::vector<std::string>);
 
-//typedef void(*ScriptFunction)(void); // function pointer type
-//typedef std::unordered_map<std::string, bar> script_map;
+std::string add(std::vector<std::string>)
+{
 
-std::string add(int i, int j) {	return std::to_string(i + j); }
-std::string sub(int i, int j) { return std::to_string(i - j); }
+	return "i+j";
+}
+std::string sub(std::vector<std::string>)
+{
+	return "i-j";
+}
 
-typedef void* (*fooFunc)(void*, void*);
+std::map<std::string, funct> functions;
+
+std::string parseCommand(std::string s) 
+{
+	//tokenize s to vector of strings
+	//functions[s[0]](restOfS);
+}
 
 int main(int argc, char *argv[]) {
-	std::map<std::string, bar> functions;
-	//functions["add"] = add;
-	//functions["sub"] = &sub;
+	functions["add"] = add;
+	functions["sub"] = sub;
 
+	//functions["add"](1, 3);
 	// usage:
-	//std::string s("add");
-	//std::string res = functions[s](1, 2);
-	
-	//while (true);
+	std::string s("add 1 2");
+	std::cout << parseCommand(s) << std::endl;
 }
