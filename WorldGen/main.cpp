@@ -23,8 +23,8 @@ typedef void* (*fooFunc)(void*, void*);
 
 int main(int argc, char *argv[]) {
 	std::map<std::string, bar> functions;
-	functions["add"] = add;
-	functions["sub"] = &sub;
+	//functions["add"] = add;
+	//functions["sub"] = &sub;
 
 	// usage:
 	//std::string s("add");

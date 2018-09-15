@@ -14,6 +14,8 @@ World::~World()
 // gets the chunk based on chunk coordinates
 Chunk* World::getChunk(vec2 pos)
 {
+	int chunkx = int(pos[0]);
+	int chunky = int(pos[1]);
 	Chunk* tempChunk = spawn;
 	if (chunkx < 0) {
 		int i = 0;
@@ -60,20 +62,21 @@ Chunk* World::getChunk(vec2 pos)
 			i++;
 		}
 	}
+	return tempChunk;
 }
 
-/*
-obtains a tile based on absolute world coordinates
-*/
-Tile* World::getTile(vec2 pos) 
-{
-	int offsetx = int(pos[0]) % 16;
-	int offsety = int(pos[1]) % 16;
-	int chunkx = (pos[0] - offsetx) / 16;
-	int chunky = (pos[1] - offsety) / 16;
-	
-	return getChunk(vec2(chunkx, chunky)->getTile(vec2(offsetx, offsety));
-}
+///*
+//obtains a tile based on absolute world coordinates
+//*/
+//Tile* World::getTile(vec2 pos) 
+//{
+//	int offsetx = int(pos[0]) % 16;
+//	int offsety = int(pos[1]) % 16;
+//	int chunkx = (pos[0] - offsetx) / 16;
+//	int chunky = (pos[1] - offsety) / 16;
+//	
+//	return getChunk(vec2(chunkx, chunky))->getTile(vec2(offsetx, offsety));
+//}
 
 /*
 Alternate function
