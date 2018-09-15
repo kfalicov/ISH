@@ -3,10 +3,10 @@
 #include "SDL.h"
 #include "Sprite.h"
 #include <vector>
-#include <map>
+#include <unordered_map>
 
 using std::vector;
-using std::map;
+using std::unordered_map;
 
 class AssetHandler {
 public:
@@ -27,7 +27,7 @@ private:
 
 	Game* game;
 
-	std::map<const char*, SDL_Surface*> loadedSpriteSheets;
+	std::unordered_map<const char*, SDL_Surface*> loadedSpriteSheets;
 	
 	AssetHandler();
 

@@ -30,7 +30,7 @@ Sprite* AssetHandler::GetSprite(const char* spriteSheet, int spriteIndex)
 {
 	SDL_Surface* surface;
 
-	std::map<const char*, SDL_Surface*>::iterator it;
+	std::unordered_map<const char*, SDL_Surface*>::iterator it;
 	it = loadedSpriteSheets.find(spriteSheet);
 	if (it != loadedSpriteSheets.end()) {
 		//std::cout << spriteSheet << " found!" << std::endl;
