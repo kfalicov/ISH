@@ -12,26 +12,9 @@ World::~World()
 }
 
 // gets the chunk based on chunk coordinates
-Chunk* World::getChunk(vec2 pos)
+Chunk* World::getChunk(int chunkx, int chunky)
 {
-	int chunkx = int(pos[0]);
-	int chunky = int(pos[1]);
 	Chunk* tempChunk = spawn;
-	if (chunkx < 0) {
-		int i = 0;
-		while (i > chunkx) {
-			tempChunk = tempChunk->getWest();
-			i--;
-		}
-	}
-	else
-	{
-		int i = 0;
-		while (i < chunkx) {
-			tempChunk = tempChunk->getEast();
-			i++;
-		}
-	}
 	if (chunkx < 0) {
 		int i = 0;
 		while (i > chunkx) {
@@ -65,6 +48,8 @@ Chunk* World::getChunk(vec2 pos)
 	return tempChunk;
 }
 
+//TODO implement a better getChunk which uses save file data instead of looping through a linked list
+
 ///*
 //obtains a tile based on absolute world coordinates
 //*/
@@ -75,7 +60,7 @@ Chunk* World::getChunk(vec2 pos)
 //	int chunkx = (pos[0] - offsetx) / 16;
 //	int chunky = (pos[1] - offsety) / 16;
 //	
-//	return getChunk(vec2(chunkx, chunky))->getTile(vec2(offsetx, offsety));
+//	return getChunk(chunkx, chunky)->getTile(vec2(offsetx, offsety));
 //}
 
 /*

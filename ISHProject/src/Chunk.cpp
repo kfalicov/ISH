@@ -24,6 +24,12 @@ Chunk* Chunk::getWest() {	return neighbors[dir::WEST];}
 */
 Tile* Chunk::getTile(vec2 pos) 
 {
+	int loadDistance = 5; //5 chunk radius from player is loaded
+	if (pos[0] > 16 * loadDistance)
+	{
+		//at this point look to the save file since we know it's out of loaded range
+	}
+	//TODO continue these checks
 	if (pos[0] > 15)
 		return getEast()->getTile(pos - (16 * vec2::E));
 	if (pos[0] < 0)
