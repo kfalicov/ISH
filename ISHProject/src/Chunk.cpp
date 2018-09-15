@@ -3,6 +3,9 @@
 Chunk::Chunk()
 {
 	//TODO instantialize a 16x16 chunk
+	//set chunk pos
+	//create array of tiles who are members of the chunk
+	//new Tile(vec2(0-15,0-15), chunk's pos)
 }
 
 Chunk::~Chunk()
@@ -15,16 +18,20 @@ Chunk* Chunk::getEast() {	return neighbors[dir::EAST];}
 Chunk* Chunk::getSouth() {	return neighbors[dir::SOUTH];}
 Chunk* Chunk::getWest() {	return neighbors[dir::WEST];}
 
+/*
+	returns the tile relative to calling chunk's 0,0
+	A recursive x-first seek for the target tile
+*/
 Tile* Chunk::getTile(vec2 pos) 
 {
 	if (pos[0] > 15)
-		return getEast()->getTile(pos + (16 * vec2::E));
+		return getEast()->getTile(pos - (16 * vec2::E));
 	if (pos[0] < 0)
-		return getWest()->getTile(pos + (16 * vec2::W));
+		return getWest()->getTile(pos - (16 * vec2::W));
 	if (pos[1] > 15)
-		return getSouth()->getTile(pos + (16 * vec2::S));
+		return getSouth()->getTile(pos - (16 * vec2::S));
 	if (pos[1] < 0)
-		return getNorth()->getTile(pos + (16 * vec2::N));
+		return getNorth()->getTile(pos - (16 * vec2::N));
 
 	return grid[pos[1]][pos[0]];	// these are flipped along x and y because grid is 
 									// row-major which needs to be inverted so that x, y makes sense
