@@ -23,8 +23,8 @@ void Camera::RenderSprite(Sprite sprite, vec2 position)
 	SDL_Rect srcRect = sprite.srcRect;
 	destRect.w = srcRect.w;
 	destRect.h = srcRect.h;
-	destRect.x = (getCenter()[0] + position[0]);
-	destRect.y = (getCenter()[1] + position[1]);
+	destRect.x = (getCenter()[0] + position[0]*16);
+	destRect.y = (getCenter()[1] + position[1]*16);
 	//std::cout << getCenter()[0] << std::endl;
 
 	SDL_BlitSurface(sprite.spriteSheet, &srcRect, cameraSurface, &destRect);
@@ -42,7 +42,7 @@ vec2 Camera::getPos()
 
 vec2 Camera::getCenter()
 {
-	return camPosition + (size / 2); //vec2 automatically does the math for us!
+	return camPosition + (size / 2) - 128; //vec2 automatically does the math for us!
 }
 
 vec2 Camera::getSize()

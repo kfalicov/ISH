@@ -46,6 +46,9 @@
     <ClCompile Include="src\Console.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Player.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AssetHandler.h">
@@ -88,6 +91,9 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\Console.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Player.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

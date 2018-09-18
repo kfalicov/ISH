@@ -1,14 +1,29 @@
 #pragma once
+#include <unordered_map>
 #include "Chunk.h"
+#include "Player.h"
+
+using namespace std;
 
 class World
 {
 public:
 	World();
+	World(int seed);
 	~World();
-	Chunk* getChunk(vec2 pos);
-	Tile* getTile(vec2 pos);
+	//Tile* getTile(vec2 pos);
+	Player* player;
+
+	void Render(Game* game, float interpolation);
+
+	void loadChunks(vec2 center);
+	Chunk* getLoadedChunk(vec2 position);
+
+	int seed;
+	unordered_map<vec2*, Chunk*> loadedChunks;
+
 private:
-	Chunk* currentChunk;
-	Chunk* spawn; //the 0,0 coordinate
+	int chunkSquareRadius = 1;
+	//Chunk* currentChunk;
+	//Chunk* spawn; //the 0,0 coordinate
 };

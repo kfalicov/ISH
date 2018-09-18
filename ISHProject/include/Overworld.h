@@ -2,6 +2,8 @@
 #include "GameState.h"
 #include "Game.h"
 #include "ActionManager.h"
+#include "Player.h"
+#include "World.h"
 
 class Overworld : public GameState
 {
@@ -15,6 +17,8 @@ public:
 	void Render(Game *game, float interpolation) override;
 
 	const char* getName() override { return "Overworld"; }
+
+	World* world;
 
 	~Overworld();
 

@@ -1,9 +1,17 @@
 #include "World.h"
 #include "Util.h"
+#include "Player.h"
 
 World::World()
 {
 
+}
+
+World::World(int seed) {
+	this->seed = seed;
+	// TODO init player from save file if applicable
+	player = new Player();
+	loadChunks(player->chunkPos);
 }
 
 World::~World()
@@ -11,58 +19,45 @@ World::~World()
 
 }
 
-// gets the chunk based on chunk coordinates
-Chunk* World::getChunk(vec2 pos)
-{
-	int chunkx = int(pos[0]);
-	int chunky = int(pos[1]);
-	Chunk* tempChunk = spawn;
-	if (chunkx < 0) {
-		int i = 0;
-		while (i > chunkx) {
-			tempChunk = tempChunk->getWest();
-			i--;
+void World::loadChunks(vec2 center) {
+	for (int chunkX = center[0] - chunkSquareRadius; chunkX <= center[0] + chunkSquareRadius; chunkX++) {
+		for (int chunkY = center[1] - chunkSquareRadius; chunkY <= center[1] + chunkSquareRadius; chunkY++) {
+			vec2* pos = new vec2(chunkX, chunkY);
+
+			// TODO properly load/generate chunk
+			Chunk* newChunk = new Chunk(chunkX, chunkY);
+			loadedChunks.insert(pair<vec2*, Chunk*>(pos, newChunk));
+			//std::cout << chunkX << ", " << chunkY << std::endl;
 		}
 	}
-	else
-	{
-		int i = 0;
-		while (i < chunkx) {
-			tempChunk = tempChunk->getEast();
-			i++;
+
+	for (unordered_map<vec2*, Chunk*>::iterator it = loadedChunks.begin(); it != loadedChunks.end(); ++it) {
+		vec2* p = it->first;
+		if(it->second->getNorth() == NULL)
+			it->second->setNorth(getLoadedChunk((*p) + vec2::N));
+		if (it->second->getEast() == NULL)
+			it->second->setEast(getLoadedChunk((*p) + vec2::E));
+		if (it->second->getSouth() == NULL)
+			it->second->setSouth(getLoadedChunk((*p) + vec2::S));
+		if (it->second->getWest() == NULL)
+			it->second->setWest(getLoadedChunk((*p) + vec2::W));
+	}
+}
+
+Chunk* World::getLoadedChunk(vec2 position) {
+	for (unordered_map<vec2*, Chunk*>::iterator it = loadedChunks.begin(); it != loadedChunks.end(); ++it) {
+		vec2* p = it->first;
+		if ((*p) == position) {
+			return it->second;
 		}
 	}
-	if (chunkx < 0) {
-		int i = 0;
-		while (i > chunkx) {
-			tempChunk = tempChunk->getWest();
-			i--;
-		}
+	return NULL;
+}
+
+void World::Render(Game* game, float interpolation) {
+	for (unordered_map<vec2*, Chunk*>::iterator it = loadedChunks.begin(); it != loadedChunks.end(); ++it) {
+		it->second->Render(game, interpolation);
 	}
-	else
-	{
-		int i = 0;
-		while (i < chunkx) {
-			tempChunk = tempChunk->getEast();
-			i++;
-		}
-	}
-	if (chunky < 0) {
-		int i = 0;
-		while (i > chunky) {
-			tempChunk = tempChunk->getNorth();
-			i--;
-		}
-	}
-	else
-	{
-		int i = 0;
-		while (i < chunky) {
-			tempChunk = tempChunk->getSouth();
-			i++;
-		}
-	}
-	return tempChunk;
 }
 
 ///*
@@ -82,7 +77,7 @@ Chunk* World::getChunk(vec2 pos)
 Alternate function
 obtains a tile based on absolute world coordinates
 */
-Tile* World::getTile(vec2 pos) 
-{
-	return spawn->getTile(pos); //this will be called recursively when pos is out of the spawn's bounds
-}
+//Tile* World::getTile(vec2 pos) 
+//{
+//	return spawn->getTile(pos); //this will be called recursively when pos is out of the spawn's bounds
+//}
