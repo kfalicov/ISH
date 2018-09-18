@@ -1,4 +1,4 @@
 # ISH
-WIP game using SDL2 for my CS425 class, Game Programming.
+WIP game using SDL2 for CS425 at GMU, Game Programming. Capstone project to-be.
 
 by Paul Hughes and Kyle Falicov
