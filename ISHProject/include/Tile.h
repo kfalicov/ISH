@@ -15,10 +15,10 @@ public:
 	void Render(Game* game, float interpolation);
 
 	vec2 tilePos; //the position 0-15 in the chunk
-
-private:
 	Sprite* s;
-	//std::vector<Entity*> transparent;
+	std::vector<Entity*> transparent;
 	Entity* opaque;
+private:
+
 	//vec2 worldPos(); // returns the absolute position of this tile relative to 0,0 of the world
 };

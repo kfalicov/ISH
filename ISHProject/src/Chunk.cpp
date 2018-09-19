@@ -1,4 +1,5 @@
 #include "Chunk.h"
+#include "AssetHandler.h"
 
 Chunk::Chunk() {
 
@@ -20,6 +21,7 @@ Chunk::Chunk(int x, int y)
 	for (int x = 0; x < CHUNK_SIZE; x++) {
 		for (int y = 0; y < CHUNK_SIZE; y++) {
 			tileGrid[x][y] = new Tile((chunkPos[0]*16) + x, (chunkPos[1]*16) + y);
+			tileGrid[x][y]->s = AssetHandler::Instance()->GetSprite("Assets/AnimTest.png", 0);
 			//std::cout << tileGrid[x][y]->tilePos << std::endl;
 		}
 	}
@@ -56,14 +58,14 @@ void Chunk::setWest(Chunk* W) {
 */
 Tile* Chunk::getTile(vec2 tilePos) 
 {
-	//if (pos[0] > 15)
-	//	return getEast()->getTile(pos - (16 * vec2::E));
-	//if (pos[0] < 0)
-	//	return getWest()->getTile(pos - (16 * vec2::W));
-	//if (pos[1] > 15)
-	//	return getSouth()->getTile(pos - (16 * vec2::S));
-	//if (pos[1] < 0)
-	//	return getNorth()->getTile(pos - (16 * vec2::N));
+	if (tilePos[0] >= CHUNK_SIZE)
+		return getEast()->getTile(tilePos - (CHUNK_SIZE * vec2::E));
+	if (tilePos[0] < 0)
+		return getWest()->getTile(tilePos - (CHUNK_SIZE * vec2::W));
+	if (tilePos[1] >= CHUNK_SIZE)
+		return getSouth()->getTile(tilePos - (CHUNK_SIZE * vec2::S));
+	if (tilePos[1] < 0)
+		return getNorth()->getTile(tilePos - (CHUNK_SIZE * vec2::N));
 
 	return tileGrid[(int)tilePos[0]][(int)tilePos[1]];
 }

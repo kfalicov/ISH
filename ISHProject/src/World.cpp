@@ -12,6 +12,9 @@ World::World(int seed) {
 	// TODO init player from save file if applicable
 	player = new Player();
 	loadChunks(player->chunkPos);
+	player->currentChunk = getLoadedChunk(player->chunkPos);
+	player->currentTile = player->currentChunk->getTile(player->tilePos);
+	player->currentTile->opaque = player;
 }
 
 World::~World()

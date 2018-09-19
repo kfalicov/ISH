@@ -3,7 +3,7 @@
 #include "Chunk.h"
 #include "Tile.h"
 
-class Player : Entity {
+class Player : public Entity {
 public:
 	Player();
 	~Player();
@@ -13,6 +13,7 @@ public:
 	Chunk* currentChunk;
 	Tile* currentTile;
 
+	void Move(vec2 dir);
 private:
 	
 };

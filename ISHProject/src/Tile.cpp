@@ -17,8 +17,16 @@ Tile::~Tile() {
 
 void Tile::Render(Game* game, float interpolation) {
 	// TODO move sprite initialization to constructor so we don't waste hella memory
-	s = game->assetHandler->GetSprite("Assets/AnimTest.png", AssetHandler::Tiles::GRASS);
-	game->mainCamera->RenderSprite((*s), tilePos);
+	if (s != NULL) {
+		game->mainCamera->RenderSprite((*s), tilePos);
+	}
+	if (transparent.size() > 0) {
+		game->mainCamera->RenderSprite((*transparent.back()->sprite), tilePos);
+	}
+	if (opaque != NULL) {
+		game->mainCamera->RenderSprite((*opaque->sprite), tilePos);
+		//std::cout << "Rendering opaque object at " << tilePos << std::endl;
+	}
 }
 
 //vec2 Tile::worldPos()

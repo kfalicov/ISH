@@ -39,19 +39,20 @@ void ActionManager::HandleEvents(Game* game, SDL_Event event)
 	// Player should only be able to move if they are not currently moving
 	if (event.type == SDL_KEYDOWN) {
 		if (event.key.keysym.sym == SDLK_w) {
-			player->Move(); //move up
+			//Move Player up
+			player->Move(vec2::N);
 			playerMoved = true;
 		}
 		else if (event.key.keysym.sym == SDLK_s) {
-			player->Move(); //move down
+			player->Move(vec2::S);
 			playerMoved = true;
 		}		
 		else if (event.key.keysym.sym == SDLK_a) {
-			player->Move(); //move left
+			player->Move(vec2::W);
 			playerMoved = true;
 		}		
 		else if (event.key.keysym.sym == SDLK_d) {
-			player->Move(); //move right
+			player->Move(vec2::E);
 			playerMoved = true;
 		}
 	}
@@ -66,7 +67,7 @@ void ActionManager::Update(Game* game)
 		if ((turnBased && playerMoved) ||
 			(!turnBased && tickCounter % e.moveFreq == 0)) {
 			e.moveTicks = 0;
-			e.Move();
+			//e.move();
 			playerMoved = false;
 		}
 	}

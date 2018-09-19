@@ -7,7 +7,7 @@ public:
 	Entity();
 	~Entity();
 
-	Sprite sprite;
+	Sprite* sprite;
 	//TODO Tile* tilePos;	// This is effectively the entity's position
 	bool opaque;	// Does the entity take up physical space?
 
@@ -16,7 +16,6 @@ public:
 	vec2 currentPos;// Current position (movement interpolation target)
 	vec2 oldPos;	// Old position
 
-	void Move();	// Moves entity to a tile
 private:
 
 };

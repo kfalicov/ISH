@@ -2,6 +2,7 @@
 #include <vector>
 #include "Entity.h"
 #include "Game.h"
+#include "Player.h"
 
 class ActionManager {
 public:
@@ -21,12 +22,12 @@ public:
 	bool playerMoved;
 	const float TICKS_PER_MOVE = 15;
 
+	Player* player;
+
 	~ActionManager();
 private:
 	ActionManager();
 	static ActionManager* instance;
-
-	Entity* player;
 	int tickCounter;
 
 	std::vector<Entity*> actors;
