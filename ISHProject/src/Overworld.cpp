@@ -42,10 +42,12 @@ void Overworld::HandleEvents(Game * game, SDL_Event event)
 
 void Overworld::Update(Game *game)
 {
+	world->Update(game);
 	actionManager->Update(game);
 }
 
 void Overworld::Render(Game *game, float interpolation)
 {
 	world->Render(game, interpolation);
+	actionManager->Render(game, interpolation);
 }

@@ -4,7 +4,7 @@
 #include "Util.h"
 
 using namespace std;
-#define CHUNK_SIZE 16
+#define CHUNK_SIZE 8
 
 class Chunk {
 public:
@@ -14,6 +14,7 @@ public:
 	~Chunk();	//saves data and removes chunk from memory
 
 	void Render(Game* game, float interpolation);
+	void Unload();
 
 	vec2 chunkPos; // the chunk coordinate
 
@@ -28,14 +29,7 @@ public:
 	void setWest(Chunk* W);
 
 	Tile* getTile(vec2 tilePos);
-
-	//Tile* getNorth(Tile* t);	//get the tile north of the specified tile
-	//Tile* getEast(Tile* t);		//get the tile east of the specified tile
-	//Tile* getSouth(Tile* t);	//get the tile south of the specified tile
-	//Tile* getWest(Tile* t);		//get the tile west of the specified tile
-
-	//operators
-	//vector<Tile*>& operator [](int x); // gets the specified row in the chunk
+	Chunk* getChunk(vec2& tilePos, vec2 direction);
 
 private:
 	vector<Chunk*> neighbors;

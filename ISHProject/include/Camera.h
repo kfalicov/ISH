@@ -3,6 +3,8 @@
 #include "Game.h"
 #include "Sprite.h"
 
+#define PIXELS_PER_TILE 16
+
 class Camera
 {
 public:

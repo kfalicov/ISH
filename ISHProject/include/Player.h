@@ -8,8 +8,6 @@ public:
 	Player();
 	~Player();
 
-	vec2 tilePos;
-	vec2 chunkPos;
 	Chunk* currentChunk;
 	Tile* currentTile;
 

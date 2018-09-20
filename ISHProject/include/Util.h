@@ -70,5 +70,15 @@ public:
 };
 
 static double lerp(double a, double b, double t) {
+	if (t > 1) {
+		return b;
+	}
+	return a * (1 - t) + b * t;
+}
+
+static vec2 lerp(vec2 a, vec2 b, double t) {
+	if (t > 1) {
+		return b;
+	}
 	return a * (1 - t) + b * t;
 }

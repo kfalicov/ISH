@@ -23,13 +23,4 @@ void Tile::Render(Game* game, float interpolation) {
 	if (transparent.size() > 0) {
 		game->mainCamera->RenderSprite((*transparent.back()->sprite), tilePos);
 	}
-	if (opaque != NULL) {
-		game->mainCamera->RenderSprite((*opaque->sprite), tilePos);
-		//std::cout << "Rendering opaque object at " << tilePos << std::endl;
-	}
 }
-
-//vec2 Tile::worldPos()
-//{
-//	return pos + (16 * chunk); //chunk no. * chunk width/height, plus offset within chunk
-//}

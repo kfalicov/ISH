@@ -16,9 +16,22 @@ Player::~Player() {
 }
 
 void Player::Move(vec2 dir) {
-	currentTile->opaque = NULL;
-	currentTile = currentChunk->getTile(tilePos + dir);//move up
-	currentTile->opaque = this;
-	tilePos = currentTile->tilePos;
-	chunkPos = currentChunk->chunkPos;
+	if (renderPos == currentPos) {
+		oldPos = currentPos;
+
+		moveTicks = 0;
+
+		//getChunk will change tilePos to the new position if there is a space available
+		currentChunk = currentChunk->getChunk(tilePos, dir);
+
+		currentTile->opaque = NULL;
+		currentTile = currentChunk->getTile(tilePos);
+		currentTile->opaque = this;
+
+		//tilePos = currentTile->tilePos;
+		chunkPos = currentChunk->chunkPos;
+		currentPos = currentTile->tilePos;
+
+		std::cout << "Player moving to chunk: " << chunkPos << ", tile: " << tilePos << std::endl;
+	}
 }

@@ -13,7 +13,9 @@ public:
 	~World();
 	//Tile* getTile(vec2 pos);
 	Player* player;
+	vec2 centerChunkPos;
 
+	void Update(Game* game);
 	void Render(Game* game, float interpolation);
 
 	void loadChunks(vec2 center);

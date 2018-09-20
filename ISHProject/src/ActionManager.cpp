@@ -1,5 +1,6 @@
 #include "ActionManager.h"
 #include "Util.h"
+#include "Camera.h"
 
 ActionManager* ActionManager::instance;
 
@@ -67,10 +68,19 @@ void ActionManager::Update(Game* game)
 		if ((turnBased && playerMoved) ||
 			(!turnBased && tickCounter % e.moveFreq == 0)) {
 			e.moveTicks = 0;
-			//e.move();
+			e.Move();
 			playerMoved = false;
 		}
 	}
+}
+
+void ActionManager::Render(Game* game, float interpolation){
+	for (std::vector<Entity*>::iterator it = actors.begin(); it != actors.end(); ++it) {
+		(*it)->updateRenderPosition(interpolation);
+		game->mainCamera->RenderSprite((*(*it)->sprite), (*it)->renderPos);
+	}
+	player->updateRenderPosition(interpolation);
+	game->mainCamera->RenderSprite((*player->sprite), player->renderPos);
 }
 
 void ActionManager::Clean()
