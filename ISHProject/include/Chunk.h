@@ -5,6 +5,7 @@
 
 using namespace std;
 #define CHUNK_SIZE 8
+#define TILE_SPACING 1
 
 class Chunk {
 public:

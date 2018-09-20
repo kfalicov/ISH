@@ -12,6 +12,7 @@ public:
 	Camera(Game* game, vec2 center, int w, int h);
 	~Camera();
 
+	void Update();
 	void RenderSprite(Sprite sprite, vec2 position);
 
 	void TrackTo(vec2 target);
@@ -24,6 +25,7 @@ public:
 	SDL_Surface* cameraSurface;
 
 private:
+	double followSpeed = 0.1;
 	vec2 camPosition; // The top left of the camera
 	vec2 size;
 	vec2 target; // Where the camera is moving to over time

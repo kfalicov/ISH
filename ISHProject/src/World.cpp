@@ -1,6 +1,7 @@
 #include "World.h"
 #include "Util.h"
 #include "Player.h"
+#include "Camera.h"
 
 World::World()
 {
@@ -31,7 +32,7 @@ void World::loadChunks(vec2 center) {
 	int maxY = center[1] + chunkSquareRadius;
 
 	//For all chunks that SHOULD BE loaded...
-	for (int chunkX = minY; chunkX <= maxX; chunkX++) {
+	for (int chunkX = minX; chunkX <= maxX; chunkX++) {
 		for (int chunkY = minY; chunkY <= maxY; chunkY++) {
 			vec2* pos = new vec2(chunkX, chunkY);
 
@@ -83,6 +84,8 @@ Chunk* World::getLoadedChunk(vec2 position) {
 }
 
 void World::Update(Game* game) {
+	game->mainCamera->TrackTo(player->renderPos*PIXELS_PER_TILE + PIXELS_PER_TILE/2);
+
 	if (centerChunkPos != player->currentChunk->chunkPos) {
 		centerChunkPos = player->currentChunk->chunkPos;
 		loadChunks(centerChunkPos);

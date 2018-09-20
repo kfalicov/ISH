@@ -77,10 +77,10 @@ void ActionManager::Update(Game* game)
 void ActionManager::Render(Game* game, float interpolation){
 	for (std::vector<Entity*>::iterator it = actors.begin(); it != actors.end(); ++it) {
 		(*it)->updateRenderPosition(interpolation);
-		game->mainCamera->RenderSprite((*(*it)->sprite), (*it)->renderPos);
+		game->mainCamera->RenderSprite((*(*it)->sprite), (*it)->renderPos*PIXELS_PER_TILE);
 	}
 	player->updateRenderPosition(interpolation);
-	game->mainCamera->RenderSprite((*player->sprite), player->renderPos);
+	game->mainCamera->RenderSprite((*player->sprite), player->renderPos*PIXELS_PER_TILE);
 }
 
 void ActionManager::Clean()

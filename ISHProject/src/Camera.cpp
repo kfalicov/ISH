@@ -18,14 +18,18 @@ Camera::~Camera()
 
 }
 
+void Camera::Update() {
+	setCenter(lerp(getCenter(), target, followSpeed));
+}
+
 void Camera::RenderSprite(Sprite sprite, vec2 position)
 {
 	SDL_Rect destRect = SDL_Rect();
 	SDL_Rect srcRect = sprite.srcRect;
 	destRect.w = srcRect.w;
 	destRect.h = srcRect.h;
-	destRect.x = (getCenter()[0] + position[0]*PIXELS_PER_TILE);
-	destRect.y = (getCenter()[1] + position[1]*PIXELS_PER_TILE);
+	destRect.x = position[0] - camPosition[0];
+	destRect.y = position[1] - camPosition[1];
 	//std::cout << getCenter()[0] << std::endl;
 
 	SDL_BlitSurface(sprite.spriteSheet, &srcRect, cameraSurface, &destRect);
@@ -33,7 +37,7 @@ void Camera::RenderSprite(Sprite sprite, vec2 position)
 
 void Camera::TrackTo(vec2 dest)
 {
-	target = dest-(size/2); //offsets so that the camera is tracking by its own center
+	target = dest;
 }
 
 vec2 Camera::getPos()
@@ -43,7 +47,7 @@ vec2 Camera::getPos()
 
 vec2 Camera::getCenter()
 {
-	return camPosition + (size / 2) - (CHUNK_SIZE/2)*PIXELS_PER_TILE; //vec2 automatically does the math for us!
+	return camPosition + (size / 2);// -(CHUNK_SIZE / 2)*PIXELS_PER_TILE; //vec2 automatically does the math for us!
 }
 
 vec2 Camera::getSize()

@@ -63,6 +63,7 @@ void Game::HandleEvents() {
 }
 
 void Game::Update() {
+	mainCamera->Update();
 	activeState->Update(this);
 }
 
