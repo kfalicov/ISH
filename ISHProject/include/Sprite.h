@@ -4,6 +4,7 @@
 
 class Sprite {
 public:
+	Sprite();
 	Sprite(SDL_Surface* spriteSheet, SDL_Rect srcRect);
 	~Sprite();
 

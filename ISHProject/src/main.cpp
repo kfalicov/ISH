@@ -3,17 +3,12 @@
 #include <SDL_image.h>
 #include "Game.h"
 #include "MainMenu.h"
+#include "Overworld.h"
 #include "Util.h"
 
 Game *game = nullptr;
 
 int main(int argc, char *argv[]) {
-
-	vec2 pos = vec2(16, 28);
-	std::cout << (pos += vec2(10,-4)) << std::endl;
-	std::cout << pos*4 << std::endl;
-
-
 	const int TICKS_PER_SECOND = 30;
 	const int SKIP_TICKS = 1000 / TICKS_PER_SECOND;
 	const int MAX_FRAMESKIP = 10;
@@ -24,7 +19,7 @@ int main(int argc, char *argv[]) {
 
 	game = new Game();
 	game->Init("ISH", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, false);
-	game->ChangeState(MainMenu::Instance());
+	game->ChangeState(Overworld::Instance());
 
 	while (game->Running()) {
 		loops = 0;

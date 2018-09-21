@@ -1,11 +1,30 @@
 #include "Chunk.h"
+#include "AssetHandler.h"
 
-Chunk::Chunk()
+Chunk::Chunk() {
+
+}
+
+Chunk::Chunk(int x, int y)
 {
+	chunkPos = vec2(x, y);
+	neighbors = vector<Chunk*>(4);
 	//TODO instantialize a 16x16 chunk
 	//set chunk pos
 	//create array of tiles who are members of the chunk
 	//new Tile(vec2(0-15,0-15), chunk's pos)
+	tileGrid = new Tile**[CHUNK_SIZE];
+	for (int i = 0; i < CHUNK_SIZE; i++) {
+		tileGrid[i] = new Tile*[CHUNK_SIZE];
+	}
+
+	for (int x = 0; x < CHUNK_SIZE; x++) {
+		for (int y = 0; y < CHUNK_SIZE; y++) {
+			tileGrid[x][y] = new Tile((chunkPos[0]*(CHUNK_SIZE+TILE_SPACING)) + x, (chunkPos[1]*(CHUNK_SIZE+TILE_SPACING)) + y);
+			tileGrid[x][y]->s = AssetHandler::Instance()->GetSprite("Assets/AnimTest.png", 0);
+			//std::cout << tileGrid[x][y]->tilePos << std::endl;
+		}
+	}
 }
 
 Chunk::~Chunk()
@@ -13,55 +32,113 @@ Chunk::~Chunk()
 	//TODO perform saving of chunk before destruction
 }
 
+void Chunk::Unload() {
+	if (getEast() != nullptr) {
+		getEast()->setWest(nullptr);
+	}
+	if (getWest() != nullptr) {
+		getWest()->setEast(nullptr);
+	}
+	if (getSouth() != nullptr) {
+		getSouth()->setNorth(nullptr);
+	}
+	if (getNorth() != nullptr) {
+		getNorth()->setSouth(nullptr);
+	}
+
+	// TODO unload all tiles in the chunk
+}
+
 Chunk* Chunk::getNorth() {	return neighbors[dir::NORTH];}
 Chunk* Chunk::getEast() {	return neighbors[dir::EAST];}
 Chunk* Chunk::getSouth() {	return neighbors[dir::SOUTH];}
 Chunk* Chunk::getWest() {	return neighbors[dir::WEST];}
 
+void Chunk::setNorth(Chunk* N) {
+	neighbors[dir::NORTH] = N;
+}
+
+void Chunk::setEast(Chunk* E) {
+	neighbors[dir::EAST] = E;
+}
+
+void Chunk::setSouth(Chunk* S) {
+	neighbors[dir::SOUTH] = S;
+}
+
+void Chunk::setWest(Chunk* W) {
+	neighbors[dir::WEST] = W;
+}
 /*
 	returns the tile relative to calling chunk's 0,0
 	A recursive x-first seek for the target tile
 */
-Tile* Chunk::getTile(vec2 pos) 
+Tile* Chunk::getTile(vec2 tilePos) 
 {
-	int loadDistance = 5; //5 chunk radius from player is loaded
-	if (pos[0] > 16 * loadDistance)
-	{
-		//at this point look to the save file since we know it's out of loaded range
+
+	//if (tilePos[0] >= CHUNK_SIZE)
+	//	return getEast()->getTile(tilePos - (CHUNK_SIZE * vec2::E));
+	//if (tilePos[0] < 0)
+	//	return getWest()->getTile(tilePos - (CHUNK_SIZE * vec2::W));
+	//if (tilePos[1] >= CHUNK_SIZE)
+	//	return getSouth()->getTile(tilePos - (CHUNK_SIZE * vec2::S));
+	//if (tilePos[1] < 0)
+	//	return getNorth()->getTile(tilePos - (CHUNK_SIZE * vec2::N));
+
+	return tileGrid[(int)tilePos[0]][(int)tilePos[1]];
+}
+
+Chunk* Chunk::getChunk(vec2& tilePos, vec2 direction) {
+	vec2 newPos = tilePos + direction;
+	if (newPos[0] >= CHUNK_SIZE) {
+		if (getEast() != nullptr) {
+			newPos -= CHUNK_SIZE * vec2::E;
+			tilePos = newPos;
+			return getEast();
+		}
+		else {
+			return this;
+		}
 	}
-	//TODO continue these checks
-	if (pos[0] > 15)
-		return getEast()->getTile(pos - (16 * vec2::E));
-	if (pos[0] < 0)
-		return getWest()->getTile(pos - (16 * vec2::W));
-	if (pos[1] > 15)
-		return getSouth()->getTile(pos - (16 * vec2::S));
-	if (pos[1] < 0)
-		return getNorth()->getTile(pos - (16 * vec2::N));
+	if (newPos[0] < 0) {
+		if (getWest() != nullptr) {
+			newPos -= CHUNK_SIZE * vec2::W;
+			tilePos = newPos;
+			return getWest();
+		}
+		else {
+			return this;
+		}
+	}
+	if (newPos[1] >= CHUNK_SIZE) {
+		if (getSouth() != nullptr) {
+			newPos -= CHUNK_SIZE * vec2::S;
+			tilePos = newPos;
+			return getSouth();
+		}
+		else {
+			return this;
+		}
+	}
+	if (newPos[1] < 0) {
+		if (getNorth() != nullptr) {
+			newPos -= CHUNK_SIZE * vec2::N;
+			tilePos = newPos;
+			return getNorth();
+		}
+		else {
+			return this;
+		}
+	}
 
-	return grid[pos[1]][pos[0]];	// these are flipped along x and y because grid is 
-									// row-major which needs to be inverted so that x, y makes sense
+	tilePos = newPos;
+	return this;
 }
 
-Tile* Chunk::getNorth(Tile* t) 
-{
-	return getTile(t->pos + vec2::N);
-}
-Tile* Chunk::getEast(Tile* t)
-{
-	return getTile(t->pos + vec2::E);
-}
-Tile* Chunk::getSouth(Tile* t)
-{
-	return getTile(t->pos + vec2::S);
-}
-Tile* Chunk::getWest(Tile* t)
-{
-	return getTile(t->pos + vec2::W);
-}
-
-std::vector<Tile*>& Chunk::operator [] (int x) 
-{
-	//TODO check for out of bounds
-	return grid[x];
+void Chunk::Render(Game* game, float interpolation) {
+	for (int x = 0; x < CHUNK_SIZE; ++x) {
+		for (int y = 0; y < CHUNK_SIZE; ++y) {
+			tileGrid[x][y]->Render(game, interpolation);
+		}
+	}
 }

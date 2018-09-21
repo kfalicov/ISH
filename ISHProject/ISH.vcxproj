@@ -23,6 +23,7 @@
     <ClCompile Include="src\Console.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Chunk.cpp" />
+    <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\Tile.cpp" />
     <ClCompile Include="src\Overworld.cpp" />
     <ClCompile Include="src\Util.cpp" />
@@ -43,6 +44,7 @@
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\GameState.h" />
     <ClInclude Include="include\Entity.h" />
+    <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\Tile.h" />
     <ClInclude Include="include\Console.h" />
     <ClInclude Include="include\Overworld.h" />

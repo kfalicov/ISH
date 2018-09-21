@@ -10,7 +10,7 @@
 
 // CONSTRUCTORS
 
-vec2::vec2() {}
+vec2::vec2() { n[VX] = 0; n[VY] = 0; }
 vec2::vec2(const double x, const double y)	{	n[VX] = x; n[VY] = y;}
 vec2::vec2(const double d)	{	n[VX] = n[VY] = d;}
 vec2::vec2(const vec2& v)	{	n[VX] = v.n[VX]; n[VY] = v.n[VY];}

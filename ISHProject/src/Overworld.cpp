@@ -25,6 +25,10 @@ Overworld* Overworld::Instance() {
 
 void Overworld::Init() {
 	actionManager = ActionManager::Instance();
+
+	// TODO same with the world (this would likely just be a seed number, and maybe some other info)
+	int seed = rand();
+	world = new World(seed);
 }
 
 void Overworld::Clean()
@@ -38,12 +42,12 @@ void Overworld::HandleEvents(Game * game, SDL_Event event)
 
 void Overworld::Update(Game *game)
 {
+	world->Update(game);
 	actionManager->Update(game);
 }
 
 void Overworld::Render(Game *game, float interpolation)
 {
-	Sprite* spr = game->assetHandler->GetSprite("Assets/AnimTest.png", AssetHandler::Tiles::GRASS);
-	vec2 pos = vec2(0, 0);
-	game->mainCamera->RenderSprite((*spr), pos);
+	world->Render(game, interpolation);
+	actionManager->Render(game, interpolation);
 }
