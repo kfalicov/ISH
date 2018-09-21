@@ -38,24 +38,35 @@ void ActionManager::HandleEvents(Game* game, SDL_Event event)
 {
 	// TODO player movements and ActionManager::HandleEvents neater
 	// Player should only be able to move if they are not currently moving
-	if (event.type == SDL_KEYDOWN) {
-		if (event.key.keysym.sym == SDLK_w) {
+	//SDL_PumpEvents();
+	if (player->canMove) {
+		if (keystates[SDL_SCANCODE_W]) {
 			//Move Player up
 			player->Move(vec2::N);
-			playerMoved = true;
+			player->canMove = false;
+			player->moveTicks = 0;
 		}
-		else if (event.key.keysym.sym == SDLK_s) {
+		else if (keystates[SDL_SCANCODE_S]) {
 			player->Move(vec2::S);
-			playerMoved = true;
-		}		
-		else if (event.key.keysym.sym == SDLK_a) {
-			player->Move(vec2::W);
-			playerMoved = true;
-		}		
-		else if (event.key.keysym.sym == SDLK_d) {
-			player->Move(vec2::E);
-			playerMoved = true;
+			player->canMove = false;
+			player->moveTicks = 0;
 		}
+		else if (keystates[SDL_SCANCODE_A]) {
+			player->Move(vec2::W);
+			player->canMove = false;
+			player->moveTicks = 0;
+		}
+		else if (keystates[SDL_SCANCODE_D]) {
+			player->Move(vec2::E);
+			player->canMove = false;
+			player->moveTicks = 0;
+		}
+	}
+	else if(player->moveTicks <= player->moveFreq) {
+		player->moveTicks++;
+	}
+	else {
+		player->canMove = true;
 	}
 }
 
@@ -64,14 +75,18 @@ void ActionManager::Update(Game* game)
 	tickCounter++;
 	for (std::vector<Entity*>::iterator it = actors.begin(); it != actors.end(); ++it) {
 		Entity e = *(*it);
-		e.moveTicks++;
-		if ((turnBased && playerMoved) ||
-			(!turnBased && tickCounter % e.moveFreq == 0)) {
+		if (e.canMove) {
+			e.canMove = false;
 			e.moveTicks = 0;
-			e.Move();
-			playerMoved = false;
+			//e.Move();
+		}else if (e.moveTicks <= e.moveFreq) {
+			e.moveTicks++;
+		}
+		else {
+			e.canMove = true;
 		}
 	}
+	
 }
 
 void ActionManager::Render(Game* game, float interpolation){

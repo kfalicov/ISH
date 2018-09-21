@@ -30,5 +30,7 @@ private:
 	static ActionManager* instance;
 	int tickCounter = 0;
 
+	const Uint8* keystates = SDL_GetKeyboardState(NULL);
+
 	std::vector<Entity*> actors;
 };
