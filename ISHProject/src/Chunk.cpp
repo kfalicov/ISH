@@ -75,7 +75,6 @@ void Chunk::setWest(Chunk* W) {
 */
 Tile* Chunk::getTile(vec2 tilePos) 
 {
-	//shouldnt need the ifs anymore
 
 	//if (tilePos[0] >= CHUNK_SIZE)
 	//	return getEast()->getTile(tilePos - (CHUNK_SIZE * vec2::E));

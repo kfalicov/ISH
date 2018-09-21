@@ -23,7 +23,6 @@ public:
 
 	int seed;
 	unordered_map<vec2*, Chunk*> loadedChunks;
-
 private:
 	int chunkSquareRadius = 1;
 	//Chunk* currentChunk;

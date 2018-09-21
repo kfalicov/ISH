@@ -24,7 +24,6 @@ World::~World()
 {
 
 }
-
 void World::loadChunks(vec2 center) {
 	int minX = center[0] - chunkSquareRadius;
 	int maxX = center[0] + chunkSquareRadius;
@@ -66,7 +65,7 @@ void World::loadChunks(vec2 center) {
 			it->second->setSouth(getLoadedChunk(p + vec2::S));
 		}
 		if (it->second->getWest() == nullptr) {
-			it->second->setWest(getLoadedChunk(p + vec2::W));
+			it->second->setWest(getLoadedChunk(p + vec2::W))
 		}
 
 		it++;
@@ -82,7 +81,6 @@ Chunk* World::getLoadedChunk(vec2 position) {
 	}
 	return nullptr;
 }
-
 void World::Update(Game* game) {
 	game->mainCamera->TrackTo(player->renderPos*PIXELS_PER_TILE + PIXELS_PER_TILE/2);
 
