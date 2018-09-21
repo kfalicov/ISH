@@ -32,6 +32,6 @@ void Player::Move(vec2 dir) {
 		chunkPos = currentChunk->chunkPos;
 		currentPos = currentTile->tilePos;
 
-		std::cout << "Player moving to chunk: " << chunkPos << ", tile: " << tilePos << std::endl;
+		//std::cout << "Player moving to chunk: " << chunkPos << ", tile: " << tilePos << std::endl;
 	}
 }

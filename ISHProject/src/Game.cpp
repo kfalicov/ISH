@@ -123,18 +123,18 @@ void Game::Render(float interpolation) {
 	//Bottom
 	SDL_RenderDrawLine(renderer, camDestRect.x, camDestRect.y + camDestRect.h - 1,
 									camDestRect.x + camDestRect.w, camDestRect.y + camDestRect.h - 1);
-	SDL_SetRenderDrawColor(renderer, 255, 105, 180, 255);
-	//Vertical Mid
-	SDL_RenderDrawLine(renderer, camDestRect.x + camDestRect.w / 2, camDestRect.y,
-		camDestRect.x + camDestRect.w / 2, camDestRect.y + camDestRect.h);
-	//Horizontal Mid
-	SDL_RenderDrawLine(renderer, camDestRect.x, camDestRect.y + camDestRect.h / 2,
-		camDestRect.x + camDestRect.w, camDestRect.y + camDestRect.h / 2);
+	//SDL_SetRenderDrawColor(renderer, 255, 105, 180, 255);
+	////Vertical Mid
+	//SDL_RenderDrawLine(renderer, camDestRect.x + camDestRect.w / 2, camDestRect.y,
+	//	camDestRect.x + camDestRect.w / 2, camDestRect.y + camDestRect.h);
+	////Horizontal Mid
+	//SDL_RenderDrawLine(renderer, camDestRect.x, camDestRect.y + camDestRect.h / 2,
+	//	camDestRect.x + camDestRect.w, camDestRect.y + camDestRect.h / 2);
 
 	//Window Center
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-	SDL_RenderDrawLine(renderer, 0, windowRect.h / 2, windowRect.w, windowRect.h / 2);
-	SDL_RenderDrawLine(renderer, windowRect.w / 2, 0, windowRect.w / 2, windowRect.h);
+	SDL_RenderDrawLine(renderer, windowRect.w / 2 - 10, windowRect.h / 2, windowRect.w / 2 + 10, windowRect.h / 2);
+	SDL_RenderDrawLine(renderer, windowRect.w / 2, windowRect.h / 2 - 10, windowRect.w / 2, windowRect.h / 2 + 10);
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
 	SDL_RenderPresent(renderer);
