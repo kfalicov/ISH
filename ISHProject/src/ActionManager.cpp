@@ -61,6 +61,9 @@ void ActionManager::HandleEvents(Game* game, SDL_Event event)
 			player->canMove = false;
 			player->moveTicks = 0;
 		}
+		else {
+			player->Move(vec2(0, 0));
+		}
 	}
 	else if(player->moveTicks <= player->moveFreq) {
 		player->moveTicks++;
