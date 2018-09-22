@@ -24,7 +24,7 @@ void Player::Move(vec2 dir) {
 		//getChunk will change tilePos to the new position if there is a space available
 		currentChunk = currentChunk->getChunk(tilePos, dir);
 
-		currentTile->opaque = NULL;
+		currentTile->opaque = nullptr;
 		currentTile = currentChunk->getTile(tilePos);
 		currentTile->opaque = this;
 

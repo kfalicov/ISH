@@ -84,7 +84,7 @@ Chunk* World::getLoadedChunk(vec2 position) {
 void World::Update(Game* game) {
 	vec2 lead = player->facing*PIXELS_PER_TILE;
 	lead *= 6; //number of tiles for camera to lead player (to show terrain in front)
-	game->mainCamera->TrackTo((player->currentPos*PIXELS_PER_TILE + PIXELS_PER_TILE/2)+lead);
+	game->mainCamera->TrackTo((player->currentPos*PIXELS_PER_TILE + PIXELS_PER_TILE/2)); //+lead
 
 	if (centerChunkPos != player->currentChunk->chunkPos) {
 		centerChunkPos = player->currentChunk->chunkPos;

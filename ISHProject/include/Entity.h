@@ -26,7 +26,7 @@ public:
 	bool canMove;
 
 	void updateRenderPosition(float interpolation);
-	void Move();
+	virtual void Move();
 private:
 
 };
