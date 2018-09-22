@@ -16,11 +16,11 @@ public:
 
 	void HandleEvents(Game* game, SDL_Event event);
 	void Update(Game* game);
+	void Render(Game* game, float interpolation);
 	void Clean();
 
-	bool turnBased;
-	bool playerMoved;
-	const float TICKS_PER_MOVE = 15;
+	bool turnBased = false;;
+	bool playerMoved = false;
 
 	Player* player;
 
@@ -28,7 +28,9 @@ public:
 private:
 	ActionManager();
 	static ActionManager* instance;
-	int tickCounter;
+	int tickCounter = 0;
+
+	const Uint8* keystates = SDL_GetKeyboardState(NULL);
 
 	std::vector<Entity*> actors;
 };

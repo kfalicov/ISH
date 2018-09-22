@@ -15,10 +15,23 @@ Player::~Player() {
 
 }
 
+// entities move as soon as this is called. It is up to the caller to provide intervals
+// to the movement, using the moveTicks and the moveFreq
 void Player::Move(vec2 dir) {
+	facing = dir;
+	if (currentPos + dir == currentPos) return;
+	oldPos = currentPos;
+
+	//getChunk will change tilePos to the new position if there is a space available
+	currentChunk = currentChunk->getChunk(tilePos, dir);
+
 	currentTile->opaque = NULL;
-	currentTile = currentChunk->getTile(tilePos + dir);//move up
+	currentTile = currentChunk->getTile(tilePos);
 	currentTile->opaque = this;
-	tilePos = currentTile->tilePos;
+
+	//tilePos = currentTile->tilePos;
 	chunkPos = currentChunk->chunkPos;
+	currentPos = currentTile->tilePos;
+
+	std::cout << "Player moving to chunk: " << chunkPos << ", tile: " << tilePos << std::endl;
 }
