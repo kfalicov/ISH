@@ -19,7 +19,7 @@ public:
 	void Render(Game* game, float interpolation);
 	void Clean();
 
-	bool turnBased = false;;
+	bool turnBased = false;
 	bool playerMoved = false;
 
 	Player* player;

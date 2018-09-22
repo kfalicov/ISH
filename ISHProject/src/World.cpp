@@ -1,6 +1,7 @@
 #include "World.h"
 #include "Util.h"
 #include "Player.h"
+#include "Enemy.h"
 #include "Camera.h"
 
 World::World()
@@ -18,6 +19,11 @@ World::World(int seed) {
 	player->currentTile->opaque = player;
 
 	centerChunkPos = player->currentChunk->chunkPos;
+
+	Enemy* enemy = new Enemy();
+	enemy->currentChunk = getLoadedChunk(player->chunkPos);
+	enemy->currentTile = enemy->currentChunk->getTile(enemy->tilePos);
+	enemy->currentTile->opaque = enemy;
 }
 
 World::~World()

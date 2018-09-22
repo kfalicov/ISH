@@ -24,7 +24,7 @@ public:
 	int seed;
 	unordered_map<vec2*, Chunk*> loadedChunks;
 private:
-	int chunkSquareRadius = 1;
+	int chunkSquareRadius = 2;
 	//Chunk* currentChunk;
 	//Chunk* spawn; //the 0,0 coordinate
 };
