@@ -65,7 +65,7 @@ void World::loadChunks(vec2 center) {
 			it->second->setSouth(getLoadedChunk(p + vec2::S));
 		}
 		if (it->second->getWest() == nullptr) {
-			it->second->setWest(getLoadedChunk(p + vec2::W))
+			it->second->setWest(getLoadedChunk(p + vec2::W));
 		}
 
 		it++;
