@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Camera.h"
+#include "ActionManager.h"
 
 World::World()
 {
@@ -13,7 +14,8 @@ World::World(int seed) {
 	this->seed = seed;
 	// TODO init player from save file if applicable
 	player = new Player();
-	loadChunks(player->chunkPos);
+	centerChunkPos = player->chunkPos;
+	loadChunks();
 	player->currentChunk = getLoadedChunk(player->chunkPos);
 	player->currentTile = player->currentChunk->getTile(player->tilePos);
 	player->currentTile->opaque = player;
@@ -30,11 +32,11 @@ World::~World()
 {
 
 }
-void World::loadChunks(vec2 center) {
-	int minX = center[0] - chunkSquareRadius;
-	int maxX = center[0] + chunkSquareRadius;
-	int minY = center[1] - chunkSquareRadius;
-	int maxY = center[1] + chunkSquareRadius;
+void World::loadChunks() {
+	int minX = centerChunkPos[0] - chunkSquareRadius;
+	int maxX = centerChunkPos[0] + chunkSquareRadius;
+	int minY = centerChunkPos[1] - chunkSquareRadius;
+	int maxY = centerChunkPos[1] + chunkSquareRadius;
 
 	//For all chunks that SHOULD BE loaded...
 	for (int chunkX = minX; chunkX <= maxX; chunkX++) {
@@ -94,12 +96,31 @@ void World::Update(Game* game) {
 
 	if (centerChunkPos != player->currentChunk->chunkPos) {
 		centerChunkPos = player->currentChunk->chunkPos;
-		loadChunks(centerChunkPos);
+		loadChunks();
+		for (std::vector<Entity*>::iterator it = ActionManager::Instance()->actors.begin(); it != ActionManager::Instance()->actors.end(); ++it) {
+			Chunk* entityChunk = getLoadedChunk((*it)->chunkPos);
+			if (entityChunk != nullptr) {
+				(*it)->currentChunk = entityChunk;
+				(*it)->currentTile = (*it)->currentChunk->getTile((*it)->tilePos);
+			}
+			else {
+				(*it)->currentChunk = nullptr;
+				(*it)->currentTile = nullptr;
+			}
+		}
 	}
 }
 
 void World::Render(Game* game, float interpolation) {
+	int minX = centerChunkPos[0] - renderChunkSquareRadius;
+	int maxX = centerChunkPos[0] + renderChunkSquareRadius;
+	int minY = centerChunkPos[1] - renderChunkSquareRadius;
+	int maxY = centerChunkPos[1] + renderChunkSquareRadius;
+
 	for (unordered_map<vec2*, Chunk*>::iterator it = loadedChunks.begin(); it != loadedChunks.end(); ++it) {
-		it->second->Render(game, interpolation);
+		Chunk c = (*it->second);
+		if (c.chunkPos[0] >= minX && c.chunkPos[0] <= maxX && c.chunkPos[1] >= minY && c.chunkPos[1] <= maxY) {
+			it->second->Render(game, interpolation);
+		}
 	}
 }

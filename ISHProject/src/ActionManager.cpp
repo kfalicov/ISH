@@ -84,7 +84,7 @@ void ActionManager::Update(Game* game)
 	for (std::vector<Entity*>::iterator it = actors.begin(); it != actors.end(); ++it) {
 		Entity* e = (*it);
 		if ((turnBased && playerMoved) || !turnBased) {
-			if (e->canMove) {
+			if (e->currentChunk != nullptr && e->canMove) {
 				e->canMove = false;
 				e->moveTicks = 0;
 				e->Move();

@@ -23,6 +23,7 @@ public:
 	bool playerMoved = false;
 
 	Player* player;
+	std::vector<Entity*> actors;
 
 	~ActionManager();
 private:
@@ -31,6 +32,4 @@ private:
 	int tickCounter = 0;
 
 	const Uint8* keystates = SDL_GetKeyboardState(NULL);
-
-	std::vector<Entity*> actors;
 };

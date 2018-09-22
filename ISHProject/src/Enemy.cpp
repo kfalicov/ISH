@@ -5,6 +5,7 @@
 Enemy::Enemy() {
 	sprite = AssetHandler::Instance()->GetSprite("Assets/DarkLemon.png", 0);
 	tilePos = currentPos = oldPos = renderPos = vec2(3,3);
+	moveFreq = 15;
 	ActionManager::Instance()->Subscribe(this);
 }
 
@@ -32,7 +33,6 @@ void Enemy::Move(){
 	vec2 oldTilePos = tilePos;
 	Chunk* newChunk = currentChunk->getChunk(tilePos, dir);
 	if (newChunk->getTile(tilePos)->opaque == nullptr) {
-		oldPos = currentPos;
 		moveTicks = 0;
 
 		//getChunk will change tilePos to the new position if there is a space available
@@ -47,5 +47,8 @@ void Enemy::Move(){
 		currentPos = currentTile->tilePos;
 
 		//std::cout << "Enemy moving to chunk: " << chunkPos << ", tile: " << tilePos << std::endl;
+	}
+	else {
+		tilePos = oldTilePos;
 	}
 }

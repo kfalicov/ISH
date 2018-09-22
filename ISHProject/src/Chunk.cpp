@@ -47,6 +47,12 @@ void Chunk::Unload() {
 	}
 
 	// TODO unload all tiles in the chunk
+	//for (int x = 0; x < CHUNK_SIZE; x++) {
+	//	for (int y = 0; y < CHUNK_SIZE; y++) {
+	//		delete tileGrid[x][y];
+	//		//std::cout << tileGrid[x][y]->tilePos << std::endl;
+	//	}
+	//}
 }
 
 Chunk* Chunk::getNorth() {	return neighbors[dir::NORTH];}
