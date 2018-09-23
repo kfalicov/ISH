@@ -2,6 +2,7 @@
 #include <vector>
 #include "Tile.h"
 #include "Util.h"
+#include "Game.h"
 
 using namespace std;
 class Tile;

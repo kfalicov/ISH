@@ -23,6 +23,7 @@ vec2& vec2::operator += (const vec2& v)	{	n[VX] += v.n[VX]; n[VY] += v.n[VY]; re
 vec2& vec2::operator -= (const vec2& v)	{	n[VX] -= v.n[VX]; n[VY] -= v.n[VY]; return *this;}
 vec2& vec2::operator *= (const double d)	{	n[VX] *= d; n[VY] *= d; return *this;}
 vec2& vec2::operator /= (const double d)	{	double d_inv = 1. / d; n[VX] *= d_inv; n[VY] *= d_inv; return *this;}
+
 double vec2::operator [] (int i) const {
 	if (i < VX || i > VY)
 		V_ERROR("vec2 [] operator: illegal access; index = " << i << '\n')
