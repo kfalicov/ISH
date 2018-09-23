@@ -58,6 +58,7 @@ public:
 	static vec2 E;
 	static vec2 S;
 	static vec2 W;
+	static vec2 randV();	//creates a unit vector with a random rotation.
 };
 
 class noise

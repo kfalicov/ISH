@@ -42,6 +42,20 @@ double vec2::length2()	{	return n[VX] * n[VX] + n[VY] * n[VY];}
 // it is up to caller to avoid divide-by-zero
 vec2& vec2::normalize()	{	*this /= length(); return *this;}
 
+vec2 vec2::randV()
+{
+	double x, y, theta, pi;
+	pi = 4.0*atan(1.0); //TODO this could probably be faster
+						//by defining a PI constant to the desired precision
+	
+	theta = 2.0*pi;
+	theta *= (rand() / double(RAND_MAX));
+
+	x = sin(theta);
+	y = cos(theta);
+	return vec2(x, y);
+}
+
 
 // FRIENDS
 
