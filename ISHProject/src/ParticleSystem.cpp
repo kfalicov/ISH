@@ -1,7 +1,11 @@
 #include "ParticleSystem.h"
 
-Emitter::Emitter() 
+Emitter::Emitter(vec2 pos = vec2(0,0)) //optional: specify the point particles are centered on
 {
+	//TODO specify surface size
+	surface->w = 10;
+	surface->h = 10;
+	this->pos = pos-vec2(surface->w/2, surface->h/2);
 	particles = vector<Particle>();
 	Start();
 }
@@ -31,19 +35,15 @@ void Emitter::Update()
 	}
 }
 
-void Emitter::Render()
+void Emitter::Render() //renders particles to the emitter's surface
 {
 	for(Particle p: particles)
 	{
 		SDL_Rect offset;
-		offset.x = p.pos[0];
-		offset.y = p.pos[1];
-		SDL_Surface* type;// = SpriteSheet[p.type];
-		//TODO store a single spritesheet in Emitter, and 
-		//access which Surface based on the particle's stored type.
-		//This avoids storing a Surface for every particle.
-
-		SDL_BlitSurface(type, NULL, surface, &offset);
+		offset.x = p.pos[0] + surface->w / 2;
+		offset.y = p.pos[1] + surface->h / 2;
+		Sprite* spr = AssetHandler::Instance()->GetSprite("Assets/AnimTest.png", p.id);
+		SDL_BlitSurface(spr->spriteSheet, &(spr->srcRect), surface, &offset);
 	}
 	
 }
@@ -71,6 +71,7 @@ void Emitter::Pause()
 Particle::Particle(int id = 0, int lifespan = 50)
 {
 	vel = 5;
+	pos = vec2(0, 0);
 	dir = vec2::randV();
 	this->lifespan = lifespan;
 	this->id = id;

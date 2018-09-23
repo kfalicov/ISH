@@ -2,6 +2,7 @@
 #include "Util.h"
 #include "SDL.h"
 #include <vector>
+#include "AssetHandler.h"
 
 using std::vector;
 
@@ -20,7 +21,7 @@ public:
 
 class Emitter {
 public:
-	Emitter(); //creates and starts the particle emitter
+	Emitter(vec2 pos); //creates and starts the particle emitter
 	~Emitter();
 
 	void Update();
@@ -34,6 +35,7 @@ public:
 private:
 	bool running;
 	bool spawning;
+	vec2 pos; //the position of the Emitter in the world
 	vector<Particle> particles;
 	SDL_Surface* surface;
 
