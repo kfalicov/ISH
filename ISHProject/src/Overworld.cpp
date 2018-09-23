@@ -28,7 +28,8 @@ void Overworld::Init() {
 	actionManager = ActionManager::Instance();
 
 	// TODO same with the world (this would likely just be a seed number, and maybe some other info)
-	int seed = rand();
+	//int seed = rand();
+	int seed = 1337;
 	world = new World(seed);
 }
 

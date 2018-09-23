@@ -1,11 +1,12 @@
 #include "Chunk.h"
 #include "AssetHandler.h"
+#include "WorldGenerator.h"
 
 Chunk::Chunk() {
 
 }
 
-Chunk::Chunk(int x, int y)
+Chunk::Chunk(WorldGenerator worldGen, int x, int y)
 {
 	chunkPos = vec2(x, y);
 	neighbors = vector<Chunk*>(4);
@@ -21,7 +22,10 @@ Chunk::Chunk(int x, int y)
 	for (int x = 0; x < CHUNK_SIZE; x++) {
 		for (int y = 0; y < CHUNK_SIZE; y++) {
 			tileGrid[x][y] = new Tile((chunkPos[0]*(CHUNK_SIZE+TILE_SPACING)) + x, (chunkPos[1]*(CHUNK_SIZE+TILE_SPACING)) + y);
-			tileGrid[x][y]->s = AssetHandler::Instance()->GetSprite("Assets/AnimTest.png", 0);
+			//tileGrid[x][y]->s = AssetHandler::Instance()->GetSprite("Assets/AnimTest.png", 0);
+			tileGrid[x][y]->s = worldGen.getBackgroundSprite(
+				tileGrid[x][y]->tilePos[0],
+				tileGrid[x][y]->tilePos[1]);
 			//std::cout << tileGrid[x][y]->tilePos << std::endl;
 		}
 	}

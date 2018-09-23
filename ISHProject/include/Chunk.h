@@ -2,6 +2,7 @@
 #include <vector>
 #include "Tile.h"
 #include "Util.h"
+#include "WorldGenerator.h"
 
 using namespace std;
 class Tile;
@@ -12,7 +13,7 @@ class Chunk {
 public:
 	static enum dir { NORTH, EAST, SOUTH, WEST };
 	Chunk();
-	Chunk(int x, int y);
+	Chunk(WorldGenerator worldGen, int x, int y);
 	~Chunk();	//saves data and removes chunk from memory
 
 	void Render(Game* game, float interpolation);
