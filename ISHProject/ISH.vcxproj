@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="src\ActionManager.cpp" />
     <ClCompile Include="src\Console.cpp" />
+    <ClCompile Include="src\Enemy.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Chunk.cpp" />
     <ClCompile Include="src\Player.cpp" />
@@ -41,6 +42,7 @@
     <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\AssetHandler.h" />
     <ClInclude Include="include\Chunk.h" />
+    <ClInclude Include="include\Enemy.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\GameState.h" />
     <ClInclude Include="include\Entity.h" />

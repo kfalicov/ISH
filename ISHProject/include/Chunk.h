@@ -4,8 +4,9 @@
 #include "Util.h"
 
 using namespace std;
+class Tile;
 #define CHUNK_SIZE 8
-#define TILE_SPACING 1
+#define TILE_SPACING 0
 
 class Chunk {
 public:

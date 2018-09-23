@@ -45,24 +45,29 @@ void ActionManager::HandleEvents(Game* game, SDL_Event event)
 			player->Move(vec2::N);
 			player->canMove = false;
 			player->moveTicks = 0;
+			playerMoved = true;
 		}
 		else if (keystates[SDL_SCANCODE_S]) {
 			player->Move(vec2::S);
 			player->canMove = false;
 			player->moveTicks = 0;
+			playerMoved = true;
 		}
 		else if (keystates[SDL_SCANCODE_A]) {
 			player->Move(vec2::W);
 			player->canMove = false;
 			player->moveTicks = 0;
+			playerMoved = true;
 		}
 		else if (keystates[SDL_SCANCODE_D]) {
 			player->Move(vec2::E);
 			player->canMove = false;
 			player->moveTicks = 0;
+			playerMoved = true;
 		}
 		else {
 			player->Move(vec2(0, 0));
+			playerMoved = false;
 		}
 	}
 	else if(player->moveTicks <= player->moveFreq) {
@@ -77,19 +82,21 @@ void ActionManager::Update(Game* game)
 {
 	tickCounter++;
 	for (std::vector<Entity*>::iterator it = actors.begin(); it != actors.end(); ++it) {
-		Entity e = *(*it);
-		if (e.canMove) {
-			e.canMove = false;
-			e.moveTicks = 0;
-			//e.Move();
-		}else if (e.moveTicks <= e.moveFreq) {
-			e.moveTicks++;
-		}
-		else {
-			e.canMove = true;
+		Entity* e = (*it);
+		if ((turnBased && playerMoved) || !turnBased) {
+			if (e->currentChunk != nullptr && e->canMove) {
+				e->canMove = false;
+				e->moveTicks = 0;
+				e->Move();
+			}
+			else if (e->moveTicks <= e->moveFreq) {
+				e->moveTicks++;
+			}
+			else {
+				e->canMove = true;
+			}
 		}
 	}
-	
 }
 
 void ActionManager::Render(Game* game, float interpolation){

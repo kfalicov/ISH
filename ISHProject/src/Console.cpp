@@ -91,7 +91,7 @@ void Console::Update(Game *game)
 
 void Console::Render(Game *game, float interpolation)
 {
-	oldState->Render(game, interpolation);
+	oldState->Render(game, 0);
 
 	int INC = 25;
 	int renderY = game->UISurface->clip_rect.h - (INC*2);

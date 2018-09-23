@@ -1,6 +1,11 @@
 #pragma once
 #include "Util.h"
 #include "Sprite.h"
+#include "Tile.h"
+#include "Chunk.h"
+
+class Tile;
+class Chunk;
 
 class Entity {
 public:
@@ -8,7 +13,8 @@ public:
 	~Entity();
 
 	Sprite* sprite;
-	//TODO Tile* tilePos;	// This is effectively the entity's position
+	Chunk* currentChunk;
+	Tile* currentTile;
 	bool opaque;	// Does the entity take up physical space?
 	vec2 tilePos;
 	vec2 chunkPos;
@@ -26,7 +32,7 @@ public:
 	bool canMove;
 
 	void updateRenderPosition(float interpolation);
-	void Move();
+	virtual void Move();
 private:
 
 };
