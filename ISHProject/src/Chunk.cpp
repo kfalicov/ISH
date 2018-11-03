@@ -1,7 +1,7 @@
 #include "Chunk.h"
 #include "AssetHandler.h"
 
-#define HEURISTIC manhattan
+#define HEURISTIC psquared
 
 Chunk::Chunk() {
 
@@ -181,7 +181,7 @@ std::deque<vec2> Chunk::AStarPath(vec2 & a, vec2 & b)
 	open.push_back(start); //starts with one visible tile, the origin tile
 	bool foundPath = false;
 
-	Node* current;
+	Node* current = start;
 	while (!open.empty()) {
 		current = open.front();
 		open.pop_front();
@@ -196,15 +196,15 @@ std::deque<vec2> Chunk::AStarPath(vec2 & a, vec2 & b)
 			Node* temp = new Node(v);
 
 			//check if temp is a valid tile to traverse, and if it hasn't been visited already
-			if (find(closed.begin(), closed.end(), temp) == closed.end()) {
-				temp->acost = current->acost + 10;	//TODO the cost doesn't have to be 10, instead it can be dependent on tile terrain
+			if (std::find_if(closed.begin(), closed.end(), IsNode(temp->data)) == closed.end()) {
+				temp->acost = current->acost + 1;	//TODO the cost doesn't have to be 1, instead it can be dependent on tile terrain
 				temp->bcost = HEURISTIC(v, b);
 
 				temp->parent = current;
-				deque<Node*>::iterator it = find(open.begin(), open.end(), temp);
+				deque<Node*>::iterator it = find_if(open.begin(), open.end(), IsNode(temp->data));
 				if (it == open.end()) { //if the node is not found in the currently visible nodes list the iterator will have reached the end
 					open.push_back(temp);
-					sort(open.begin(), open.end());
+					sort(open.begin(), open.end(), PointerCompare());
 				}
 				//this might only be useful if negative cost paths are possible (please don't)
 				//else if (temp->acost < (*it)->acost) { //the node is in the visible list but you've found a better way to access it
@@ -217,6 +217,7 @@ std::deque<vec2> Chunk::AStarPath(vec2 & a, vec2 & b)
 	if (!foundPath) {
 		//TODO behavior when no path is found
 		//at the moment, nothing
+		//path.push_front(a);
 	}
 	Node* traversal = current;
 	while (!(traversal == start) && traversal->parent != nullptr) {

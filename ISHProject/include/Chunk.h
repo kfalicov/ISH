@@ -41,7 +41,7 @@ public:
 	double manhattan(vec2 a, vec2 b);	//gets distance along "blocks"
 	double psquared(vec2 a, vec2 b);	//gets direct distance squared using pythagorean theorem
 
-	// gets a list representation of the best path between position a and position b
+	// gets a queue representation of the best path between position a and position b
 	std::deque<vec2> AStarPath(vec2& a, vec2& b);
 
 	
@@ -60,6 +60,24 @@ public:
 	double bcost;	//distance to point b
 
 	Node(vec2 place) { data = place; }
-	bool operator < (const Node& other) { return acost + bcost < other.acost + other.bcost; }
+	bool operator < (const Node& other) { return acost + bcost > other.acost + other.bcost; }
 	bool operator == (const Node& other) { return data == other.data; }
+};
+
+struct PointerCompare {
+	bool operator()(const Node* l, const Node* r) {
+		return  l->acost + l->bcost < r->acost + r->bcost;
+	}
+};
+
+struct IsNode
+{
+	vec2 m_value;
+
+	IsNode(vec2 value) : m_value(value) {}
+
+	bool operator()(const Node *cls) const
+	{
+		return (cls->data == m_value);
+	}
 };

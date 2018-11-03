@@ -1,6 +1,7 @@
 #include "Enemy.h"
 #include "ActionManager.h"
 #include "AssetHandler.h"
+#include "Overworld.h"
 
 Enemy::Enemy() {
 	sprite = AssetHandler::Instance()->GetSprite("Assets/DarkLemon.png", 0);
@@ -28,6 +29,16 @@ void Enemy::Move(){
 	else if (r == 3) {
 		dir = vec2::W;
 	}
+
+	vec2 dest = Overworld::Instance()->world->player->currentPos; //a quick and ugly way to get the player's position by using the overworld instance
+	deque<vec2> path = currentChunk->AStarPath(currentPos, dest);
+	if (!path.empty()) {
+		dir = path.front() - currentPos;
+	}
+	else {
+		dir = vec2(0, 0);
+	}
+	
 
 	oldPos = currentPos;
 	vec2 oldTilePos = tilePos;
