@@ -40,6 +40,7 @@ public:
 	//various heuristics for distance of pathfinding
 	double manhattan(vec2 a, vec2 b);	//gets distance along "blocks"
 	double psquared(vec2 a, vec2 b);	//gets direct distance squared using pythagorean theorem
+	double diagonal(vec2 a, vec2 b);	//moves along whichever axis is the largest
 
 	// gets a queue representation of the best path between position a and position b
 	std::deque<vec2> AStarPath(vec2& a, vec2& b);

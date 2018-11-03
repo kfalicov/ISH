@@ -1,7 +1,7 @@
 #include "Chunk.h"
 #include "AssetHandler.h"
 
-#define HEURISTIC psquared
+#define HEURISTIC diagonal
 
 Chunk::Chunk() {
 
@@ -163,6 +163,11 @@ double Chunk::manhattan(vec2 a, vec2 b)
 double Chunk::psquared(vec2 a, vec2 b)
 {
 	return ((a[0] - b[0])*(a[0] - b[0])) + ((a[1] - b[1])*(a[1] - b[1]));
+}
+
+double Chunk::diagonal(vec2 a, vec2 b)
+{
+	return max(abs(a[0] - b[0]), abs(a[1] - b[1]));
 }
 
 /*
