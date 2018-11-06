@@ -1,4 +1,8 @@
 #include "Console.h"
+#include "MainMenu.h"
+#include "Overworld.h"
+#include <sstream>
+#include <iostream>
 
 Console* Console::instance;
 
@@ -43,7 +47,7 @@ void Console::HandleEvents(Game* game, SDL_Event event)
 		case SDLK_RETURN:
 			commands.push_back(currentCommand);
 			consoleOutput.push_back(currentCommand);
-			ParseCommand(currentCommand);
+			ParseCommand(game, currentCommand);
 			commandIndex = 0;
 			currentCommand = "";
 			break;
@@ -94,7 +98,7 @@ void Console::Render(Game *game, float interpolation)
 	oldState->Render(game, 0);
 
 	int INC = 25;
-	int renderY = game->UISurface->clip_rect.h - (INC*2);
+	int renderY = game->UISurface->clip_rect.h - (INC * 2);
 
 	int printCount = 0;
 	for (std::vector<string>::reverse_iterator it = consoleOutput.rbegin(); it != consoleOutput.rend(); ++it) {
@@ -125,6 +129,38 @@ void Console::Render(Game *game, float interpolation)
 	SDL_FreeSurface(cS);
 }
 
-void Console::ParseCommand(string command) {
+void Console::ParseCommand(Game* game, string c) {
 
+	std::cout << c << std::endl;
+	std::vector<string> args = split(currentCommand, ' ');
+	std::cout << args.size() << std::endl;
+	if (args.size() >= 2) {
+		if (args[0] == "state"){
+			if (args[1] == "mainmenu") {
+				oldState->ChangeState(game, MainMenu::Instance());
+			}else if (args[1] == "overworld") {
+				if (args.size() > 2) {
+					oldState->ChangeState(game, Overworld::Instance(std::stoi(args[2])));
+				}
+				else {
+					oldState->ChangeState(game, Overworld::Instance());
+				}
+			}
+		}
+	}
+	else {
+		consoleOutput.push_back("Invalid command.");
+	}
+}
+
+std::vector<std::string> Console::split(const std::string& s, char delimiter)
+{
+	std::vector<std::string> tokens;
+	std::string token;
+	std::istringstream tokenStream(s);
+	while (std::getline(tokenStream, token, delimiter))
+	{
+		tokens.push_back(token);
+	}
+	return tokens;
 }

@@ -17,6 +17,7 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 	int fullscreenFlag = 0;
 	if (fullscreen) { fullscreenFlag = SDL_WINDOW_FULLSCREEN; }
 
+	//Initialize SDL2, SDL Image, and SDL ttf
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0 && IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG && TTF_Init() != -1) {
 		std::cout << "Subsystems initialized..." << std::endl;
 		window = SDL_CreateWindow(title, xpos, ypos, width, height, fullscreenFlag);
@@ -29,6 +30,7 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 			std::cout << "Renderer created..." << std::endl;
 		}
 
+		//Create the Asset Handler, Camera, and UI Surface
 		assetHandler = AssetHandler::Instance();
 		assetHandler->Init(this);
 		mainCamera = new Camera(this, vec2(0,0), 1024, 1024);

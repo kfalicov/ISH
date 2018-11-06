@@ -17,9 +17,10 @@ Overworld::~Overworld()
 	delete instance;
 }
 
-Overworld* Overworld::Instance() {
+Overworld* Overworld::Instance(int seed) {
 	if (instance == 0) {
 		instance = new Overworld();
+		instance->world = new World(seed);
 	}
 	return instance;
 }
@@ -29,8 +30,6 @@ void Overworld::Init() {
 
 	// TODO same with the world (this would likely just be a seed number, and maybe some other info)
 	//int seed = rand();
-	int seed = 1337;
-	world = new World(seed);
 }
 
 void Overworld::Clean()

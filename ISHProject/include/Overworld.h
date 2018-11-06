@@ -8,7 +8,7 @@
 class Overworld : public GameState
 {
 public:
-	static Overworld* Instance();
+	static Overworld* Instance(int seed = 1337);
 	void Init() override;
 	void Clean() override;
 

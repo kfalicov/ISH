@@ -12,7 +12,7 @@ WorldGenerator::WorldGenerator(int seed) {
 	tempMap = FastNoise();
 	tempMap.SetNoiseType(FastNoise::SimplexFractal);
 	tempMap.SetFrequency(0.02);
-	//tempMap.SetSeed(seed);
+	tempMap.SetSeed(seed);
 }
 
 WorldGenerator::~WorldGenerator() {
@@ -44,6 +44,6 @@ Sprite* WorldGenerator::getBackgroundSprite(int x, int y) {
 }
 
 void WorldGenerator::setSeed(int s) {
-	tempMap = FastNoise();
+	//tempMap = FastNoise();
 	tempMap.SetSeed(s);
 }
