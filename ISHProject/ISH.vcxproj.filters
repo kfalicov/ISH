@@ -52,6 +52,9 @@
     <ClCompile Include="src\Enemy.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AssetHandler.h">
@@ -100,6 +103,9 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\Enemy.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
