@@ -2,6 +2,8 @@
 #include "AssetHandler.h"
 #include "WorldGenerator.h"
 
+#define HEURISTIC diagonal
+
 Chunk::Chunk() {
 
 }
@@ -98,6 +100,18 @@ Tile* Chunk::getTile(vec2 tilePos)
 	return tileGrid[(int)tilePos[0]][(int)tilePos[1]];
 }
 
+//A helper function that gets the neighbors of the input coordinates
+std::vector<vec2> Chunk::neighborsOf(vec2 tilePos)
+{
+	std::vector<vec2> tneighbors;
+	tneighbors.push_back(	tilePos + vec2(-1, 0)	);
+	tneighbors.push_back(	tilePos + vec2(1, 0)	);
+	tneighbors.push_back(	tilePos + vec2(0, -1)	);
+	tneighbors.push_back(	tilePos + vec2(0, 1)	);
+	return tneighbors;
+}
+
+//Gets the chunk to load based on a world position. Updates the tilepos to be relative to that chunk's internal coordinate system.
 Chunk* Chunk::getChunk(vec2& tilePos, vec2 direction) {
 	vec2 newPos = tilePos + direction;
 	if (newPos[0] >= CHUNK_SIZE) {
@@ -143,6 +157,83 @@ Chunk* Chunk::getChunk(vec2& tilePos, vec2 direction) {
 
 	tilePos = newPos;
 	return this;
+}
+
+double Chunk::manhattan(vec2 a, vec2 b)
+{
+	return abs(a[0] - b[0]) + abs(a[1] - b[1]);
+}
+
+double Chunk::psquared(vec2 a, vec2 b)
+{
+	return ((a[0] - b[0])*(a[0] - b[0])) + ((a[1] - b[1])*(a[1] - b[1]));
+}
+
+double Chunk::diagonal(vec2 a, vec2 b)
+{
+	return max(abs(a[0] - b[0]), abs(a[1] - b[1]));
+}
+
+/*
+	Gets the best path between (a, b]
+*/
+std::deque<vec2> Chunk::AStarPath(vec2 & a, vec2 & b)
+{
+	std::deque<Node*> open;
+	std::deque<Node*> closed;
+	Node* start = new Node(a);
+	start->acost = 0;
+	start->bcost = HEURISTIC(a, b);
+
+	deque<vec2> path;
+
+	open.push_back(start); //starts with one visible tile, the origin tile
+	bool foundPath = false;
+
+	Node* current = start;
+	while (!open.empty()) {
+		current = open.front();
+		open.pop_front();
+		if (current->data == b) {
+			foundPath = true;
+			break;
+		}
+		closed.push_back(current);
+		std::vector<vec2> surroundings = neighborsOf(current->data);
+		for (vec2 v : surroundings) {
+			
+			Node* temp = new Node(v);
+
+			//check if temp is a valid tile to traverse, and if it hasn't been visited already
+			if (std::find_if(closed.begin(), closed.end(), IsNode(temp->data)) == closed.end()) {
+				temp->acost = current->acost + 1;	//TODO the cost doesn't have to be 1, instead it can be dependent on tile terrain
+				temp->bcost = HEURISTIC(v, b);
+
+				temp->parent = current;
+				deque<Node*>::iterator it = find_if(open.begin(), open.end(), IsNode(temp->data));
+				if (it == open.end()) { //if the node is not found in the currently visible nodes list the iterator will have reached the end
+					open.push_back(temp);
+					sort(open.begin(), open.end(), PointerCompare());
+				}
+				//this might only be useful if negative cost paths are possible (please don't)
+				//else if (temp->acost < (*it)->acost) { //the node is in the visible list but you've found a better way to access it
+				//	(*it)->acost = temp->acost;
+				//}
+			}
+		}
+
+	}
+	if (!foundPath) {
+		//TODO behavior when no path is found
+		//at the moment, nothing
+		//path.push_front(a);
+	}
+	Node* traversal = current;
+	while (!(traversal == start) && traversal->parent != nullptr) {
+		path.push_front(traversal->data);
+		traversal = traversal->parent;
+	}
+	return path;
 }
 
 void Chunk::Render(Game* game, float interpolation) {
