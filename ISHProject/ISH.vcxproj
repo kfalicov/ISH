@@ -24,6 +24,7 @@
     <ClCompile Include="src\Enemy.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Chunk.cpp" />
+    <ClCompile Include="src\FastNoise.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\Tile.cpp" />
     <ClCompile Include="src\Overworld.cpp" />
@@ -36,6 +37,7 @@
     <ClCompile Include="src\MainMenu.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\World.cpp" />
+    <ClCompile Include="src\WorldGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\ActionManager.h" />
@@ -43,6 +45,7 @@
     <ClInclude Include="include\AssetHandler.h" />
     <ClInclude Include="include\Chunk.h" />
     <ClInclude Include="include\Enemy.h" />
+    <ClInclude Include="include\FastNoise.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\GameState.h" />
     <ClInclude Include="include\Entity.h" />
@@ -54,6 +57,7 @@
     <ClInclude Include="include\MainMenu.h" />
     <ClInclude Include="include\Sprite.h" />
     <ClInclude Include="include\World.h" />
+    <ClInclude Include="include\WorldGenerator.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

@@ -19,8 +19,9 @@ int main(int argc, char *argv[]) {
 
 	game = new Game();
 	game->Init("ISH", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, false);
-	game->ChangeState(Overworld::Instance());
+	game->ChangeState(MainMenu::Instance());
 
+	//Main game loop
 	while (game->Running()) {
 		loops = 0;
 		while (SDL_GetTicks() > next_game_tick && loops < MAX_FRAMESKIP) {

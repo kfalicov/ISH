@@ -12,10 +12,8 @@ ActionManager* ActionManager::Instance()
 {
 	if (instance == 0) {
 		instance = new ActionManager();
+		instance->turnBased = true;
 	}
-
-	instance->turnBased = false;
-
 	return instance;
 }
 

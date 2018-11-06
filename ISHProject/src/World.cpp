@@ -4,6 +4,7 @@
 #include "Enemy.h"
 #include "Camera.h"
 #include "ActionManager.h"
+#include "WorldGenerator.h"
 
 World::World()
 {
@@ -11,7 +12,7 @@ World::World()
 }
 
 World::World(int seed) {
-	this->seed = seed;
+	worldGen = WorldGenerator(seed);
 	// TODO init player from save file if applicable
 	player = new Player();
 	centerChunkPos = player->chunkPos;
@@ -45,7 +46,7 @@ void World::loadChunks() {
 
 			// TODO properly load/generate chunk
 			if (getLoadedChunk(vec2(chunkX, chunkY)) == nullptr) { //If they are not already loaded, load them
-				Chunk* newChunk = new Chunk(chunkX, chunkY);
+				Chunk* newChunk = new Chunk(worldGen, chunkX, chunkY);
 				loadedChunks.insert(pair<vec2*, Chunk*>(pos, newChunk));
 			}
 			//std::cout << chunkX << ", " << chunkY << std::endl;
