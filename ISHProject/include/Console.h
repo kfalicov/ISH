@@ -2,9 +2,12 @@
 #include "GameState.h"
 #include "Game.h"
 #include <string>
+#include <unordered_map>
 #include <SDL_ttf.h>
 
 using std::string;
+
+typedef int(*ConsoleCallbackFunction)(std::vector<string>, std::string&);
 
 class Console : public GameState
 {
@@ -19,6 +22,8 @@ public:
 	void Render(Game *game, float interpolation) override;
 
 	void ParseCommand(string command);
+
+	std::vector<std::string> split(const std::string & s, char delimiter);
 
 	const char* getName() override { return "Console"; }
 
@@ -35,6 +40,8 @@ protected:
 	int commandIndex = 0;
 	vector<string> consoleOutput;
 	vector<string> commands;
+
+	std::unordered_map<std::string, ConsoleCallbackFunction> functions;
 
 	Console();
 };

@@ -1,4 +1,7 @@
 #include "Console.h"
+#include <sstream>
+#include "MainMenu.h"
+#include "Overworld.h"
 
 Console* Console::instance;
 
@@ -26,6 +29,45 @@ Console* Console::Instance(GameState* state) {
 
 void Console::Init() {
 	consoleFont = TTF_OpenFont("Assets/opensans.ttf", 20);
+
+	/*
+	This section is the addition of all of the functions that the console
+	can recognize. The string that the function will use is the 'key' in
+	the map. The function itself can be the name of an existing function
+	so long as the return type is int and the argument is std::vector<string>
+	or the function can be a lambda as seen below. Make sure to check for
+	vector index OOB on the arguments list (or, we could add the appropriate
+	catch statement in ParseCommand()).
+	*/
+
+	functions["hello"] = [](std::vector<string>, std::string &msg){
+		msg = "hello there";
+		return 0; //completed successfully
+	};
+	//changes state
+	functions["state"] = [](std::vector<string> args, std::string &msg) {
+		if (args.size() >= 1) { //only needs the first argument
+			if (args[0] == "menu") {
+				Game::ChangeState(MainMenu::Instance());
+				Game::ChangeState(Console::Instance(MainMenu::Instance()));
+				msg = "switched to menu";
+				return 0;//completed successfully
+			}
+			else if (args[0] == "overworld") {
+				Game::ChangeState(Overworld::Instance());
+				Game::ChangeState(Console::Instance(Overworld::Instance()));
+				msg = "switched to overworld";
+				return 0;//completed successfully
+			}
+		}
+		msg = "usage: state [menu|overworld]";
+		return 1;
+	};
+	functions["help"] = [](std::vector<string>, std::string &msg) {
+		msg = "commands: [hello|state]";
+		return 0; //completed successfully
+	};
+	//TODO more functions
 }
 
 void Console::Clean()
@@ -42,7 +84,7 @@ void Console::HandleEvents(Game* game, SDL_Event event)
 			return;
 		case SDLK_RETURN:
 			commands.push_back(currentCommand);
-			consoleOutput.push_back(currentCommand);
+			consoleOutput.push_back("> "+currentCommand);
 			ParseCommand(currentCommand);
 			commandIndex = 0;
 			currentCommand = "";
@@ -126,5 +168,41 @@ void Console::Render(Game *game, float interpolation)
 }
 
 void Console::ParseCommand(string command) {
+	std::vector<string> args = split(currentCommand, ' ');
+	std::string cin = args[0];
+	if (args.size() > 0) {
+		args.erase(args.begin());
+		if (functions.find(cin) == functions.end()) {
+			consoleOutput.push_back("Invalid command");
+		}
+		else {
+			try {
+				std::string msg = "";
+				int errorcode = (*functions[cin])(args, msg);
+				if (errorcode != 0) {
+					//msg = "Invalid arguments";
+					//this functionality was replaced by making the message reflect
+					//correct usage. However, the functions still return nonzero when
+					//they fail, so that can be used for something if desired.
+				}
+				consoleOutput.push_back(msg);
+			}
+			catch (const std::exception& e) {
+				std::cout << "fail: "<< std::endl;
+			}
+			//execute the function at that place in the map
+		}
+	}
+}
 
+std::vector<std::string> Console::split(const std::string& s, char delimiter)
+{
+	std::vector<std::string> tokens;
+	std::string token;
+	std::istringstream tokenStream(s);
+	while (std::getline(tokenStream, token, delimiter))
+	{
+		tokens.push_back(token);
+	}
+	return tokens;
 }

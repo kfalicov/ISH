@@ -26,7 +26,7 @@ public:
 	Button(vec2 pos, vec2 anchor, vec2 size);
 	~Button();
 	void click();
-	//Usage: pass in a function name with no (), or create a lambda of the type []() {code;}
+	//Usage: pass in a function name with no parenthesis, or create a lambda of the format "[]() {code;}"
 	void setCallback(CallbackFunction fcn);
 private:
 	void* optr;
