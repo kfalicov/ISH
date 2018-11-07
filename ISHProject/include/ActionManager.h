@@ -8,8 +8,8 @@ class ActionManager {
 public:
 	static ActionManager* Instance();
 
-	void Subscribe(Entity* e);
-	void unSubscribe(Entity* e);
+	void Subscribe(Agent* e);
+	void unSubscribe(Agent* e);
 
 	// TODO initialize player
 	//void setPlayer(Entity* p);
@@ -23,7 +23,7 @@ public:
 	bool playerMoved = false;
 
 	Player* player;
-	std::vector<Entity*> actors;
+	std::vector<Agent*> actors;
 
 	~ActionManager();
 private:

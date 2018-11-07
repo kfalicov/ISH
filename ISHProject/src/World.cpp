@@ -27,6 +27,11 @@ World::World(int seed) {
 	enemy->currentChunk = getLoadedChunk(player->chunkPos);
 	enemy->currentTile = enemy->currentChunk->getTile(enemy->tilePos);
 	enemy->currentTile->opaque = enemy;
+
+	Item* item = new Item();
+	item->currentChunk = getLoadedChunk(player->chunkPos);
+	item->currentTile = item->currentChunk->getTile(item->tilePos);
+	item->currentTile->transparent.push_back(item);
 }
 
 World::~World()
@@ -98,7 +103,7 @@ void World::Update(Game* game) {
 	if (centerChunkPos != player->currentChunk->chunkPos) {
 		centerChunkPos = player->currentChunk->chunkPos;
 		loadChunks();
-		for (std::vector<Entity*>::iterator it = ActionManager::Instance()->actors.begin(); it != ActionManager::Instance()->actors.end(); ++it) {
+		for (std::vector<Agent*>::iterator it = ActionManager::Instance()->actors.begin(); it != ActionManager::Instance()->actors.end(); ++it) {
 			Chunk* entityChunk = getLoadedChunk((*it)->chunkPos);
 			if (entityChunk != nullptr) {
 				(*it)->currentChunk = entityChunk;
