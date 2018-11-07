@@ -52,7 +52,7 @@
     <ClCompile Include="src\Enemy.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="UI.cpp">
+    <ClCompile Include="src\UI.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -105,7 +105,7 @@
     <ClInclude Include="include\Enemy.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="UI.h">
+    <ClInclude Include="include\UI.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

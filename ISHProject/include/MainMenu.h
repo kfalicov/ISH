@@ -1,6 +1,7 @@
 #pragma once
 #include "GameState.h"
 #include "Game.h"
+#include "UI.h"
 
 class MainMenu : public GameState
 {
@@ -18,6 +19,7 @@ public:
 	~MainMenu();
 
 protected:
-	static MainMenu *instance;
+	static MainMenu* instance;
 	MainMenu();
+	Button* b;
 };

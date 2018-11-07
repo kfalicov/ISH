@@ -17,9 +17,8 @@ int main(int argc, char *argv[]) {
 	int loops;
 	float interpolation;
 
-	game = new Game();
-	game->Init("ISH", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, false);
-	game->ChangeState(Overworld::Instance());
+	game = Game::Instance();
+	game->ChangeState(MainMenu::Instance()); //Start the game on the main menu gamestate
 
 	while (game->Running()) {
 		loops = 0;

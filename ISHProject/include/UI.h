@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include "Util.h"
 
+typedef void(*CallbackFunction)();
+
 
 class Element {
 public:
@@ -21,9 +23,12 @@ private:
 
 class Button : public Element {
 public:
-	Button();
+	Button(vec2 pos, vec2 anchor, vec2 size);
 	~Button();
 	void click();
+	//Usage: pass in a function name with no (), or create a lambda of the type []() {code;}
+	void setCallback(CallbackFunction fcn);
 private:
-
+	void* optr;
+	CallbackFunction fptr; //the function to call on click
 };

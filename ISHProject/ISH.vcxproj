@@ -36,7 +36,7 @@
     <ClCompile Include="src\MainMenu.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\World.cpp" />
-    <ClCompile Include="UI.cpp" />
+    <ClCompile Include="src\UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\ActionManager.h" />
@@ -55,7 +55,7 @@
     <ClInclude Include="include\MainMenu.h" />
     <ClInclude Include="include\Sprite.h" />
     <ClInclude Include="include\World.h" />
-    <ClInclude Include="UI.h" />
+    <ClInclude Include="include\UI.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

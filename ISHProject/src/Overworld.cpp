@@ -40,7 +40,7 @@ void Overworld::HandleEvents(Game * game, SDL_Event event)
 {
 	if (event.type == SDL_KEYDOWN) {
 		if (event.key.keysym.sym == SDLK_BACKQUOTE) { // Tilde/Backquote key
-			ChangeState(game, Console::Instance(this));
+			Game::ChangeState(Console::Instance(this));
 			return;
 		}
 	}

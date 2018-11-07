@@ -22,10 +22,6 @@ public:
 
 	virtual const char* getName() = 0;
 
-	void ChangeState(Game *game, GameState *state) {
-		game->ChangeState(state);
-	}
-
 	~GameState();
 
 protected:
