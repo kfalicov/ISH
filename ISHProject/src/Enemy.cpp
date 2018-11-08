@@ -8,6 +8,7 @@ Enemy::Enemy() {
 	tilePos = currentPos = oldPos = renderPos = vec2(3,3);
 	moveFreq = 15;
 	ActionManager::Instance()->Subscribe(this);
+	health = 15;
 }
 
 Enemy::~Enemy() {
@@ -57,6 +58,7 @@ void Enemy::Move(){
 		chunkPos = currentChunk->chunkPos;
 		currentPos = currentTile->tilePos;
 
+		facing = dir;
 		//std::cout << "Enemy moving to chunk: " << chunkPos << ", tile: " << tilePos << std::endl;
 	}
 	else {
