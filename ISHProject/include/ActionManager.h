@@ -16,7 +16,7 @@ public:
 
 	void HandleEvents(Game* game, SDL_Event event);
 	void Update(Game* game);
-	void Render(Game* game, float interpolation);
+	void Render(float interpolation);
 	void Clean();
 
 	bool turnBased = false;

@@ -1,6 +1,7 @@
 #pragma once
 #include "GameState.h"
 #include "Game.h"
+#include "UI.h"
 
 class MainMenu : public GameState
 {
@@ -11,13 +12,14 @@ public:
 
 	void HandleEvents(Game *game, SDL_Event event) override;
 	void Update(Game *game) override;
-	void Render(Game *game, float interpolation) override;
+	void Render(float interpolation) override;
 
 	const char* getName() override { return "MainMenu"; }
 
 	~MainMenu();
 
 protected:
-	static MainMenu *instance;
+	static MainMenu* instance;
 	MainMenu();
+	std::vector<Element*> menuitems;
 };

@@ -40,7 +40,7 @@ void Overworld::HandleEvents(Game * game, SDL_Event event)
 {
 	if (event.type == SDL_KEYDOWN) {
 		if (event.key.keysym.sym == SDLK_BACKQUOTE) { // Tilde/Backquote key
-			ChangeState(game, Console::Instance(this));
+			Game::ChangeState(Console::Instance(this));
 			return;
 		}
 	}
@@ -53,8 +53,8 @@ void Overworld::Update(Game *game)
 	actionManager->Update(game);
 }
 
-void Overworld::Render(Game *game, float interpolation)
+void Overworld::Render(float interpolation)
 {
-	world->Render(game, interpolation);
-	actionManager->Render(game, interpolation);
+	world->Render(interpolation);
+	actionManager->Render(interpolation);
 }

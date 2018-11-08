@@ -15,7 +15,7 @@ public:
 	void Init(Game* game);
 	void Clean();
 
-	Sprite* GetSprite(const char* spriteSheet, int spriteIndex);
+	static Sprite* GetSprite(const char* spriteSheet, int spriteIndex);
 
 	static const enum Temps{LOWEST, LOW, MEDIUM, HIGH};
 	static const enum Tiles{ GRASS, SAND, STONE };
@@ -28,7 +28,7 @@ private:
 
 	Game* game;
 
-	std::unordered_map<const char*, SDL_Surface*> loadedSpriteSheets;
+	static std::unordered_map<const char*, SDL_Surface*> loadedSpriteSheets;
 	
 	AssetHandler();
 

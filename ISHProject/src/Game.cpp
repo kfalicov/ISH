@@ -3,11 +3,32 @@
 #include <SDL_ttf.h>
 #include "Game.h"
 #include "GameState.h"
+#include "MainMenu.h"
 #include "Console.h"
 #include "AssetHandler.h"
 #include "Camera.h"
 
+Game* Game::instance;
+GameState* Game::activeState;
+Camera* Game::mainCamera;
+
+void Game::ChangeState(GameState * state)
+{
+	activeState = state;
+	std::cout << "Changing GameState to " << state->getName() << std::endl;
+}
+
 Game::Game() {
+	Init("ISH", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, false);
+	activeState = MainMenu::Instance();
+}
+
+Game * Game::Instance()
+{
+	if (instance == 0) {
+		instance = new Game();
+	}
+	return instance;
 }
 
 Game::~Game() {
@@ -44,11 +65,6 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 	}
 }
 
-void Game::ChangeState(GameState *state) {
-	activeState = state;
-	std::cout << "Changing GameState to " << state->getName() << std::endl;
-}
-
 void Game::HandleEvents() {
 	SDL_Event event;
 	SDL_PollEvent(&event);
@@ -79,7 +95,7 @@ void Game::Render(float interpolation) {
 	int h;
 	SDL_GetRendererOutputSize(renderer, &w, &h);
 
-	activeState->Render(this, interpolation);
+	activeState->Render(interpolation);
 
 	SDL_Texture *camTex = SDL_CreateTextureFromSurface(renderer, mainCamera->cameraSurface);
 	SDL_Rect windowRect = SDL_Rect();

@@ -117,7 +117,7 @@ void World::Update(Game* game) {
 	}
 }
 
-void World::Render(Game* game, float interpolation) {
+void World::Render(float interpolation) {
 	int minX = centerChunkPos[0] - renderChunkSquareRadius;
 	int maxX = centerChunkPos[0] + renderChunkSquareRadius;
 	int minY = centerChunkPos[1] - renderChunkSquareRadius;
@@ -126,7 +126,7 @@ void World::Render(Game* game, float interpolation) {
 	for (unordered_map<vec2*, Chunk*>::iterator it = loadedChunks.begin(); it != loadedChunks.end(); ++it) {
 		Chunk c = (*it->second);
 		if (c.chunkPos[0] >= minX && c.chunkPos[0] <= maxX && c.chunkPos[1] >= minY && c.chunkPos[1] <= maxY) {
-			it->second->Render(game, interpolation);
+			it->second->Render(interpolation);
 		}
 	}
 }

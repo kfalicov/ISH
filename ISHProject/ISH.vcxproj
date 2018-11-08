@@ -37,6 +37,7 @@
     <ClCompile Include="src\MainMenu.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\World.cpp" />
+    <ClCompile Include="src\UI.cpp" />
     <ClCompile Include="src\WorldGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -57,6 +58,7 @@
     <ClInclude Include="include\MainMenu.h" />
     <ClInclude Include="include\Sprite.h" />
     <ClInclude Include="include\World.h" />
+    <ClInclude Include="include\UI.h" />
     <ClInclude Include="include\WorldGenerator.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

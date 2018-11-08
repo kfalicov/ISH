@@ -52,6 +52,7 @@
     <ClCompile Include="src\Enemy.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\UI.cpp">
     <ClCompile Include="src\FastNoise.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -108,6 +109,7 @@
     <ClInclude Include="include\Enemy.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\UI.h">
     <ClInclude Include="include\FastNoise.h">
       <Filter>include</Filter>
     </ClInclude>

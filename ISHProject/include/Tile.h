@@ -15,7 +15,7 @@ public:
 	Tile(int x, int y); //creates a Tile with the given coordinate (bounded by 0-15) and knowing the position of its chunk
 	~Tile();
 
-	void Render(Game* game, float interpolation);
+	void Render(float interpolation);
 
 	vec2 tilePos; //the position 0-15 in the chunk
 	Sprite* s;

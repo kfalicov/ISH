@@ -10,12 +10,10 @@ class Camera;
 class Game
 {
 public:
-	Game();
+	static Game* Instance();
 	~Game();
 
 	void Init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen);
-
-	void ChangeState(GameState *state);
 
 	void HandleEvents();
 	void Update();
@@ -27,11 +25,16 @@ public:
 	SDL_Renderer *renderer;
 	SDL_Window *window;
 	AssetHandler *assetHandler;
-	Camera *mainCamera;
+	static Camera *mainCamera;
 	SDL_Surface* UISurface;
 
-	const int TILE_SIZE = 16;
+	static const int TILE_SIZE = 16;
+
+	static void ChangeState(GameState* state);
+
 private:
-	GameState *activeState;
+	static Game* instance;
+	Game();
+	static GameState* activeState;
 	bool isRunning;
 };
