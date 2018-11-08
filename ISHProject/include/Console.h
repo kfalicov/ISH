@@ -21,10 +21,8 @@ public:
 	void Update(Game *game) override;
 	void Render(float interpolation) override;
 
-	void ParseCommand(Game* game, string c);
+	void ParseCommand(string c);
 	std::vector<std::string> split(const std::string& s, char delimiter);
-
-	std::vector<std::string> split(const std::string & s, char delimiter);
 
 	const char* getName() override { return "Console"; }
 

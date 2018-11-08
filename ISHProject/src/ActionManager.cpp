@@ -126,7 +126,7 @@ void ActionManager::Update(Game* game)
 }
 
 void ActionManager::Render(float interpolation){
-	for (std::vector<Entity*>::iterator it = actors.begin(); it != actors.end(); ++it) {
+	for (std::vector<Agent*>::iterator it = actors.begin(); it != actors.end(); ++it) {
 		(*it)->updateRenderPosition(interpolation);
 		Game::Instance()->mainCamera->RenderSprite((*(*it)->sprite), (*it)->renderPos*PIXELS_PER_TILE);
 	}
