@@ -4,6 +4,7 @@
 #include "Enemy.h"
 #include "Camera.h"
 #include "ActionManager.h"
+#include "WorldGenerator.h"
 
 World::World()
 {
@@ -11,7 +12,7 @@ World::World()
 }
 
 World::World(int seed) {
-	this->seed = seed;
+	worldGen = WorldGenerator(seed);
 	// TODO init player from save file if applicable
 	player = new Player();
 	centerChunkPos = player->chunkPos;
@@ -26,6 +27,11 @@ World::World(int seed) {
 	enemy->currentChunk = getLoadedChunk(player->chunkPos);
 	enemy->currentTile = enemy->currentChunk->getTile(enemy->tilePos);
 	enemy->currentTile->opaque = enemy;
+
+	Item* item = new Item();
+	item->currentChunk = getLoadedChunk(player->chunkPos);
+	item->currentTile = item->currentChunk->getTile(item->tilePos);
+	item->currentTile->transparent.push_back(item);
 }
 
 World::~World()
@@ -45,7 +51,7 @@ void World::loadChunks() {
 
 			// TODO properly load/generate chunk
 			if (getLoadedChunk(vec2(chunkX, chunkY)) == nullptr) { //If they are not already loaded, load them
-				Chunk* newChunk = new Chunk(chunkX, chunkY);
+				Chunk* newChunk = new Chunk(worldGen, chunkX, chunkY);
 				loadedChunks.insert(pair<vec2*, Chunk*>(pos, newChunk));
 			}
 			//std::cout << chunkX << ", " << chunkY << std::endl;
@@ -97,7 +103,7 @@ void World::Update(Game* game) {
 	if (centerChunkPos != player->currentChunk->chunkPos) {
 		centerChunkPos = player->currentChunk->chunkPos;
 		loadChunks();
-		for (std::vector<Entity*>::iterator it = ActionManager::Instance()->actors.begin(); it != ActionManager::Instance()->actors.end(); ++it) {
+		for (std::vector<Agent*>::iterator it = ActionManager::Instance()->actors.begin(); it != ActionManager::Instance()->actors.end(); ++it) {
 			Chunk* entityChunk = getLoadedChunk((*it)->chunkPos);
 			if (entityChunk != nullptr) {
 				(*it)->currentChunk = entityChunk;

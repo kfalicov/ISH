@@ -17,6 +17,7 @@ public:
 
 	static Sprite* GetSprite(const char* spriteSheet, int spriteIndex);
 
+	static const enum Temps{LOWEST, LOW, MEDIUM, HIGH};
 	static const enum Tiles{ GRASS, SAND, STONE };
 	static const enum Weapons{ DAGGER, SWORD, AXE };
 	

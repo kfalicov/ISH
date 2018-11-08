@@ -5,6 +5,8 @@
 Player::Player() {
 	sprite = AssetHandler::Instance()->GetSprite("Assets/Lemon.png", 0);
 	ActionManager::Instance()->player = this;
+	health = 1000;
+	facing = vec2::W;
 }
 
 Player::~Player() {
@@ -12,6 +14,10 @@ Player::~Player() {
 }
 
 void Player::Move(vec2 dir) {
+	if (dir != vec2(0, 0)) {
+		facing = dir;
+	}
+
 	if (canMove) {
 		oldPos = currentPos;
 

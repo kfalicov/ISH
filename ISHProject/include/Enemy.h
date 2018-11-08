@@ -3,7 +3,7 @@
 #include "AssetHandler.h"
 #include "ActionManager.h"
 
-class Enemy : public Entity {
+class Enemy : public Agent {
 public:
 	Enemy();
 	~Enemy();

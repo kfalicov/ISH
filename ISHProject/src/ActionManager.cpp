@@ -12,21 +12,19 @@ ActionManager* ActionManager::Instance()
 {
 	if (instance == 0) {
 		instance = new ActionManager();
+		instance->turnBased = true;
 	}
-
-	instance->turnBased = false;
-
 	return instance;
 }
 
-void ActionManager::Subscribe(Entity* e)
+void ActionManager::Subscribe(Agent* e)
 {
 	actors.push_back(e);
 }
 
-void ActionManager::unSubscribe(Entity* e)
+void ActionManager::unSubscribe(Agent* e)
 {
-	for (std::vector<Entity*>::iterator it = actors.begin(); it != actors.end(); ++it) {
+	for (std::vector<Agent*>::iterator it = actors.begin(); it != actors.end(); ++it) {
 		if ((*it) == e) {
 			actors.erase(it);
 			return;
@@ -65,6 +63,34 @@ void ActionManager::HandleEvents(Game* game, SDL_Event event)
 			player->moveTicks = 0;
 			playerMoved = true;
 		}
+		else if (keystates[SDL_SCANCODE_R] && event.type == SDL_KEYDOWN && event.key.repeat == 0) {
+			if (player->currentTile->transparent.size() > 0) {
+				if (player->weapon) {
+					player->currentTile->transparent.insert(
+						player->currentTile->transparent.begin(), player->weapon);
+					player->weapon = nullptr;
+				}
+				player->weapon = player->currentTile->transparent.back();
+				player->currentTile->transparent.pop_back();
+				player->setAttackStrength(player->weapon->attack);
+			}
+			else {
+				if (player->weapon) {
+					player->currentTile->transparent.insert(
+						player->currentTile->transparent.begin(), player->weapon);
+					player->weapon = nullptr;
+				}
+			}
+			player->canMove = false;
+			player->moveTicks = 0;
+			playerMoved = true;
+		}
+		else if (keystates[SDL_SCANCODE_SPACE]) {
+			player->Attack();
+			player->canMove = false;
+			player->moveTicks = 0;
+			playerMoved = true;
+		}
 		else {
 			player->Move(vec2(0, 0));
 			playerMoved = false;
@@ -81,8 +107,8 @@ void ActionManager::HandleEvents(Game* game, SDL_Event event)
 void ActionManager::Update(Game* game)
 {
 	tickCounter++;
-	for (std::vector<Entity*>::iterator it = actors.begin(); it != actors.end(); ++it) {
-		Entity* e = (*it);
+	for (std::vector<Agent*>::iterator it = actors.begin(); it != actors.end(); ++it) {
+		Agent* e = (*it);
 		if ((turnBased && playerMoved) || !turnBased) {
 			if (e->currentChunk != nullptr && e->canMove) {
 				e->canMove = false;

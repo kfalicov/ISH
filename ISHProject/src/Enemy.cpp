@@ -1,12 +1,14 @@
 #include "Enemy.h"
 #include "ActionManager.h"
 #include "AssetHandler.h"
+#include "Overworld.h"
 
 Enemy::Enemy() {
 	sprite = AssetHandler::Instance()->GetSprite("Assets/DarkLemon.png", 0);
 	tilePos = currentPos = oldPos = renderPos = vec2(3,3);
 	moveFreq = 15;
 	ActionManager::Instance()->Subscribe(this);
+	health = 15;
 }
 
 Enemy::~Enemy() {
@@ -29,6 +31,16 @@ void Enemy::Move(){
 		dir = vec2::W;
 	}
 
+	vec2 dest = Overworld::Instance()->world->player->currentPos; //a quick and ugly way to get the player's position by using the overworld instance
+	deque<vec2> path = currentChunk->AStarPath(currentPos, dest);
+	if (!path.empty()) {
+		dir = path.front() - currentPos;
+	}
+	else {
+		dir = vec2(0, 0);
+	}
+	
+
 	oldPos = currentPos;
 	vec2 oldTilePos = tilePos;
 	Chunk* newChunk = currentChunk->getChunk(tilePos, dir);
@@ -46,6 +58,7 @@ void Enemy::Move(){
 		chunkPos = currentChunk->chunkPos;
 		currentPos = currentTile->tilePos;
 
+		facing = dir;
 		//std::cout << "Enemy moving to chunk: " << chunkPos << ", tile: " << tilePos << std::endl;
 	}
 	else {

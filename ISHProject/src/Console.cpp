@@ -1,7 +1,8 @@
 #include "Console.h"
-#include <sstream>
 #include "MainMenu.h"
 #include "Overworld.h"
+#include <sstream>
+#include <iostream>
 
 Console* Console::instance;
 

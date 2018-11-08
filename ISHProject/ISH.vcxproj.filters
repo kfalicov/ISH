@@ -53,6 +53,10 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\UI.cpp">
+    <ClCompile Include="src\FastNoise.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WorldGenerator.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -106,6 +110,10 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\UI.h">
+    <ClInclude Include="include\FastNoise.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\WorldGenerator.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,6 +2,7 @@
 #include <unordered_map>
 #include "Chunk.h"
 #include "Player.h"
+#include "WorldGenerator.h"
 
 using namespace std;
 
@@ -21,9 +22,9 @@ public:
 	void loadChunks();
 	Chunk* getLoadedChunk(vec2 position);
 
-	int seed;
+	WorldGenerator worldGen;
 	unordered_map<vec2*, Chunk*> loadedChunks;
 private:
-	int chunkSquareRadius = 2;
-	int renderChunkSquareRadius = 1;
+	int chunkSquareRadius = 4;
+	int renderChunkSquareRadius = 4;
 };

@@ -20,6 +20,7 @@ int main(int argc, char *argv[]) {
 	game = Game::Instance();
 	game->ChangeState(MainMenu::Instance()); //Start the game on the main menu gamestate
 
+	//Main game loop
 	while (game->Running()) {
 		loops = 0;
 		while (SDL_GetTicks() > next_game_tick && loops < MAX_FRAMESKIP) {
