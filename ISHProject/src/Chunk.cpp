@@ -141,10 +141,10 @@ Chunk* Chunk::getChunk(vec2& tilePos, vec2 direction) {
 	return this;
 }
 
-void Chunk::Render(Game* game, float interpolation) {
+void Chunk::Render(float interpolation) {
 	for (int x = 0; x < CHUNK_SIZE; ++x) {
 		for (int y = 0; y < CHUNK_SIZE; ++y) {
-			tileGrid[x][y]->Render(game, interpolation);
+			tileGrid[x][y]->Render(interpolation);
 		}
 	}
 }

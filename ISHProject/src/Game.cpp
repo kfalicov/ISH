@@ -10,6 +10,7 @@
 
 Game* Game::instance;
 GameState* Game::activeState;
+Camera* Game::mainCamera;
 
 void Game::ChangeState(GameState * state)
 {
@@ -92,7 +93,7 @@ void Game::Render(float interpolation) {
 	int h;
 	SDL_GetRendererOutputSize(renderer, &w, &h);
 
-	activeState->Render(this, interpolation);
+	activeState->Render(interpolation);
 
 	SDL_Texture *camTex = SDL_CreateTextureFromSurface(renderer, mainCamera->cameraSurface);
 	SDL_Rect windowRect = SDL_Rect();

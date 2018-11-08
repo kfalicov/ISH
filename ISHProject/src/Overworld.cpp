@@ -53,8 +53,8 @@ void Overworld::Update(Game *game)
 	actionManager->Update(game);
 }
 
-void Overworld::Render(Game *game, float interpolation)
+void Overworld::Render(float interpolation)
 {
-	world->Render(game, interpolation);
-	actionManager->Render(game, interpolation);
+	world->Render(interpolation);
+	actionManager->Render(interpolation);
 }

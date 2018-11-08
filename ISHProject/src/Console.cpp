@@ -131,12 +131,12 @@ void Console::Update(Game *game)
 {
 }
 
-void Console::Render(Game *game, float interpolation)
+void Console::Render(float interpolation)
 {
-	oldState->Render(game, 0);
+	oldState->Render(0);
 
 	int INC = 25;
-	int renderY = game->UISurface->clip_rect.h - (INC*2);
+	int renderY = Game::Instance()->UISurface->clip_rect.h - (INC*2);
 
 	int printCount = 0;
 	for (std::vector<string>::reverse_iterator it = consoleOutput.rbegin(); it != consoleOutput.rend(); ++it) {
@@ -153,17 +153,17 @@ void Console::Render(Game *game, float interpolation)
 
 		renderY -= INC;
 
-		SDL_BlitSurface(commandSurface, &commandSurface->clip_rect, game->UISurface, &r);
+		SDL_BlitSurface(commandSurface, &commandSurface->clip_rect, Game::Instance()->UISurface, &r);
 		SDL_FreeSurface(commandSurface);
 	}
 
 	SDL_Surface* cS = TTF_RenderText_Solid(consoleFont, ("> " + currentCommand).c_str(), fontColor);
 	SDL_Rect r = SDL_Rect();
 	r.x = 10;
-	r.y = game->UISurface->clip_rect.h - INC;
+	r.y = Game::Instance()->UISurface->clip_rect.h - INC;
 	r.w = 100;
 	r.h = INC;
-	SDL_BlitSurface(cS, &cS->clip_rect, game->UISurface, &r);
+	SDL_BlitSurface(cS, &cS->clip_rect, Game::Instance()->UISurface, &r);
 	SDL_FreeSurface(cS);
 }
 

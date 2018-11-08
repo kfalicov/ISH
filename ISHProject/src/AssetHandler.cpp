@@ -4,6 +4,7 @@
 #include "SDL_image.h"
 
 AssetHandler* AssetHandler::instance;
+std::unordered_map<const char*, SDL_Surface*> AssetHandler::loadedSpriteSheets;
 
 AssetHandler::AssetHandler(){}
 
@@ -47,12 +48,15 @@ Sprite* AssetHandler::GetSprite(const char* spriteSheet, int spriteIndex)
 	h = surface->clip_rect.h;
 	SDL_Rect srcRect = SDL_Rect();
 	
-	w /= game->TILE_SIZE;
-	h /= game->TILE_SIZE;
+	//using Game::instance here will break the game's startup with an infinite loop because AssetHandler is created
+	//before Game is fully initialized, so it will try and re-instance the Game which will then create AssetHandler again
+	//and you get the idea.
+	w /= Game::TILE_SIZE;
+	h /= Game::TILE_SIZE;
 
-	srcRect.x = (spriteIndex % w) * game->TILE_SIZE;
-	srcRect.y = (spriteIndex / w) * game->TILE_SIZE;
-	srcRect.w = srcRect.h = game->TILE_SIZE;
+	srcRect.x = (spriteIndex % w) * Game::TILE_SIZE;
+	srcRect.y = (spriteIndex / w) * Game::TILE_SIZE;
+	srcRect.w = srcRect.h = Game::TILE_SIZE;
 
 	return new Sprite(surface, srcRect);
 }

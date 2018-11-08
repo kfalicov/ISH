@@ -15,7 +15,7 @@ public:
 	Chunk(int x, int y);
 	~Chunk();	//saves data and removes chunk from memory
 
-	void Render(Game* game, float interpolation);
+	void Render(float interpolation);
 	void Unload();
 
 	vec2 chunkPos; // the chunk coordinate
