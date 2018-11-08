@@ -17,6 +17,7 @@ public:
 	~Element();
 	vec2 renderpos();
 	virtual std::string type() { return "element"; };
+	virtual void click() = 0;
 
 	vec2 anchor; //the point which ui elements are transformed about, measured from 0-1 and 0-1 (% of element size)
 	vec2 pos;	//the position that the anchor is located in
@@ -32,7 +33,7 @@ class Button : public Element {
 public:
 	Button(vec2 pos, vec2 size, vec2 anchor = vec2(0,0));
 	~Button();
-	void click();
+	void click() override;
 	//Usage: pass in a function name with no parenthesis, or create a lambda of the format "[]() {code;}"
 	void setCallback(CallbackFunction fcn);
 	std::string type() override { return "button"; };

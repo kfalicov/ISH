@@ -46,7 +46,7 @@ void Console::Init() {
 	};
 	//changes state
 	functions["state"] = [](std::vector<string> args, std::string &msg) {
-		if (args.size() >= 1) { //only needs the first argument
+		if (args.size() == 1) { //only needs the first argument
 			if (args[0] == "menu") {
 				Game::ChangeState(MainMenu::Instance());
 				Game::ChangeState(Console::Instance(MainMenu::Instance()));
@@ -63,6 +63,7 @@ void Console::Init() {
 		msg = "usage: state [menu|overworld]";
 		return 1;
 	};
+
 	functions["help"] = [](std::vector<string>, std::string &msg) {
 		msg = "commands: [hello|state]";
 		return 0; //completed successfully
@@ -83,11 +84,13 @@ void Console::HandleEvents(Game* game, SDL_Event event)
 			game->ChangeState(oldState);
 			return;
 		case SDLK_RETURN:
-			commands.push_back(currentCommand);
-			consoleOutput.push_back("> "+currentCommand);
-			ParseCommand(currentCommand);
-			commandIndex = 0;
-			currentCommand = "";
+			if (currentCommand.length() > 0) {
+				commands.push_back(currentCommand);
+				consoleOutput.push_back("> " + currentCommand);
+				ParseCommand(currentCommand);
+				commandIndex = 0;
+				currentCommand = "";
+			}
 			break;
 		case SDLK_BACKSPACE:
 			if (currentCommand.length() > 0) {
@@ -169,15 +172,15 @@ void Console::Render(float interpolation)
 
 void Console::ParseCommand(string command) {
 	std::vector<string> args = split(currentCommand, ' ');
-	std::string cin = args[0];
 	if (args.size() > 0) {
+		std::string cin = args[0];
 		args.erase(args.begin());
 		if (functions.find(cin) == functions.end()) {
 			consoleOutput.push_back("Invalid command");
 		}
 		else {
 			try {
-				std::string msg = "";
+				std::string msg = "Command Failure";
 				int errorcode = (*functions[cin])(args, msg);
 				if (errorcode != 0) {
 					//msg = "Invalid arguments";

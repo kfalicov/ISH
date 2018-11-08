@@ -26,7 +26,7 @@ MainMenu* MainMenu::Instance() {
 }
 
 void MainMenu::Init() {
-	Button* b = new Button(vec2(20,50), vec2(50,50), vec2(0,0));
+	Button* b = new Button(vec2(0,0), vec2(500,500));
 	b->setCallback(
 		[]() {Game::ChangeState(Overworld::Instance()); } //bro this lambda is elegant af
 		// ^ the [] represents the void function with () as empty params.
@@ -54,10 +54,8 @@ void MainMenu::HandleEvents(Game * game, SDL_Event event)
 			for (auto e : menuitems) {
 				if (mpos[0]> e->pos[0] && mpos[0] < (e->pos[0]+e->size[0]) &&
 					mpos[1]> e->pos[1] && mpos[1] < (e->pos[1] + e->size[1])) {
-					Button* item = dynamic_cast<Button*>(e);
-					if (item != 0) {
-						//item->click();
-					}
+					//Button* item = dynamic_cast<Button*>(e);
+					e->click();
 				}
 			}
 		}
