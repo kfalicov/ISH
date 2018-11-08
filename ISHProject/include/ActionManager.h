@@ -19,8 +19,8 @@ public:
 	void Render(float interpolation);
 	void Clean();
 
-	bool turnBased = false;
-	bool playerMoved = false;
+	static bool turnBased;
+	bool playerMoved;
 
 	Player* player;
 	std::vector<Agent*> actors;

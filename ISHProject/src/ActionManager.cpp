@@ -3,6 +3,7 @@
 #include "Camera.h"
 
 ActionManager* ActionManager::instance;
+bool ActionManager::turnBased;
 
 ActionManager::ActionManager() {}
 
@@ -13,6 +14,7 @@ ActionManager* ActionManager::Instance()
 	if (instance == 0) {
 		instance = new ActionManager();
 		instance->turnBased = true;
+		instance->playerMoved = false;
 	}
 	return instance;
 }

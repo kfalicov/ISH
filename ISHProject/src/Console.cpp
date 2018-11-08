@@ -65,6 +65,23 @@ void Console::Init() {
 		return 1;
 	};
 
+	functions["turnbased"] = [](std::vector<string> args, std::string &msg) {
+		if (args.size() == 1) {
+			if (args[0] == "true") {
+				ActionManager::turnBased = true;
+				msg = "turnbased = true";
+				return 0;
+			}
+			else if (args[0] == "false") {
+				ActionManager::turnBased = false;
+				msg = "turnbased = false";
+				return 0;
+			}
+		}
+		msg = "usage: turnbased [bool]";
+		return 1;
+	};
+
 	functions["help"] = [](std::vector<string>, std::string &msg) {
 		msg = "commands: [hello|state]";
 		return 0; //completed successfully
