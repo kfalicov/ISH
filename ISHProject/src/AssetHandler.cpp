@@ -18,9 +18,8 @@ AssetHandler* AssetHandler::Instance()
 	return instance;
 }
 
-void AssetHandler::Init(Game* game)
+void AssetHandler::Init()
 {
-	this->game = game;
 }
 
 void AssetHandler::Clean()

@@ -3,6 +3,10 @@
 #include "ActionManager.h"
 
 Player::Player() {
+	tilePos = chunkPos = currentPos = oldPos = renderPos = facing = vec2();
+	canMove = true;
+	moveTicks = 0;
+
 	sprite = AssetHandler::Instance()->GetSprite("Assets/Lemon.png", 0);
 	ActionManager::Instance()->player = this;
 	health = 1000;
@@ -11,6 +15,10 @@ Player::Player() {
 
 Player::~Player() {
 
+}
+
+void Player::updateRenderPosition(float interpolation) {
+	renderPos = lerp(oldPos, currentPos, (moveTicks + interpolation) / animPeriod);
 }
 
 void Player::Move(vec2 dir) {
@@ -41,6 +49,45 @@ void Player::Move(vec2 dir) {
 		}
 		else {
 			tilePos = oldTilePos;
+		}
+	}
+}
+
+void Player::Attack() {
+	//std::cout << "Attacker's pos: " << currentPos << std::endl;
+	//std::cout << "Under attack: " << facing << std::endl;
+	vec2 tileToAttack = tilePos;
+	Chunk c = (*currentChunk->getChunk(tileToAttack, facing));
+	Tile t = (*c.getTile(tileToAttack));
+	if (t.opaque) {
+		t.opaque->TakeDamage(attackStrength);
+	}
+}
+
+void Player::setAttackStrength(int attack) {
+	attackStrength = attack;
+}
+
+void Player::TakeDamage(int damage) {
+	std::cout << "Agent has taken " << damage << " damage!" << std::endl;
+	health -= damage;
+	std::cout << "Agent health now " << health << "." << std::endl;
+}
+
+void Player::Equip() {
+	if (currentTile->transparent.size() > 0) {
+		if (weapon) {
+			currentTile->transparent.insert(currentTile->transparent.begin(), weapon);
+			weapon = nullptr;
+		}
+		weapon = currentTile->transparent.back();
+		currentTile->transparent.pop_back();
+		setAttackStrength(weapon->attackStrength);
+	}
+	else {
+		if (weapon) {
+			currentTile->transparent.insert(currentTile->transparent.begin(), weapon);
+			weapon = nullptr;
 		}
 	}
 }

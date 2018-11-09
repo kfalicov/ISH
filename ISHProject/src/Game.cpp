@@ -53,8 +53,8 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 
 		//Create the Asset Handler, Camera, and UI Surface
 		assetHandler = AssetHandler::Instance();
-		assetHandler->Init(this);
-		mainCamera = new Camera(this, vec2(0,0), 1024, 1024);
+		assetHandler->Init();
+		mainCamera = new Camera(vec2(0,0), 1024, 1024);
 		UISurface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
 		//Treat solid black as transparent for the UI.
 		SDL_SetColorKey(UISurface, SDL_TRUE, SDL_MapRGBA(UISurface->format, 0, 0, 0, 0));
@@ -69,7 +69,7 @@ void Game::HandleEvents() {
 	SDL_Event event;
 	SDL_PollEvent(&event);
 
-	activeState->HandleEvents(this, event);
+	activeState->HandleEvents(event);
 
 	switch (event.type) {
 	case SDL_QUIT:
@@ -82,7 +82,7 @@ void Game::HandleEvents() {
 
 void Game::Update() {
 	mainCamera->Update();
-	activeState->Update(this);
+	activeState->Update();
 }
 
 void Game::Render(float interpolation) {

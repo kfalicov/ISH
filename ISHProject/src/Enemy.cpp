@@ -4,6 +4,10 @@
 #include "Overworld.h"
 
 Enemy::Enemy() {
+	chunkPos = facing = vec2();
+	canMove = true;
+	moveTicks = 0;
+
 	sprite = AssetHandler::Instance()->GetSprite("Assets/DarkLemon.png", 0);
 	tilePos = currentPos = oldPos = renderPos = vec2(3,3);
 	moveFreq = 15;
@@ -13,6 +17,10 @@ Enemy::Enemy() {
 
 Enemy::~Enemy() {
 
+}
+
+void Enemy::updateRenderPosition(float interpolation) {
+	renderPos = lerp(oldPos, currentPos, (moveTicks + interpolation) / animPeriod);
 }
 
 void Enemy::Move(){
@@ -64,4 +72,22 @@ void Enemy::Move(){
 	else {
 		tilePos = oldTilePos;
 	}
+}
+
+void Enemy::Attack() {
+	//std::cout << "Attacker's pos: " << currentPos << std::endl;
+	//std::cout << "Under attack: " << facing << std::endl;
+	vec2 tileToAttack = tilePos;
+	Chunk c = (*currentChunk->getChunk(tileToAttack, facing));
+	Tile t = (*c.getTile(tileToAttack));
+	if (t.opaque) {
+		t.opaque->TakeDamage(attackStrength);
+	}
+}
+
+
+void Enemy::TakeDamage(int damage) {
+	std::cout << "Agent has taken " << damage << " damage!" << std::endl;
+	health -= damage;
+	std::cout << "Agent health now " << health << "." << std::endl;
 }

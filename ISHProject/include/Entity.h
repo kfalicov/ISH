@@ -9,8 +9,7 @@ class Chunk;
 
 class Entity {
 public:
-	Entity();
-	virtual ~Entity();
+	~Entity() {};
 
 	Sprite* sprite;
 	Chunk* currentChunk;
@@ -18,12 +17,6 @@ public:
 	bool opaque;	// Does the entity take up physical space?
 	vec2 tilePos;
 	vec2 chunkPos;
-};
-
-class Agent : public Entity {
-public:
-	Agent();
-	~Agent();
 
 	int animPeriod = 3;	// Number of updates to visually transition from a to b
 	int moveFreq = 3; // the speed at which movement can happen. read as "once every x ticks"
@@ -36,22 +29,23 @@ public:
 	vec2 facing;
 
 	bool canMove;
-	void updateRenderPosition(float interpolation);
-	virtual void Move();
-	virtual void Attack();
+	virtual void updateRenderPosition(float interpolation) {};
+	virtual void Move() {};
+	virtual void Attack() {};
 
-	void Heal(int hp);
-	void TakeDamage(int hp);
-	void setAttackStrength(int attack);
-protected:
+	virtual void Heal(int hp) {};
+	virtual void TakeDamage(int damage) {};
+	virtual void setAttackStrength(int attack) {};
+
 	int health;
 	int attackStrength;
+
+protected:
+	Entity() {};
 };
 
 class Item : public Entity {
 public:
 	Item();
 	~Item();
-
-	int attack;
 };

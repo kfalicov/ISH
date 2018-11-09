@@ -93,13 +93,13 @@ void Console::Clean()
 {
 }
 
-void Console::HandleEvents(Game* game, SDL_Event event)
+void Console::HandleEvents(SDL_Event event)
 {
 	if (event.type == SDL_KEYDOWN && event.key.repeat == 0) {
 		switch (event.key.keysym.sym) {
 		case SDLK_BACKQUOTE:	//Change back to old state
 			SDL_StopTextInput();
-			game->ChangeState(oldState);
+			Game::Instance()->ChangeState(oldState);
 			return;
 		case SDLK_RETURN:
 			if (currentCommand.length() > 0) {
@@ -148,7 +148,7 @@ void Console::HandleEvents(Game* game, SDL_Event event)
 	}
 }
 
-void Console::Update(Game *game)
+void Console::Update()
 {
 }
 

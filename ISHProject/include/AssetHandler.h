@@ -12,7 +12,7 @@ class AssetHandler {
 public:
 	static AssetHandler* Instance();
 	
-	void Init(Game* game);
+	void Init();
 	void Clean();
 
 	static Sprite* GetSprite(const char* spriteSheet, int spriteIndex);
@@ -25,9 +25,6 @@ public:
 
 private:
 	static AssetHandler* instance;
-
-	Game* game;
-
 	static std::unordered_map<const char*, SDL_Surface*> loadedSpriteSheets;
 	
 	AssetHandler();

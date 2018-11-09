@@ -9,7 +9,7 @@ class Camera
 {
 public:
 	Camera();
-	Camera(Game* game, vec2 center, int w, int h);
+	Camera(vec2 center, int w, int h);
 	~Camera();
 
 	void Update();
@@ -21,7 +21,6 @@ public:
 	vec2 getSize();
 	void setCenter(vec2 dest);
 
-	Game* game;
 	SDL_Surface* cameraSurface;
 
 private:

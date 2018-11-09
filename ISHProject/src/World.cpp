@@ -95,15 +95,15 @@ Chunk* World::getLoadedChunk(vec2 position) {
 	}
 	return nullptr;
 }
-void World::Update(Game* game) {
+void World::Update() {
 	vec2 lead = player->facing*PIXELS_PER_TILE;
 	lead *= 6; //number of tiles for camera to lead player (to show terrain in front)
-	game->mainCamera->TrackTo((player->currentPos*PIXELS_PER_TILE + PIXELS_PER_TILE/2)); //+lead
+	Game::Instance()->mainCamera->TrackTo((player->currentPos*PIXELS_PER_TILE + PIXELS_PER_TILE/2)); //+lead
 
 	if (centerChunkPos != player->currentChunk->chunkPos) {
 		centerChunkPos = player->currentChunk->chunkPos;
 		loadChunks();
-		for (std::vector<Agent*>::iterator it = ActionManager::Instance()->actors.begin(); it != ActionManager::Instance()->actors.end(); ++it) {
+		for (std::vector<Entity*>::iterator it = ActionManager::Instance()->actors.begin(); it != ActionManager::Instance()->actors.end(); ++it) {
 			Chunk* entityChunk = getLoadedChunk((*it)->chunkPos);
 			if (entityChunk != nullptr) {
 				(*it)->currentChunk = entityChunk;

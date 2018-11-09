@@ -8,14 +8,14 @@ class ActionManager {
 public:
 	static ActionManager* Instance();
 
-	void Subscribe(Agent* e);
-	void unSubscribe(Agent* e);
+	void Subscribe(Entity* e);
+	void unSubscribe(Entity* e);
 
 	// TODO initialize player
 	//void setPlayer(Entity* p);
 
-	void HandleEvents(Game* game, SDL_Event event);
-	void Update(Game* game);
+	void HandleEvents(SDL_Event event);
+	void Update();
 	void Render(float interpolation);
 	void Clean();
 
@@ -23,7 +23,7 @@ public:
 	bool playerMoved;
 
 	Player* player;
-	std::vector<Agent*> actors;
+	std::vector<Entity*> actors;
 
 	~ActionManager();
 private:

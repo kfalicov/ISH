@@ -16,7 +16,7 @@ public:
 	Player* player;
 	vec2 centerChunkPos;
 
-	void Update(Game* game);
+	void Update();
 	void Render(float interpolation);
 
 	void loadChunks();
