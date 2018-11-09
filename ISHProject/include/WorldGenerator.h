@@ -15,4 +15,9 @@ private:
 	int seed;
 	double scale = 0.01;
 	FastNoise tempMap;
+	FastNoise heightMap;
+	FastNoise wetMap;
+
+	const int tiles[3][3] = {	{}, 
+								{} };
 };
