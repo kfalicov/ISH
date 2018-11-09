@@ -17,7 +17,7 @@ public:
 	void Init() override;
 	void Clean() override;
 
-	void HandleEvents(Game *game, SDL_Event event) override;
+	void HandleEvents(SDL_Event event) override;
 	void Update(Game *game) override;
 	void Render(float interpolation) override;
 

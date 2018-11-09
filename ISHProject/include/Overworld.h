@@ -12,7 +12,7 @@ public:
 	void Init() override;
 	void Clean() override;
 
-	void HandleEvents(Game *game, SDL_Event event) override;
+	void HandleEvents(SDL_Event event) override;
 	void Update(Game *game) override;
 	void Render(float interpolation) override;
 
@@ -26,4 +26,6 @@ protected:
 	static Overworld *instance;
 	ActionManager* actionManager;
 	Overworld();
+private:
+	vec2 lastCameraPos; //used when switching to another state and back
 };

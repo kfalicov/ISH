@@ -14,7 +14,7 @@ public:
 	// TODO initialize player
 	//void setPlayer(Entity* p);
 
-	void HandleEvents(Game* game, SDL_Event event);
+	void HandleEvents(SDL_Event event);
 	void Update(Game* game);
 	void Render(float interpolation);
 	void Clean();

@@ -59,3 +59,8 @@ void Camera::setCenter(vec2 dest)
 {
 	camPosition = dest - (size / 2); //vec2 automatically does the math for us!
 }
+
+void Camera::setCorner(vec2 dest)
+{
+	camPosition = dest;
+}

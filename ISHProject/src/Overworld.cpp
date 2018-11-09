@@ -22,12 +22,14 @@ Overworld* Overworld::Instance(int seed) {
 		instance = new Overworld();
 		instance->world = new World(seed);
 	}
+	Game::mainCamera->setCorner(instance->lastCameraPos);
 	return instance;
 }
 
 void Overworld::Init() {
 	actionManager = ActionManager::Instance();
 
+	lastCameraPos = vec2(0, 0);
 	// TODO same with the world (this would likely just be a seed number, and maybe some other info)
 	//int seed = rand();
 }
@@ -36,7 +38,7 @@ void Overworld::Clean()
 {
 }
 
-void Overworld::HandleEvents(Game * game, SDL_Event event)
+void Overworld::HandleEvents(SDL_Event event)
 {
 	if (event.type == SDL_KEYDOWN) {
 		if (event.key.keysym.sym == SDLK_BACKQUOTE) { // Tilde/Backquote key
@@ -44,13 +46,15 @@ void Overworld::HandleEvents(Game * game, SDL_Event event)
 			return;
 		}
 	}
-	actionManager->HandleEvents(game, event);
+	actionManager->HandleEvents(event);
 }
 
 void Overworld::Update(Game *game)
 {
 	world->Update(game);
 	actionManager->Update(game);
+	Game::mainCamera->Update();
+	lastCameraPos = Game::mainCamera->getPos();
 }
 
 void Overworld::Render(float interpolation)

@@ -19,7 +19,12 @@ public:
 	vec2 getPos();
 	vec2 getCenter();
 	vec2 getSize();
+
+	//sets the center of the camera
 	void setCenter(vec2 dest);
+
+	//sets the top left corner
+	void setCorner(vec2 dest);
 
 	Game* game;
 	SDL_Surface* cameraSurface;

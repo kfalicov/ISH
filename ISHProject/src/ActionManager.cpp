@@ -34,7 +34,7 @@ void ActionManager::unSubscribe(Agent* e)
 	}
 }
 
-void ActionManager::HandleEvents(Game* game, SDL_Event event)
+void ActionManager::HandleEvents(SDL_Event event)
 {
 	// TODO player movements and ActionManager::HandleEvents neater
 	// Player should only be able to move if they are not currently moving
