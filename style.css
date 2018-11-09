@@ -59,6 +59,8 @@ ul{
 }
 #header div#logo h1{
     font-size: 72px;
+    
+    text-shadow: 5px 5px 2px #00000081;
 }
 #header div#logo h1 a{
     color: inherit;
@@ -77,12 +79,14 @@ ul{
 #nav{
     margin-top: 110px;
     border-radius: 1px;
-    background: #443333;
+    background: #333333;
     color: white;
     display: block;
     float: left;
     padding-top: 0;
     width: 100%;
+    border-bottom: 1px solid white;
+    box-shadow: 10px 10px 0 0 #00000081;
 }
 #nav a{
     color: inherit;
@@ -98,10 +102,11 @@ ul{
 }
 #container{
     margin-top: 12px;
-    background-color: #443333;
+    background-color: #333333;
     border-radius: 1px;
     color: white;
     padding: 12px 15px;
+    box-shadow: 10px 10px 0 0 #00000081;
 }
 #container a{
     color: inherit;
