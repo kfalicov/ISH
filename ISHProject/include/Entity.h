@@ -3,6 +3,7 @@
 #include "Sprite.h"
 #include "Tile.h"
 #include "Chunk.h"
+#include <string>
 
 class Tile;
 class Chunk;
@@ -11,6 +12,11 @@ class Entity {
 public:
 	~Entity() {};
 
+	static const enum Entity_Type {PLAYER, ENEMY, 
+		MELEE_WEAPON, RANGED_WEAPON, 
+		ARMOR_HEAD, ARMOR_TORSO, ARMOR_LEGS};
+
+	//string name;
 	Sprite* sprite;
 	Chunk* currentChunk;
 	Tile* currentTile;
@@ -35,17 +41,42 @@ public:
 
 	virtual void Heal(int hp) {};
 	virtual void TakeDamage(int damage) {};
-	virtual void setAttackStrength(int attack) {};
+
+	Entity_Type type() { return Entity_Type; };
 
 	int health;
-	int attackStrength;
+	int attack;
+	int defense;
+	int durability;
 
 protected:
+	Entity_Type Entity_Type;
 	Entity() {};
 };
 
-class Item : public Entity {
+class MeleeWeapon : public Entity {
 public:
-	Item();
-	~Item();
+	MeleeWeapon();
+	~MeleeWeapon();
+};
+class RangedWeapon : public Entity {
+public:
+	RangedWeapon();
+	~RangedWeapon();
+};
+
+class HeadArmor : public Entity {
+public:
+	HeadArmor();
+	~HeadArmor();
+};
+class TorsoArmor : public Entity {
+public:
+	TorsoArmor();
+	~TorsoArmor();
+};
+class LegsArmor : public Entity {
+public:
+	LegsArmor();
+	~LegsArmor();
 };

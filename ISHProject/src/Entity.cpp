@@ -1,13 +1,42 @@
 #include "Entity.h"
 
-Item::Item()
+MeleeWeapon::MeleeWeapon()
 {
-	sprite = AssetHandler::Instance()->GetSprite("Assets/TestItem.png", 0);
-	tilePos = vec2(5, 5);
-
-	attackStrength = 5;
+	Entity_Type = Entity_Type::MELEE_WEAPON;
+	sprite = AssetHandler::Instance()->GetSprite("Assets/Items.png", 0);
+	tilePos = currentPos = oldPos = renderPos = vec2(5, 5);
+	attack = 5;
 }
+MeleeWeapon::~MeleeWeapon() {}
 
-Item::~Item()
-{
+RangedWeapon::RangedWeapon() {
+	Entity_Type = Entity_Type::RANGED_WEAPON;
+	sprite = AssetHandler::Instance()->GetSprite("Assets/Items.png", 1);
+	tilePos = currentPos = oldPos = renderPos = vec2(5, 5);
+	attack = 4;
 }
+RangedWeapon::~RangedWeapon() {}
+
+HeadArmor::HeadArmor() {
+	Entity_Type = Entity_Type::ARMOR_HEAD;
+	sprite = AssetHandler::Instance()->GetSprite("Assets/Items.png", 2);
+	tilePos = currentPos = oldPos = renderPos = vec2(5, 5);
+	defense = 3;
+}
+HeadArmor::~HeadArmor() {}
+
+TorsoArmor::TorsoArmor() {
+	Entity_Type = Entity_Type::ARMOR_TORSO;
+	sprite = AssetHandler::Instance()->GetSprite("Assets/Items.png", 3);
+	tilePos = currentPos = oldPos = renderPos = vec2(5, 5);
+	defense = 3;
+}
+TorsoArmor::~TorsoArmor() {}
+
+LegsArmor::LegsArmor() {
+	Entity_Type = Entity_Type::ARMOR_LEGS;
+	sprite = AssetHandler::Instance()->GetSprite("Assets/Items.png", 4);
+	tilePos = currentPos = oldPos = renderPos = vec2(5, 5);
+	defense = 3;
+}
+LegsArmor::~LegsArmor() {}

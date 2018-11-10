@@ -66,10 +66,12 @@ void ActionManager::HandleEvents(SDL_Event event)
 			playerMoved = true;
 		}
 		else if (keystates[SDL_SCANCODE_R] && event.type == SDL_KEYDOWN && event.key.repeat == 0) {
+			player->Rummage();
+			player->canMove = false;
+		}
+		else if (keystates[SDL_SCANCODE_E] && event.type == SDL_KEYDOWN && event.key.repeat == 0) {
 			player->Equip();
 			player->canMove = false;
-			player->moveTicks = 0;
-			playerMoved = true;
 		}
 		else if (keystates[SDL_SCANCODE_SPACE]) {
 			player->Attack();

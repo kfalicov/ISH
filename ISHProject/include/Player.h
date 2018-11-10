@@ -9,9 +9,13 @@ public:
 	void Move(vec2 dir);
 	void updateRenderPosition(float interpolation) override;
 	void Attack() override;
-	void setAttackStrength(int attack) override;
 	void TakeDamage(int damage) override;
 	void Equip();
+	void Rummage();
 
-	Item* weapon;
+	Entity* melee_weapon;
+	Entity* ranged_weapon;
+	Entity* head_armor;
+	Entity* torso_armor;
+	Entity* legs_armor;
 };

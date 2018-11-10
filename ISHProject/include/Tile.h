@@ -6,7 +6,6 @@
 #include "Game.h"
 
 class Entity;
-class Item;
 
 class Tile
 {
@@ -19,7 +18,7 @@ public:
 
 	vec2 tilePos; //the position 0-15 in the chunk
 	Sprite* s;
-	std::vector<Item*> transparent;
+	std::vector<Entity*> transparent;
 	Entity* opaque;
 private:
 

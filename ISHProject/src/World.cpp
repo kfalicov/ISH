@@ -28,10 +28,30 @@ World::World(int seed) {
 	enemy->currentTile = enemy->currentChunk->getTile(enemy->tilePos);
 	enemy->currentTile->opaque = enemy;
 
-	Item* item = new Item();
-	item->currentChunk = getLoadedChunk(player->chunkPos);
-	item->currentTile = item->currentChunk->getTile(item->tilePos);
-	item->currentTile->transparent.push_back(item);
+	MeleeWeapon* mw = new MeleeWeapon();
+	mw->currentChunk = getLoadedChunk(player->chunkPos);
+	mw->currentTile = mw->currentChunk->getTile(mw->tilePos);
+	mw->currentTile->transparent.push_back(mw);
+
+	RangedWeapon* rw = new RangedWeapon();
+	rw->currentChunk = getLoadedChunk(player->chunkPos);
+	rw->currentTile = rw->currentChunk->getTile(rw->tilePos);
+	rw->currentTile->transparent.push_back(rw);
+
+	HeadArmor* ha = new HeadArmor();
+	ha->currentChunk = getLoadedChunk(player->chunkPos);
+	ha->currentTile = ha->currentChunk->getTile(ha->tilePos);
+	ha->currentTile->transparent.push_back(ha);
+
+	TorsoArmor* ta = new TorsoArmor();
+	ta->currentChunk = getLoadedChunk(player->chunkPos);
+	ta->currentTile = ta->currentChunk->getTile(ta->tilePos);
+	ta->currentTile->transparent.push_back(ta);
+
+	LegsArmor* la = new LegsArmor();
+	la->currentChunk = getLoadedChunk(player->chunkPos);
+	la->currentTile = la->currentChunk->getTile(la->tilePos);
+	la->currentTile->transparent.push_back(la);
 }
 
 World::~World()

@@ -4,6 +4,7 @@
 #include "Overworld.h"
 
 Enemy::Enemy() {
+	Entity_Type = Entity_Type::PLAYER;
 	chunkPos = facing = vec2();
 	canMove = true;
 	moveTicks = 0;
@@ -81,7 +82,7 @@ void Enemy::Attack() {
 	Chunk c = (*currentChunk->getChunk(tileToAttack, facing));
 	Tile t = (*c.getTile(tileToAttack));
 	if (t.opaque) {
-		t.opaque->TakeDamage(attackStrength);
+		t.opaque->TakeDamage(attack);
 	}
 }
 

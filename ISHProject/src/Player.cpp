@@ -3,6 +3,7 @@
 #include "ActionManager.h"
 
 Player::Player() {
+	Entity_Type = Entity_Type::PLAYER;
 	tilePos = chunkPos = currentPos = oldPos = renderPos = facing = vec2();
 	canMove = true;
 	moveTicks = 0;
@@ -53,6 +54,7 @@ void Player::Move(vec2 dir) {
 	}
 }
 
+//TODO split attack() call into melee_attack() or ranged_attack() depending on currently equipped weapon
 void Player::Attack() {
 	//std::cout << "Attacker's pos: " << currentPos << std::endl;
 	//std::cout << "Under attack: " << facing << std::endl;
@@ -60,12 +62,8 @@ void Player::Attack() {
 	Chunk c = (*currentChunk->getChunk(tileToAttack, facing));
 	Tile t = (*c.getTile(tileToAttack));
 	if (t.opaque) {
-		t.opaque->TakeDamage(attackStrength);
+		t.opaque->TakeDamage(attack + melee_weapon->attack);
 	}
-}
-
-void Player::setAttackStrength(int attack) {
-	attackStrength = attack;
 }
 
 void Player::TakeDamage(int damage) {
@@ -76,18 +74,50 @@ void Player::TakeDamage(int damage) {
 
 void Player::Equip() {
 	if (currentTile->transparent.size() > 0) {
-		if (weapon) {
-			currentTile->transparent.insert(currentTile->transparent.begin(), weapon);
-			weapon = nullptr;
-		}
-		weapon = currentTile->transparent.back();
+		Entity* toEquip = currentTile->transparent.back();
 		currentTile->transparent.pop_back();
-		setAttackStrength(weapon->attackStrength);
-	}
-	else {
-		if (weapon) {
-			currentTile->transparent.insert(currentTile->transparent.begin(), weapon);
-			weapon = nullptr;
+		int et = toEquip->type();
+		switch (et) {
+		case MELEE_WEAPON:
+			if (melee_weapon) {
+				currentTile->transparent.insert(currentTile->transparent.end(), melee_weapon);
+			}
+			melee_weapon = toEquip;
+			break;
+		case RANGED_WEAPON:
+			if (ranged_weapon) {
+				currentTile->transparent.insert(currentTile->transparent.end(), ranged_weapon);
+			}
+			ranged_weapon = toEquip;
+			break;
+		case ARMOR_HEAD:
+			if (head_armor) {
+				currentTile->transparent.insert(currentTile->transparent.end(), head_armor);
+			}
+			head_armor = toEquip;
+			break;
+		case ARMOR_TORSO:
+			if (torso_armor) {
+				currentTile->transparent.insert(currentTile->transparent.end(), torso_armor);
+			}
+			torso_armor = toEquip;
+			break;
+		case ARMOR_LEGS:
+			if (legs_armor) {
+				currentTile->transparent.insert(currentTile->transparent.end(), legs_armor);
+			}
+			legs_armor = toEquip;
+			break;
+		default:
+			currentTile->transparent.insert(currentTile->transparent.end(), toEquip);
 		}
+	}
+}
+
+void Player::Rummage() {
+	if (currentTile->transparent.size() > 1) {
+		Entity* temp = currentTile->transparent.back();
+		currentTile->transparent.pop_back();
+		currentTile->transparent.insert(currentTile->transparent.begin(), temp);
 	}
 }
