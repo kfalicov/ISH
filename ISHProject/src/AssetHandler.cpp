@@ -4,9 +4,10 @@
 #include "SDL_image.h"
 
 AssetHandler* AssetHandler::instance;
-std::unordered_map<const char*, SDL_Surface*> AssetHandler::loadedSpriteSheets;
 
-AssetHandler::AssetHandler(){}
+AssetHandler::AssetHandler(){
+	Init();
+}
 
 AssetHandler::~AssetHandler() {}
 
@@ -20,6 +21,7 @@ AssetHandler* AssetHandler::Instance()
 
 void AssetHandler::Init()
 {
+	animationCounter = 0;
 }
 
 void AssetHandler::Clean()
@@ -57,5 +59,27 @@ Sprite* AssetHandler::GetSprite(const char* spriteSheet, int spriteIndex)
 	srcRect.y = (spriteIndex / w) * Game::TILE_SIZE;
 	srcRect.w = srcRect.h = Game::TILE_SIZE;
 
-	return new Sprite(surface, srcRect);
+	Sprite* s = new Sprite(surface, srcRect);
+	loadedSprites.push_back(s);
+	return s;
+}
+
+void AssetHandler::UpdateSprites() {
+	animationCounter++;
+	if (animationCounter < UPDATES_PER_FRAME) return;
+	else animationCounter = 0;
+
+	std::vector<Sprite*>::iterator it = loadedSprites.begin();
+	while(it != loadedSprites.end()) {
+		if ((*it) == nullptr) {
+			it = loadedSprites.erase(it);
+		}
+		else {
+			Sprite* s = (*it);
+			if (s->frames.size() > 1) {
+				s->currentFrameIndex = (s->currentFrameIndex + 1) % (s->frames.size());
+			}
+			++it;
+		}
+	}
 }

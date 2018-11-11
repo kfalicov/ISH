@@ -24,7 +24,7 @@ void Camera::Update() {
 void Camera::RenderSprite(Sprite sprite, vec2 position)
 {
 	SDL_Rect destRect = SDL_Rect();
-	SDL_Rect srcRect = sprite.srcRect;
+	SDL_Rect srcRect = sprite.frames[sprite.currentFrameIndex];
 	destRect.w = srcRect.w;
 	destRect.h = srcRect.h;
 	destRect.x = position[0] - camPosition[0];

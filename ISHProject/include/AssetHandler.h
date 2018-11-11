@@ -8,14 +8,17 @@
 using std::vector;
 using std::unordered_map;
 
+constexpr auto UPDATES_PER_FRAME = 10;
+
 class AssetHandler {
 public:
 	static AssetHandler* Instance();
 	
 	void Init();
 	void Clean();
+	void UpdateSprites();
 
-	static Sprite* GetSprite(const char* spriteSheet, int spriteIndex);
+	Sprite* GetSprite(const char* spriteSheet, int spriteIndex);
 
 	static const enum Temps{LOWEST, LOW, MEDIUM, HIGH};
 	static const enum Tiles{ GRASS, SAND, STONE };
@@ -25,7 +28,9 @@ public:
 
 private:
 	static AssetHandler* instance;
-	static std::unordered_map<const char*, SDL_Surface*> loadedSpriteSheets;
+	std::unordered_map<const char*, SDL_Surface*> loadedSpriteSheets;
+	std::vector<Sprite*> loadedSprites;
+	int animationCounter;
 	
 	AssetHandler();
 

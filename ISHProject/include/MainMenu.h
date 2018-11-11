@@ -21,5 +21,8 @@ public:
 protected:
 	static MainMenu* instance;
 	MainMenu();
+
 	std::vector<Element*> menuitems;
+
+	Sprite* spr;
 };

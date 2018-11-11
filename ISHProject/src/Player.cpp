@@ -8,7 +8,10 @@ Player::Player() {
 	canMove = true;
 	moveTicks = 0;
 
-	sprite = AssetHandler::Instance()->GetSprite("Assets/Lemon.png", 0);
+	//sprite = AssetHandler::Instance()->GetSprite("Assets/Lemon.png", 0);
+	sprite = AssetHandler::Instance()->GetSprite("Assets/AnimTest.png", 0);
+	sprite->setRectsFromIndices(16, 16, { 0,1,2,3 });
+
 	ActionManager::Instance()->player = this;
 	health = 1000;
 	facing = vec2::W;
