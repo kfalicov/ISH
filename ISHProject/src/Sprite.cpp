@@ -1,5 +1,6 @@
 #include "Sprite.h"
 #include "SDL.h"
+#include "AssetHandler.h"
 
 Sprite::Sprite() {
 
@@ -43,4 +44,5 @@ void Sprite::setRectsFromIndices(const int width, const int height, const std::v
 	}
 
 	frames = frameRects;
+	AssetHandler::Instance()->loadedSprites.push_back(this);
 }

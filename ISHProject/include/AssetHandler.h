@@ -23,13 +23,14 @@ public:
 	static const enum Temps{LOWEST, LOW, MEDIUM, HIGH};
 	static const enum Tiles{ GRASS, SAND, STONE };
 	static const enum Weapons{ DAGGER, SWORD, AXE };
+
+	std::vector<Sprite*> loadedSprites;
 	
 	~AssetHandler();
 
 private:
 	static AssetHandler* instance;
 	std::unordered_map<const char*, SDL_Surface*> loadedSpriteSheets;
-	std::vector<Sprite*> loadedSprites;
 	int animationCounter;
 	
 	AssetHandler();

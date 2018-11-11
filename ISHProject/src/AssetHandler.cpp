@@ -59,9 +59,7 @@ Sprite* AssetHandler::GetSprite(const char* spriteSheet, int spriteIndex)
 	srcRect.y = (spriteIndex / w) * Game::TILE_SIZE;
 	srcRect.w = srcRect.h = Game::TILE_SIZE;
 
-	Sprite* s = new Sprite(surface, srcRect);
-	loadedSprites.push_back(s);
-	return s;
+	return new Sprite(surface, srcRect);
 }
 
 void AssetHandler::UpdateSprites() {
