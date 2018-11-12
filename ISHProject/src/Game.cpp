@@ -54,7 +54,7 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 		//Create the Asset Handler, Camera, and UI Surface
 		assetHandler = AssetHandler::Instance();
 		assetHandler->Init();
-		mainCamera = new Camera(vec2(0,0), 1024, 1024);
+		mainCamera = new Camera(vec2(0,0), 256, 256);
 		UISurface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
 		camDestRect = SDL_Rect();
 		//Treat solid black as transparent for the UI.
@@ -108,6 +108,7 @@ void Game::Render(float interpolation) {
 	float widthRatio = (float)windowRect.w / mainCamera->cameraSurface->clip_rect.w;
 	float heightRatio = (float)windowRect.h / mainCamera->cameraSurface->clip_rect.h;
 	scaleMultiplier = (widthRatio < heightRatio) ? widthRatio : heightRatio;
+	scaleMultiplier = floor(scaleMultiplier);
 
 	//Disable scaling (DEBUG)
 	//scaleMultiplier = 1;
