@@ -22,12 +22,14 @@ Overworld* Overworld::Instance(int seed) {
 		instance = new Overworld();
 		instance->world = new World(seed);
 	}
+	Game::mainCamera->setCorner(instance->lastCameraPos);
 	return instance;
 }
 
 void Overworld::Init() {
 	actionManager = ActionManager::Instance();
 
+	lastCameraPos = vec2(0, 0);
 	// TODO same with the world (this would likely just be a seed number, and maybe some other info)
 	//int seed = rand();
 }
@@ -51,6 +53,8 @@ void Overworld::Update()
 {
 	world->Update();
 	actionManager->Update();
+	Game::mainCamera->Update();
+	lastCameraPos = Game::mainCamera->getPos();
 }
 
 void Overworld::Render(float interpolation)

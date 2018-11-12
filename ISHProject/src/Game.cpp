@@ -54,8 +54,9 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 		//Create the Asset Handler, Camera, and UI Surface
 		assetHandler = AssetHandler::Instance();
 		assetHandler->Init();
-		mainCamera = new Camera(vec2(0,0), 1024, 1024);
+		mainCamera = new Camera(vec2(0,0), 256, 256);
 		UISurface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
+		camDestRect = SDL_Rect();
 		//Treat solid black as transparent for the UI.
 		SDL_SetColorKey(UISurface, SDL_TRUE, SDL_MapRGBA(UISurface->format, 0, 0, 0, 0));
 		isRunning = true;
@@ -81,8 +82,8 @@ void Game::HandleEvents() {
 }
 
 void Game::Update() {
+	//mainCamera->Update(); //TODO this should be performed in the gamestates themselves, not game.
 	assetHandler->Update();
-	mainCamera->Update();
 	activeState->Update();
 }
 
@@ -106,17 +107,18 @@ void Game::Render(float interpolation) {
 
 	float widthRatio = (float)windowRect.w / mainCamera->cameraSurface->clip_rect.w;
 	float heightRatio = (float)windowRect.h / mainCamera->cameraSurface->clip_rect.h;
-	float scaleMultiplier = (widthRatio < heightRatio) ? widthRatio : heightRatio;
-
-	SDL_Rect camDestRect = SDL_Rect();
+	scaleMultiplier = (widthRatio < heightRatio) ? widthRatio : heightRatio;
+	scaleMultiplier = floor(scaleMultiplier);
 
 	//Disable scaling (DEBUG)
-	scaleMultiplier = 1;
+	//scaleMultiplier = 1;
 
 	camDestRect.w = scaleMultiplier * mainCamera->cameraSurface->clip_rect.w;
 	camDestRect.h = scaleMultiplier * mainCamera->cameraSurface->clip_rect.h;
 	camDestRect.x = (windowRect.w - camDestRect.w) / 2.0;
 	camDestRect.y = (windowRect.h - camDestRect.h) / 2.0;
+
+	camPosRelative = vec2(camDestRect.x, camDestRect.y);
 
 	//windowRect = mainCamera->cameraSurface->clip_rect; //Debug camera surface dimensions
 	SDL_RenderCopy(renderer, camTex,

@@ -22,11 +22,14 @@ MainMenu* MainMenu::Instance() {
 	if (instance == 0) {
 		instance = new MainMenu();
 	}
+	Game::mainCamera->setCorner(vec2(0, 0));
 	return instance;
 }
 
 void MainMenu::Init() {
-	Button* b = new Button(vec2(0,0), vec2(500,500));
+	Button* b = new Button(vec2(128,64), vec2(16,16));
+	b->sprite = AssetHandler::Instance()->GetSprite("Assets/Temps.png",
+		AssetHandler::Temps::MEDIUM);
 	b->setCallback(
 		[]() {Game::ChangeState(Overworld::Instance()); } //bro this lambda is elegant af
 		// ^ the [] represents the void function with () as empty params.
@@ -53,7 +56,8 @@ void MainMenu::HandleEvents(SDL_Event event)
 	}
 	if (event.type == SDL_MOUSEBUTTONDOWN) {
 		if (event.button.button == SDL_BUTTON_LEFT) {
-			vec2 mpos = vec2(event.button.x, event.button.y);// +Game::mainCamera->getPos();
+			vec2 mpos = vec2(event.button.x, event.button.y)+Game::mainCamera->getPos()-Game::Instance()->camPosRelative;// +Game::mainCamera->getPos();
+			mpos /= Game::Instance()->scaleMultiplier; //converts the mouse in window-space into pixel-space to align with buttons in the menu
 			std::cout << "clicked at " << mpos << std::endl;
 			for (auto e : menuitems) {
 				if (mpos[0]> e->pos[0] && mpos[0] < (e->pos[0]+e->size[0]) &&
@@ -73,10 +77,9 @@ void MainMenu::Update()
 
 void MainMenu::Render(float interpolation)
 {
-	vec2 pos = vec2(0, 0);
-	Game::Instance()->mainCamera->RenderSprite((*spr), pos);
 	for (auto e : menuitems) {
-		Game::Instance()->mainCamera->RenderSprite(*spr, e->renderpos()+Game::mainCamera->getPos());
+		//cout << e->renderpos() << endl;
+		Game::mainCamera->RenderSprite(*(e->sprite), e->renderpos());
 	}
 	
 }

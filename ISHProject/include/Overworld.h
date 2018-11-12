@@ -26,4 +26,6 @@ protected:
 	static Overworld *instance;
 	ActionManager* actionManager;
 	Overworld();
+private:
+	vec2 lastCameraPos; //used when switching to another state and back
 };

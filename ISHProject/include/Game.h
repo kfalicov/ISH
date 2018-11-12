@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <iostream>
+#include "Util.h"
 
 class AssetHandler;
 class GameState;
@@ -27,6 +28,9 @@ public:
 	AssetHandler *assetHandler;
 	static Camera *mainCamera;
 	SDL_Surface* UISurface;
+	SDL_Rect camDestRect;
+	float scaleMultiplier;
+	vec2 camPosRelative;
 
 	static const int TILE_SIZE = 16;
 
