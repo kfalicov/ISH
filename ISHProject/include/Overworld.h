@@ -13,7 +13,7 @@ public:
 	void Clean() override;
 
 	void HandleEvents(SDL_Event event) override;
-	void Update(Game *game) override;
+	void Update() override;
 	void Render(float interpolation) override;
 
 	const char* getName() override { return "Overworld"; }

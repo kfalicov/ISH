@@ -53,8 +53,8 @@ void Game::Init(const char* title, int xpos, int ypos, int width, int height, bo
 
 		//Create the Asset Handler, Camera, and UI Surface
 		assetHandler = AssetHandler::Instance();
-		assetHandler->Init(this);
-		mainCamera = new Camera(this, vec2(0,0), 256, 256);
+		assetHandler->Init();
+		mainCamera = new Camera(vec2(0,0), 1024, 1024);
 		UISurface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
 		camDestRect = SDL_Rect();
 		//Treat solid black as transparent for the UI.
@@ -83,7 +83,8 @@ void Game::HandleEvents() {
 
 void Game::Update() {
 	//mainCamera->Update(); //TODO this should be performed in the gamestates themselves, not game.
-	activeState->Update(this);
+	assetHandler->Update();
+	activeState->Update();
 }
 
 void Game::Render(float interpolation) {

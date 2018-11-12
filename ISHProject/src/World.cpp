@@ -28,10 +28,30 @@ World::World(int seed) {
 	enemy->currentTile = enemy->currentChunk->getTile(enemy->tilePos);
 	enemy->currentTile->opaque = enemy;
 
-	Item* item = new Item();
-	item->currentChunk = getLoadedChunk(player->chunkPos);
-	item->currentTile = item->currentChunk->getTile(item->tilePos);
-	item->currentTile->transparent.push_back(item);
+	MeleeWeapon* mw = new MeleeWeapon();
+	mw->currentChunk = getLoadedChunk(player->chunkPos);
+	mw->currentTile = mw->currentChunk->getTile(mw->tilePos);
+	mw->currentTile->transparent.push_back(mw);
+
+	RangedWeapon* rw = new RangedWeapon();
+	rw->currentChunk = getLoadedChunk(player->chunkPos);
+	rw->currentTile = rw->currentChunk->getTile(rw->tilePos);
+	rw->currentTile->transparent.push_back(rw);
+
+	HeadArmor* ha = new HeadArmor();
+	ha->currentChunk = getLoadedChunk(player->chunkPos);
+	ha->currentTile = ha->currentChunk->getTile(ha->tilePos);
+	ha->currentTile->transparent.push_back(ha);
+
+	TorsoArmor* ta = new TorsoArmor();
+	ta->currentChunk = getLoadedChunk(player->chunkPos);
+	ta->currentTile = ta->currentChunk->getTile(ta->tilePos);
+	ta->currentTile->transparent.push_back(ta);
+
+	LegsArmor* la = new LegsArmor();
+	la->currentChunk = getLoadedChunk(player->chunkPos);
+	la->currentTile = la->currentChunk->getTile(la->tilePos);
+	la->currentTile->transparent.push_back(la);
 }
 
 World::~World()
@@ -95,15 +115,15 @@ Chunk* World::getLoadedChunk(vec2 position) {
 	}
 	return nullptr;
 }
-void World::Update(Game* game) {
+void World::Update() {
 	vec2 lead = player->facing*PIXELS_PER_TILE;
 	lead *= 6; //number of tiles for camera to lead player (to show terrain in front)
-	game->mainCamera->TrackTo((player->currentPos*PIXELS_PER_TILE + PIXELS_PER_TILE/2)); //+lead
+	Game::Instance()->mainCamera->TrackTo((player->currentPos*PIXELS_PER_TILE + PIXELS_PER_TILE/2)); //+lead
 
 	if (centerChunkPos != player->currentChunk->chunkPos) {
 		centerChunkPos = player->currentChunk->chunkPos;
 		loadChunks();
-		for (std::vector<Agent*>::iterator it = ActionManager::Instance()->actors.begin(); it != ActionManager::Instance()->actors.end(); ++it) {
+		for (std::vector<Entity*>::iterator it = ActionManager::Instance()->actors.begin(); it != ActionManager::Instance()->actors.end(); ++it) {
 			Chunk* entityChunk = getLoadedChunk((*it)->chunkPos);
 			if (entityChunk != nullptr) {
 				(*it)->currentChunk = entityChunk;

@@ -99,7 +99,7 @@ void Console::HandleEvents(SDL_Event event)
 		switch (event.key.keysym.sym) {
 		case SDLK_BACKQUOTE:	//Change back to old state
 			SDL_StopTextInput();
-			Game::ChangeState(oldState);
+			Game::Instance()->ChangeState(oldState);
 			return;
 		case SDLK_RETURN:
 			if (currentCommand.length() > 0) {
@@ -148,7 +148,7 @@ void Console::HandleEvents(SDL_Event event)
 	}
 }
 
-void Console::Update(Game *game)
+void Console::Update()
 {
 }
 

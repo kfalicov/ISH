@@ -9,7 +9,7 @@ class Camera
 {
 public:
 	Camera();
-	Camera(Game* game, vec2 center, int w, int h);
+	Camera(vec2 center, int w, int h);
 	~Camera();
 
 	void Update();

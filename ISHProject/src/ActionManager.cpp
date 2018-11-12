@@ -1,3 +1,4 @@
+#pragma once
 #include "ActionManager.h"
 #include "Util.h"
 #include "Camera.h"
@@ -19,14 +20,14 @@ ActionManager* ActionManager::Instance()
 	return instance;
 }
 
-void ActionManager::Subscribe(Agent* e)
+void ActionManager::Subscribe(Entity* e)
 {
 	actors.push_back(e);
 }
 
-void ActionManager::unSubscribe(Agent* e)
+void ActionManager::unSubscribe(Entity* e)
 {
-	for (std::vector<Agent*>::iterator it = actors.begin(); it != actors.end(); ++it) {
+	for (std::vector<Entity*>::iterator it = actors.begin(); it != actors.end(); ++it) {
 		if ((*it) == e) {
 			actors.erase(it);
 			return;
@@ -66,26 +67,12 @@ void ActionManager::HandleEvents(SDL_Event event)
 			playerMoved = true;
 		}
 		else if (keystates[SDL_SCANCODE_R] && event.type == SDL_KEYDOWN && event.key.repeat == 0) {
-			if (player->currentTile->transparent.size() > 0) {
-				if (player->weapon) {
-					player->currentTile->transparent.insert(
-						player->currentTile->transparent.begin(), player->weapon);
-					player->weapon = nullptr;
-				}
-				player->weapon = player->currentTile->transparent.back();
-				player->currentTile->transparent.pop_back();
-				player->setAttackStrength(player->weapon->attack);
-			}
-			else {
-				if (player->weapon) {
-					player->currentTile->transparent.insert(
-						player->currentTile->transparent.begin(), player->weapon);
-					player->weapon = nullptr;
-				}
-			}
+			player->Rummage();
 			player->canMove = false;
-			player->moveTicks = 0;
-			playerMoved = true;
+		}
+		else if (keystates[SDL_SCANCODE_E] && event.type == SDL_KEYDOWN && event.key.repeat == 0) {
+			player->Equip();
+			player->canMove = false;
 		}
 		else if (keystates[SDL_SCANCODE_SPACE]) {
 			player->Attack();
@@ -94,7 +81,8 @@ void ActionManager::HandleEvents(SDL_Event event)
 			playerMoved = true;
 		}
 		else {
-			player->Move(vec2(0, 0));
+			//player->Move(vec2(0, 0));
+			player->new_animation = player->idle;
 			playerMoved = false;
 		}
 	}
@@ -106,11 +94,11 @@ void ActionManager::HandleEvents(SDL_Event event)
 	}
 }
 
-void ActionManager::Update(Game* game)
+void ActionManager::Update()
 {
 	tickCounter++;
-	for (std::vector<Agent*>::iterator it = actors.begin(); it != actors.end(); ++it) {
-		Agent* e = (*it);
+	for (std::vector<Entity*>::iterator it = actors.begin(); it != actors.end(); ++it) {
+		Entity* e = (*it);
 		if ((turnBased && playerMoved) || !turnBased) {
 			if (e->currentChunk != nullptr && e->canMove) {
 				e->canMove = false;
@@ -128,7 +116,7 @@ void ActionManager::Update(Game* game)
 }
 
 void ActionManager::Render(float interpolation){
-	for (std::vector<Agent*>::iterator it = actors.begin(); it != actors.end(); ++it) {
+	for (std::vector<Entity*>::iterator it = actors.begin(); it != actors.end(); ++it) {
 		(*it)->updateRenderPosition(interpolation);
 		Game::Instance()->mainCamera->RenderSprite((*(*it)->sprite), (*it)->renderPos*PIXELS_PER_TILE);
 	}

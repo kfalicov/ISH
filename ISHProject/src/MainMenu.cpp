@@ -36,6 +36,10 @@ void MainMenu::Init() {
 		// the actual function called is in the parenthesis
 	);
 	menuitems.push_back(b);
+
+	spr = AssetHandler::Instance()->GetSprite("Assets/AnimTest.png", AssetHandler::Tiles::GRASS);
+	spr->setRectsFromIndices(16, 16, { 0,1,2,3 });
+
 }
 
 void MainMenu::Clean()
@@ -66,7 +70,7 @@ void MainMenu::HandleEvents(SDL_Event event)
 	}
 }
 
-void MainMenu::Update(Game *game)
+void MainMenu::Update()
 {
 	
 }

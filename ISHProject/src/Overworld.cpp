@@ -49,9 +49,9 @@ void Overworld::HandleEvents(SDL_Event event)
 	actionManager->HandleEvents(event);
 }
 
-void Overworld::Update(Game *game)
+void Overworld::Update()
 {
-	world->Update(game);
+	world->Update();
 	actionManager->Update(game);
 	Game::mainCamera->Update();
 	lastCameraPos = Game::mainCamera->getPos();
