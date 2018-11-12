@@ -9,8 +9,14 @@ Player::Player() {
 	moveTicks = 0;
 
 	//sprite = AssetHandler::Instance()->GetSprite("Assets/Lemon.png", 0);
-	sprite = AssetHandler::Instance()->GetSprite("Assets/AnimTest.png", 0);
-	sprite->setRectsFromIndices(16, 16, { 0,1,2,3 });
+
+	idle = AssetHandler::Instance()->GetSprite("Assets/AnimTest.png", 0);
+	idle->setRectsFromIndices(16, 16, { 0,1 });
+
+	moving = AssetHandler::Instance()->GetSprite("Assets/AnimTest.png", 0);
+	moving->setRectsFromIndices(16, 16, { 2,3 });
+
+	sprite = idle;
 
 	ActionManager::Instance()->player = this;
 	health = 1000;
@@ -27,10 +33,12 @@ void Player::updateRenderPosition(float interpolation) {
 
 void Player::Move(vec2 dir) {
 	if (dir != vec2(0, 0)) {
+		new_animation = idle;
 		facing = dir;
 	}
 
 	if (canMove) {
+		new_animation = moving;
 		oldPos = currentPos;
 
 		vec2 oldTilePos = tilePos;

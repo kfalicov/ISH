@@ -81,7 +81,7 @@ void Game::HandleEvents() {
 }
 
 void Game::Update() {
-	assetHandler->UpdateSprites();
+	assetHandler->Update();
 	mainCamera->Update();
 	activeState->Update();
 }

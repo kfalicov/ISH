@@ -18,15 +18,16 @@ public:
 
 	//string name;
 	Sprite* sprite;
+	Sprite* new_animation;
 	Chunk* currentChunk;
 	Tile* currentTile;
 	bool opaque;	// Does the entity take up physical space?
 	vec2 tilePos;
 	vec2 chunkPos;
 
-	int animPeriod = 3;	// Number of updates to visually transition from a to b
-	int moveFreq = 3; // the speed at which movement can happen. read as "once every x ticks"
-						// ^ must be higher than animPeriod
+	int animPeriod = 8;	// Number of updates to visually transition from a to b
+	int moveFreq = 8; // the speed at which movement can happen. read as "once every x ticks"
+						// ^ must be >= than animPeriod
 	int moveTicks = 0;	//"e"
 
 	vec2 currentPos;// Current position (movement interpolation target)
@@ -51,7 +52,7 @@ public:
 
 protected:
 	Entity_Type Entity_Type;
-	Entity() {};
+	Entity();
 };
 
 class MeleeWeapon : public Entity {

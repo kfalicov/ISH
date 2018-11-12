@@ -1,4 +1,10 @@
+#pragma once
 #include "Entity.h"
+#include "AssetHandler.h"
+
+Entity::Entity() {
+	AssetHandler::Instance()->subscribeEntity(this);
+}
 
 MeleeWeapon::MeleeWeapon()
 {

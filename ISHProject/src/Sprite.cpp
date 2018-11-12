@@ -3,7 +3,6 @@
 #include "AssetHandler.h"
 
 Sprite::Sprite() {
-
 }
 
 Sprite::Sprite(SDL_Surface* spriteSheet, SDL_Rect srcRect)
@@ -44,5 +43,6 @@ void Sprite::setRectsFromIndices(const int width, const int height, const std::v
 	}
 
 	frames = frameRects;
-	AssetHandler::Instance()->loadedSprites.push_back(this);
+
+	AssetHandler::Instance()->subscribeSprite(this);
 }

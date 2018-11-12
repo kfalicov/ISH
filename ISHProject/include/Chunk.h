@@ -8,6 +8,7 @@
 
 using namespace std;
 class Tile;
+class WorldGenerator;
 #define CHUNK_SIZE 8
 #define TILE_SPACING 0
 

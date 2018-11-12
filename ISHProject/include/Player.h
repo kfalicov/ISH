@@ -13,6 +13,9 @@ public:
 	void Equip();
 	void Rummage();
 
+	Sprite* idle;
+	Sprite* moving;
+
 	Entity* melee_weapon;
 	Entity* ranged_weapon;
 	Entity* head_armor;

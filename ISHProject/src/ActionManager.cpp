@@ -1,3 +1,4 @@
+#pragma once
 #include "ActionManager.h"
 #include "Util.h"
 #include "Camera.h"
@@ -80,7 +81,8 @@ void ActionManager::HandleEvents(SDL_Event event)
 			playerMoved = true;
 		}
 		else {
-			player->Move(vec2(0, 0));
+			//player->Move(vec2(0, 0));
+			player->new_animation = player->idle;
 			playerMoved = false;
 		}
 	}
