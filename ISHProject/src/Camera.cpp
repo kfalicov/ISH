@@ -6,8 +6,7 @@ Camera::Camera()
 
 }
 
-Camera::Camera(Game* game, vec2 center, int w, int h) {
-	this->game = game;
+Camera::Camera(vec2 center, int w, int h) {
 	setCenter(center);
 	size = vec2(w, h);
 	cameraSurface = SDL_CreateRGBSurface(0, w, h, 32, 0, 0, 0, 0);
@@ -25,7 +24,7 @@ void Camera::Update() {
 void Camera::RenderSprite(Sprite sprite, vec2 position)
 {
 	SDL_Rect destRect = SDL_Rect();
-	SDL_Rect srcRect = sprite.srcRect;
+	SDL_Rect srcRect = sprite.frames[sprite.currentFrameIndex];
 	destRect.w = srcRect.w;
 	destRect.h = srcRect.h;
 	destRect.x = position[0] - camPosition[0];

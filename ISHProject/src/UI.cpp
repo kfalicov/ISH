@@ -6,7 +6,7 @@ Element::Element(vec2 pos, vec2 size, vec2 anchor)
 	this->pos = pos;
 	this->size = size;
 	this->anchor = anchor;
-	this->sprite = AssetHandler::GetSprite("Assets/AnimTest.png", AssetHandler::Tiles::GRASS);
+	this->sprite = AssetHandler::Instance()->GetSprite("Assets/AnimTest.png", AssetHandler::Tiles::GRASS);
 }
 
 Element::~Element()

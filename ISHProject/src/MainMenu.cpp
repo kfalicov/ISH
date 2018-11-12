@@ -33,13 +33,17 @@ void MainMenu::Init() {
 		// the actual function called is in the parenthesis
 	);
 	menuitems.push_back(b);
+
+	spr = AssetHandler::Instance()->GetSprite("Assets/AnimTest.png", AssetHandler::Tiles::GRASS);
+	spr->setRectsFromIndices(16, 16, { 0,1,2,3 });
+
 }
 
 void MainMenu::Clean()
 {
 }
 
-void MainMenu::HandleEvents(Game * game, SDL_Event event)
+void MainMenu::HandleEvents(SDL_Event event)
 {
 	if (event.type == SDL_KEYDOWN) {
 		if (event.key.keysym.sym == SDLK_BACKQUOTE) { // Tilde/Backquote key
@@ -62,14 +66,13 @@ void MainMenu::HandleEvents(Game * game, SDL_Event event)
 	}
 }
 
-void MainMenu::Update(Game *game)
+void MainMenu::Update()
 {
 	
 }
 
 void MainMenu::Render(float interpolation)
 {
-	Sprite* spr = AssetHandler::GetSprite("Assets/AnimTest.png", AssetHandler::Tiles::GRASS);
 	vec2 pos = vec2(0, 0);
 	Game::Instance()->mainCamera->RenderSprite((*spr), pos);
 	for (auto e : menuitems) {

@@ -4,9 +4,10 @@
 #include "SDL_image.h"
 
 AssetHandler* AssetHandler::instance;
-std::unordered_map<const char*, SDL_Surface*> AssetHandler::loadedSpriteSheets;
 
-AssetHandler::AssetHandler(){}
+AssetHandler::AssetHandler(){
+	Init();
+}
 
 AssetHandler::~AssetHandler() {}
 
@@ -18,9 +19,9 @@ AssetHandler* AssetHandler::Instance()
 	return instance;
 }
 
-void AssetHandler::Init(Game* game)
+void AssetHandler::Init()
 {
-	this->game = game;
+	animationCounter = 0;
 }
 
 void AssetHandler::Clean()
@@ -59,4 +60,44 @@ Sprite* AssetHandler::GetSprite(const char* spriteSheet, int spriteIndex)
 	srcRect.w = srcRect.h = Game::TILE_SIZE;
 
 	return new Sprite(surface, srcRect);
+}
+
+void AssetHandler::Update() {
+	animationCounter++;
+	if (animationCounter < UPDATES_PER_FRAME) return;
+	else animationCounter = 0;
+
+	UpdateSprites();
+	UpdateEntityAnimations();
+}
+
+void AssetHandler::UpdateSprites() {
+	std::vector<Sprite*>::iterator it = loadedSprites.begin();
+	while(it != loadedSprites.end()) {
+		if ((*it) == nullptr) {
+			it = loadedSprites.erase(it);
+		}
+		else {
+			Sprite* s = (*it);
+			if (s->frames.size() > 1) {
+				s->currentFrameIndex = (s->currentFrameIndex + 1) % (s->frames.size());
+			}
+			++it;
+		}
+	}
+}
+
+void AssetHandler::UpdateEntityAnimations() {
+	std::vector<Entity*>::iterator it = visualEntities.begin();
+	while (it != visualEntities.end()) {
+		if ((*it) == nullptr) {
+			it = visualEntities.erase(it);
+		}
+		Entity* e = (*it);
+		if (e->sprite != e->new_animation && e->new_animation) {
+			e->sprite = e->new_animation;
+			e->sprite->currentFrameIndex = 0;
+		}
+		++it;
+	}
 }

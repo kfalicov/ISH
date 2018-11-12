@@ -13,8 +13,8 @@ public:
 	virtual void Pause() { isPaused = true; };
 	virtual void Resume() { isPaused = false; };
 
-	virtual void HandleEvents(Game *game, SDL_Event event) = 0;
-	virtual void Update(Game *game) = 0;
+	virtual void HandleEvents(SDL_Event event) = 0;
+	virtual void Update() = 0;
 	virtual void Render(float interpolation) = 0;
 
 	virtual void PushSubState(GameState *substate) { substates.push_back(substate); };
