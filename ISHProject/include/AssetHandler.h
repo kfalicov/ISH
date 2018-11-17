@@ -15,33 +15,23 @@ class Entity;
 
 class AssetHandler {
 public:
-	static AssetHandler* Instance();
+	AssetHandler();
+	~AssetHandler();
 
-	void Init();
 	void Clean();
 	void Update();
 
 	Sprite* GetSprite(const char* spriteSheet, int spriteIndex);
-
-	static const enum Temps { LOWEST, LOW, MEDIUM, HIGH };
-	static const enum Tiles { GRASS, SAND, STONE };
-	static const enum Weapons { DAGGER, SWORD, AXE };
 
 	std::vector<Sprite*> loadedSprites;
 	std::vector<Entity*> visualEntities;
 	void subscribeEntity(Entity* e) { visualEntities.push_back(e); };
 	void subscribeSprite(Sprite* s) { loadedSprites.push_back(s); };
 
-	~AssetHandler();
-
 private:
-	static AssetHandler* instance;
 	std::unordered_map<const char*, SDL_Surface*> loadedSpriteSheets;
 	int animationCounter;
 
 	void UpdateSprites();
 	void UpdateEntityAnimations();
-
-	AssetHandler();
-
 };

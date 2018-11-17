@@ -9,7 +9,6 @@ Sprite::Sprite(SDL_Surface* spriteSheet, SDL_Rect srcRect)
 	frames = std::vector<SDL_Rect>();
 	frames.push_back(srcRect);
 	currentFrameIndex = 0;
-	//this->srcRect = srcRect;
 }
 
 Sprite::Sprite(SDL_Surface * spriteSheet, std::vector<SDL_Rect> frames)
@@ -41,6 +40,10 @@ void Sprite::setRectsFromIndices(const int width, const int height, const std::v
 	}
 
 	frames = frameRects;
+}
 
-	//AssetHandler::Instance()->subscribeSprite(this); TODO
+void Sprite::nextFrame() {
+	if (frames.size() > 1) {
+		currentFrameIndex = (currentFrameIndex + 1) % (frames.size());
+	}
 }

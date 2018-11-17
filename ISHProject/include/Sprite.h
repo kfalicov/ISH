@@ -11,6 +11,7 @@ public:
 	~Sprite();
 
 	void setRectsFromIndices(const int width, const int height, const std::vector<int> indices);
+	void nextFrame();
 
 	SDL_Surface* spriteSheet;
 	std::vector<SDL_Rect> frames;

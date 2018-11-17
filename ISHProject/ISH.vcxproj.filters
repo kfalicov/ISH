@@ -7,6 +7,7 @@
     <ClCompile Include="src\Environment.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\Entity.cpp" />
+    <ClCompile Include="src\AssetHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Game.h" />
@@ -15,5 +16,7 @@
     <ClInclude Include="src\Util.cpp" />
     <ClInclude Include="include\Environment.h" />
     <ClInclude Include="include\Sprite.h" />
+    <ClInclude Include="include\AssetHandler.h" />
+    <ClInclude Include="include\Entity.h" />
   </ItemGroup>
 </Project>

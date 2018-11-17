@@ -1,28 +1,13 @@
-#pragma once
+#include <SDL_image.h>
 
 #include "AssetHandler.h"
-#include "SDL_image.h"
-
-AssetHandler* AssetHandler::instance;
+#include "Environment.h"
 
 AssetHandler::AssetHandler() {
-	Init();
+	animationCounter = 0;
 }
 
 AssetHandler::~AssetHandler() {}
-
-AssetHandler* AssetHandler::Instance()
-{
-	if (instance == 0) {
-		instance = new AssetHandler();
-	}
-	return instance;
-}
-
-void AssetHandler::Init()
-{
-	animationCounter = 0;
-}
 
 void AssetHandler::Clean()
 {
@@ -52,12 +37,12 @@ Sprite* AssetHandler::GetSprite(const char* spriteSheet, int spriteIndex)
 	//using Game::instance here will break the game's startup with an infinite loop because AssetHandler is created
 	//before Game is fully initialized, so it will try and re-instance the Game which will then create AssetHandler again
 	//and you get the idea.
-	w /= Game::TILE_SIZE;
-	h /= Game::TILE_SIZE;
+	w /= TILE_SIZE;
+	h /= TILE_SIZE;
 
-	srcRect.x = (spriteIndex % w) * Game::TILE_SIZE;
-	srcRect.y = (spriteIndex / w) * Game::TILE_SIZE;
-	srcRect.w = srcRect.h = Game::TILE_SIZE;
+	srcRect.x = (spriteIndex % w) * TILE_SIZE;
+	srcRect.y = (spriteIndex / w) * TILE_SIZE;
+	srcRect.w = srcRect.h = TILE_SIZE;
 
 	return new Sprite(surface, srcRect);
 }
@@ -79,9 +64,7 @@ void AssetHandler::UpdateSprites() {
 		}
 		else {
 			Sprite* s = (*it);
-			if (s->frames.size() > 1) {
-				s->currentFrameIndex = (s->currentFrameIndex + 1) % (s->frames.size());
-			}
+			s->nextFrame();
 			++it;
 		}
 	}
@@ -94,10 +77,11 @@ void AssetHandler::UpdateEntityAnimations() {
 			it = visualEntities.erase(it);
 		}
 		Entity* e = (*it);
-		if (e->sprite != e->new_animation && e->new_animation) {
+		e->queueAnimationChange();
+		/*if (e->sprite != e->new_animation && e->new_animation) {
 			e->sprite = e->new_animation;
 			e->sprite->currentFrameIndex = 0;
-		}
+		}*/
 		++it;
 	}
 }

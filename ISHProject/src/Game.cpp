@@ -4,10 +4,12 @@
 
 #include "Game.h"
 #include "GameState.h"
+#include "AssetHandler.h"
 
 Game::Game() {
 	//initialize SDL and then our stuff
 	if (SDLInit("ISH", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, false)) {
+		assetHandler = new AssetHandler();
 		activeState = (new MenuState(this));
 		isRunning = true;
 	}
@@ -15,8 +17,6 @@ Game::Game() {
 		//TODO some error message
 		isRunning = false;
 	}
-
-	
 }
 
 Game::~Game() {

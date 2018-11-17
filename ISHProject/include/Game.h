@@ -25,12 +25,12 @@ public:
 	SDL_Renderer *renderer;
 	SDL_Window *window;
 	//AssetHandler generates sprites and reads from a file. AssetHandler needs to be given to the various generators
-	/*AssetHandler *assetHandler;
-	static Camera *mainCamera;
-	SDL_Surface* UISurface;
-	SDL_Rect camDestRect;
-	float scaleMultiplier;
-	vec2 camPosRelative;*/
+	AssetHandler *assetHandler;
+	//static Camera *mainCamera;
+	//SDL_Surface* UISurface;
+	//SDL_Rect camDestRect;
+	//float scaleMultiplier;
+	//vec2 camPosRelative;
 
 	/*static const int TILE_SIZE = 16;*/
 
