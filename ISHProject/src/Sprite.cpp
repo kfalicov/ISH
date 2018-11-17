@@ -47,3 +47,7 @@ void Sprite::nextFrame() {
 		currentFrameIndex = (currentFrameIndex + 1) % (frames.size());
 	}
 }
+
+void Sprite::resetAnimation() {
+	currentFrameIndex = 0;
+}

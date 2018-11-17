@@ -5,6 +5,7 @@
 
 AssetHandler::AssetHandler() {
 	animationCounter = 0;
+	updates_per_frame = 5;
 }
 
 AssetHandler::~AssetHandler() {}
@@ -47,20 +48,20 @@ Sprite* AssetHandler::GetSprite(const char* spriteSheet, int spriteIndex)
 	return new Sprite(surface, srcRect);
 }
 
-void AssetHandler::Update() {
+bool AssetHandler::Update() {
 	animationCounter++;
-	if (animationCounter < UPDATES_PER_FRAME) return;
-	else animationCounter = 0;
-
-	UpdateSprites();
-	UpdateEntityAnimations();
+	if (animationCounter >= updates_per_frame) {
+		animationCounter = 0;
+		return true;
+	}
+	return false;
 }
 
-void AssetHandler::UpdateSprites() {
-	std::vector<Sprite*>::iterator it = loadedSprites.begin();
-	while (it != loadedSprites.end()) {
+void AssetHandler::UpdateSpriteFrames(std::vector<Sprite*> sprites) {
+	std::vector<Sprite*>::iterator it = sprites.begin();
+	while (it != sprites.end()) {
 		if ((*it) == nullptr) {
-			it = loadedSprites.erase(it);
+			it = sprites.erase(it);
 		}
 		else {
 			Sprite* s = (*it);
@@ -70,18 +71,14 @@ void AssetHandler::UpdateSprites() {
 	}
 }
 
-void AssetHandler::UpdateEntityAnimations() {
-	std::vector<Entity*>::iterator it = visualEntities.begin();
-	while (it != visualEntities.end()) {
+void AssetHandler::UpdateEntityAnimations(std::vector<Entity*> entities) {
+	std::vector<Entity*>::iterator it = entities.begin();
+	while (it != entities.end()) {
 		if ((*it) == nullptr) {
-			it = visualEntities.erase(it);
+			it = entities.erase(it);
 		}
 		Entity* e = (*it);
 		e->queueAnimationChange();
-		/*if (e->sprite != e->new_animation && e->new_animation) {
-			e->sprite = e->new_animation;
-			e->sprite->currentFrameIndex = 0;
-		}*/
 		++it;
 	}
 }
