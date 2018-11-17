@@ -10,6 +10,7 @@ void Entity::Update()
 		shouldChangeAnimation = false;
 		if (nextAnimationIndex != displayAnimationIndex) {
 			displayAnimationIndex = nextAnimationIndex;
+			animations.at(displayAnimationIndex)->resetAnimation();
 		}
 	}
 }
