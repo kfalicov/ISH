@@ -11,6 +11,7 @@
 #define TILE_SIZE 16 //edge length of tile sprites, can be used for spacing
 
 class Entity;
+class Chunk;
 
 class Tile
 {

@@ -4,8 +4,10 @@
 #include <iostream>
 #include "Util.h"
 #include "GameState.h"
+#include "AssetHandler.h"
 
 class GameState;
+class AssetHandler;
 
 class Game
 {
@@ -22,10 +24,10 @@ public:
 
 	bool Running();
 
-	SDL_Renderer *renderer;
-	SDL_Window *window;
+	SDL_Renderer* renderer;
+	SDL_Window* window;
 	//AssetHandler generates sprites and reads from a file. AssetHandler needs to be given to the various generators
-	AssetHandler *assetHandler;
+	AssetHandler* assetHandler;
 	//static Camera *mainCamera;
 	//SDL_Surface* UISurface;
 	//SDL_Rect camDestRect;

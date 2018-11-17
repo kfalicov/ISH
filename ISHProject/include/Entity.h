@@ -9,13 +9,22 @@ class Tile;
 
 class Entity {
 public:
-	Entity(std::vector<Sprite*> animations) { this->animations = animations; };
+	Entity(std::vector<Sprite*> animations, bool solid = false, std::string name = "entity");
 	//TODO
 	~Entity();
 
 	virtual void Update();
-	virtual void Attack();
+	void Attack();
 	virtual void TakeDamage(int damage);
+	
+	//These are used when calculating attack. Override these in the Player
+	//to use the player's items instead
+	virtual int getAttackType() {
+		return this->attackType;
+	};
+	virtual int getResistanceType() {
+		return this->resistanceType;
+	}
 
 	//returns a pointer to the sprite of the current animation
 	//using the displayAnimationIndex and the animations vector
@@ -30,6 +39,8 @@ public:
 	//TODO this goes in tile
 	//virtual vec2 getRenderPosition(float interpolation) {};
 
+	//returns the string representation of the object
+	//append necessary information to the string for ID purposes
 	std::string toString();
 
 private:
