@@ -16,11 +16,9 @@ void GameState::Render(std::vector<SDL_Surface*> &surfaces, float interpolation,
 		SDL_FillRect(surface, &surface->clip_rect,
 			SDL_MapRGBA(surface->format, 0, 0, 0, 0));
 		surface = RenderLayers(interpolation);
-		surfaces.push_back(surface);
 	}
-	else {
-		surfaces.push_back(surface);
-	}
+
+	surfaces.push_back(surface);
 }
 
 MenuState::MenuState(Game* game, GameState* previous)
