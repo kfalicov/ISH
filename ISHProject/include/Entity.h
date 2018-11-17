@@ -5,9 +5,12 @@
 #include <string>
 #include <vector>
 
+class Tile;
+
 class Entity {
 public:
 	Entity(std::vector<Sprite*> animations) { this->animations = animations; };
+	//TODO
 	~Entity();
 
 	virtual void Update();
@@ -17,6 +20,9 @@ public:
 	//returns a pointer to the sprite of the current animation
 	//using the displayAnimationIndex and the animations vector
 	Sprite* getDisplaySprite();
+
+	//asset handler uses this to make all entities update animations simultaneously
+	void queueAnimationChange();
 
 	//returns whether the entity blocks other entities from sharing its space.
 	bool isSolid();
@@ -32,12 +38,14 @@ private:
 
 	//Whether or not this entity takes up physical space on a tile.
 	bool solid;
+
 	//Index of current sprite animation.
 	int displayAnimationIndex;
 	//Index of next sprite animation, will update display index on next frame change.
 	int nextAnimationIndex;
 	//List of possible animations for entity to display.
 	std::vector<Sprite*> animations;
+	bool shouldChangeAnimation = false;
 
 	//Number of updates to visually transition from currentTile to nextTile
 	int visualMoveDuration = 8;
