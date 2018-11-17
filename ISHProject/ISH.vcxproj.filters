@@ -16,7 +16,7 @@
     <ClInclude Include="src\Util.cpp" />
     <ClInclude Include="include\Environment.h" />
     <ClInclude Include="include\Sprite.h" />
-    <ClInclude Include="include\AssetHandler.h" />
     <ClInclude Include="include\Entity.h" />
+    <ClInclude Include="include\AssetHandler.h" />
   </ItemGroup>
 </Project>

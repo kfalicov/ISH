@@ -10,6 +10,8 @@
 #define CHUNK_SIZE 8 //number of tiles per chunk (n * n)
 #define TILE_SIZE 16 //edge length of tile sprites, can be used for spacing
 
+class Entity;
+
 class Tile
 {
 public:
