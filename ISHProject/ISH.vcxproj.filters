@@ -10,5 +10,7 @@
     <ClInclude Include="include\Util.h" />
     <ClInclude Include="include\GameState.h" />
     <ClInclude Include="src\Util.cpp" />
+    <ClInclude Include="include\Entity.h" />
+    <ClInclude Include="include\Environment.h" />
   </ItemGroup>
 </Project>
