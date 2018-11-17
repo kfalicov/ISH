@@ -16,7 +16,7 @@ class Chunk;
 class Tile
 {
 public:
-	//creates a Tile with the given coordinate (bounded by 0-15) and knowing the position of its chunk
+	//creates a Tile with the given coordinate (bounded by 0-15) and knowing the chunk it belongs to
 	Tile(vec2 pos, Chunk* parent);
 	//destroys the tile TODO
 	~Tile() {};
@@ -93,6 +93,11 @@ private:
 	std::vector<Chunk*> neighbors;
 	//vector< std::vector<Tile*> > grid; // a row-major matrix of tiles
 	Tile*** tileGrid;
+};
+
+class World {
+	//TODO make the world class essentially the world generator.
+	//initialize it with the assethandler, and it will pass along the assets to the 
 };
 
 /*

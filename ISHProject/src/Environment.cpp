@@ -6,7 +6,7 @@ Tile::Tile(vec2 pos, Chunk* parent) {
 };
 bool Tile::addOccupant(Entity* e) {
 	//if there are already occupants
-	if (occupants.size > 0) {
+	if (occupants.size() > 0) {
 		//if there is an obstacle
 		if (occupants.back()->isSolid() && e->isSolid()) {
 			return false;
@@ -82,11 +82,12 @@ Chunk::Chunk(int x, int y)
 
 	for (int x = 0; x < CHUNK_SIZE; x++) {
 		for (int y = 0; y < CHUNK_SIZE; y++) {
-			tileGrid[x][y] = new Tile((chunkPos[0] * (CHUNK_SIZE + TILE_SPACING)) + x, (chunkPos[1] * (CHUNK_SIZE + TILE_SPACING)) + y);
+			tileGrid[x][y] = new Tile(vec2((chunkPos[0] * CHUNK_SIZE) + x, (chunkPos[1] * CHUNK_SIZE) + y), this);
 			//tileGrid[x][y]->s = AssetHandler::Instance()->GetSprite("Assets/AnimTest.png", 0);
-			tileGrid[x][y]->s = worldGen.getBackgroundSprite(
+			/*tileGrid[x][y]->getSprite() = worldGen.getBackgroundSprite(
 				tileGrid[x][y]->tilePos[0],
-				tileGrid[x][y]->tilePos[1]);
+				tileGrid[x][y]->tilePos[1]);*/
+			//TODO somehow add sprites to the tiles
 			//std::cout << tileGrid[x][y]->tilePos << std::endl;
 		}
 	}
@@ -193,7 +194,7 @@ double Chunk::psquared(vec2 a, vec2 b)
 
 double Chunk::diagonal(vec2 a, vec2 b)
 {
-	return max(abs(a[0] - b[0]), abs(a[1] - b[1]));
+	return std::max(abs(a[0] - b[0]), abs(a[1] - b[1]));
 }
 
 /*
@@ -207,7 +208,7 @@ std::deque<vec2> Chunk::AStarPath(vec2 & a, vec2 & b)
 	start->acost = 0;
 	start->bcost = HEURISTIC(a, b);
 
-	deque<vec2> path;
+	std::deque<vec2> path;
 
 	open.push_back(start); //starts with one visible tile, the origin tile
 	bool foundPath = false;
@@ -232,7 +233,7 @@ std::deque<vec2> Chunk::AStarPath(vec2 & a, vec2 & b)
 				temp->bcost = HEURISTIC(v, b);
 
 				temp->parent = current;
-				deque<Node*>::iterator it = find_if(open.begin(), open.end(), IsNode(temp->data));
+				std::deque<Node*>::iterator it = find_if(open.begin(), open.end(), IsNode(temp->data));
 				if (it == open.end()) { //if the node is not found in the currently visible nodes list the iterator will have reached the end
 					open.push_back(temp);
 					sort(open.begin(), open.end(), PointerCompare());
@@ -261,7 +262,7 @@ std::deque<vec2> Chunk::AStarPath(vec2 & a, vec2 & b)
 void Chunk::Render(float interpolation) {
 	for (int x = 0; x < CHUNK_SIZE; ++x) {
 		for (int y = 0; y < CHUNK_SIZE; ++y) {
-			tileGrid[x][y]->Render(interpolation);
+			//surface.blit(tileGrid[x][y]->getSprite(), tileGrid[x][y]->displayPos);
 		}
 	}
 }
