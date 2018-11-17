@@ -19,6 +19,9 @@ public:
 	
 	//These are used when calculating attack. Override these in the Player
 	//to use the player's items instead
+	virtual int getAttack() {
+		return this->attack;
+	}
 	virtual int getAttackType() {
 		return this->attackType;
 	};
