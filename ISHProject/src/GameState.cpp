@@ -4,6 +4,7 @@ GameState::GameState() {
 	//TODO each state can have a different sized surface. For example, PlayState will have
 	//a square surface to render the environment.
 	initializeRenderSurface(800, 600);
+	assetHandler = new AssetHandler();
 }
 
 void GameState::Render(std::vector<SDL_Surface*> &surfaces, float interpolation, bool forceReRender) {
@@ -65,7 +66,10 @@ void PlayState::HandleEvents(SDL_Event event) {
 
 void PlayState::Update()
 {
-	//std::cout << "On PlayState" << std::endl;
+	if (assetHandler->Update()) {
+		//assetHandler->UpdateSpriteFrames(LIST OF SPRITES IN PLAYSTATE);
+		//assetHandler->UpdateEntityAnimations(LIST OF ENTITIES IN PLAYSTATE);
+	}
 }
 
 SDL_Surface* PlayState::RenderLayers(float interpolation)

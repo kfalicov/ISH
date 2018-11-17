@@ -9,8 +9,6 @@
 using std::vector;
 using std::unordered_map;
 
-constexpr auto UPDATES_PER_FRAME = 5;
-
 class Entity;
 
 class AssetHandler {
@@ -19,19 +17,17 @@ public:
 	~AssetHandler();
 
 	void Clean();
-	void Update();
+	bool Update();
 
 	Sprite* GetSprite(const char* spriteSheet, int spriteIndex);
 
-	std::vector<Sprite*> loadedSprites;
-	std::vector<Entity*> visualEntities;
-	void subscribeEntity(Entity* e) { visualEntities.push_back(e); };
-	void subscribeSprite(Sprite* s) { loadedSprites.push_back(s); };
+	//Progresses each sprite to the next frame of their animation.
+	void UpdateSpriteFrames(std::vector<Sprite*> sprites);
+	//Changes the sprite that an entity is displaying.
+	void UpdateEntityAnimations(std::vector<Entity*> entities);
 
 private:
 	std::unordered_map<const char*, SDL_Surface*> loadedSpriteSheets;
+	int updates_per_frame;
 	int animationCounter;
-
-	void UpdateSprites();
-	void UpdateEntityAnimations();
 };

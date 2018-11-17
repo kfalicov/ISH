@@ -4,8 +4,10 @@
 #include <iostream>
 
 #include "Game.h"
+#include "AssetHandler.h"
 
 class Game;
+class AssetHandler;
 
 class GameState
 {
@@ -27,6 +29,9 @@ protected:
 
 	//the last gamestate you were in, for switching purposes
 	GameState* previous;
+
+	//AssetHandler generates sprites and reads from a file. AssetHandler needs to be given to the various generators
+	AssetHandler* assetHandler;
 
 	//an internal storage so that rerendering doesn't have to happen constantly
 	//This surface only contains the layers that belong to this state.
