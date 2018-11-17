@@ -2,6 +2,8 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
+#include "Game.h"
+
 int main(int argc, char *argv[]) {
 	const int TICKS_PER_SECOND = 30;
 	const int SKIP_TICKS = 1000 / TICKS_PER_SECOND;
@@ -11,15 +13,15 @@ int main(int argc, char *argv[]) {
 	int loops;
 	float interpolation;
 
-	//game = Game::Instance(); TODO game
+	Game* game = new Game();
 	//game->ChangeState(MainMenu::Instance()); //TODO Start the game on the main menu gamestate
 
 	//Main game loop
-	while (true){//game->Running()) {
+	while (game->Running()) {
 		loops = 0;
 		while (SDL_GetTicks() > next_game_tick && loops < MAX_FRAMESKIP) {
-			//game->HandleEvents();
-			//game->Update();
+			game->HandleEvents();
+			game->Update();
 
 			next_game_tick += SKIP_TICKS;
 			loops++;
@@ -28,10 +30,10 @@ int main(int argc, char *argv[]) {
 		interpolation = float(SDL_GetTicks() + SKIP_TICKS - next_game_tick)
 			/ float(SKIP_TICKS);
 
-		//game->Render(interpolation);
+		game->Render(interpolation);
 	}
 
-	//game->Clean();
-	//delete game;
+	game->Clean();
+	delete game;
 	return 0;
 }
