@@ -18,49 +18,6 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\ActionManager.cpp" />
-    <ClCompile Include="src\Console.cpp" />
-    <ClCompile Include="src\Enemy.cpp" />
-    <ClCompile Include="src\Entity.cpp" />
-    <ClCompile Include="src\Chunk.cpp" />
-    <ClCompile Include="src\FastNoise.cpp" />
-    <ClCompile Include="src\Player.cpp" />
-    <ClCompile Include="src\Tile.cpp" />
-    <ClCompile Include="src\Overworld.cpp" />
-    <ClCompile Include="src\Util.cpp" />
-    <ClCompile Include="src\Camera.cpp" />
-    <ClCompile Include="src\AssetHandler.cpp" />
-    <ClCompile Include="src\Game.cpp" />
-    <ClCompile Include="src\GameState.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\MainMenu.cpp" />
-    <ClCompile Include="src\Sprite.cpp" />
-    <ClCompile Include="src\World.cpp" />
-    <ClCompile Include="src\UI.cpp" />
-    <ClCompile Include="src\WorldGenerator.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="include\ActionManager.h" />
-    <ClInclude Include="include\Camera.h" />
-    <ClInclude Include="include\AssetHandler.h" />
-    <ClInclude Include="include\Chunk.h" />
-    <ClInclude Include="include\Enemy.h" />
-    <ClInclude Include="include\FastNoise.h" />
-    <ClInclude Include="include\Game.h" />
-    <ClInclude Include="include\GameState.h" />
-    <ClInclude Include="include\Entity.h" />
-    <ClInclude Include="include\Player.h" />
-    <ClInclude Include="include\Tile.h" />
-    <ClInclude Include="include\Console.h" />
-    <ClInclude Include="include\Overworld.h" />
-    <ClInclude Include="include\Util.h" />
-    <ClInclude Include="include\MainMenu.h" />
-    <ClInclude Include="include\Sprite.h" />
-    <ClInclude Include="include\World.h" />
-    <ClInclude Include="include\UI.h" />
-    <ClInclude Include="include\WorldGenerator.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{F00A8210-285E-4963-81D3-001803901DF3}</ProjectGuid>
