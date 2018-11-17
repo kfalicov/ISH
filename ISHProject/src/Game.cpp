@@ -84,14 +84,14 @@ void Game::Render(float interpolation) {
 		//Scale each layer accordingly to fit the window
 		float widthRatio = (float)windowRect.w / layer->clip_rect.w;
 		float heightRatio = (float)windowRect.h / layer->clip_rect.h;
-		int scaleMultiplier = floor((widthRatio < heightRatio) ? widthRatio : heightRatio);
+		int scaleMultiplier = (int)floor((widthRatio < heightRatio) ? widthRatio : heightRatio);
 		//Disable scaling (DEBUG)
 		//scaleMultiplier = 1;
 		SDL_Rect layerDestRect;
 		layerDestRect.w = scaleMultiplier * layer->clip_rect.w;
 		layerDestRect.h = scaleMultiplier * layer->clip_rect.h;
-		layerDestRect.x = (windowRect.w - layerDestRect.w) / 2.0;
-		layerDestRect.y = (windowRect.h - layerDestRect.h) / 2.0;
+		layerDestRect.x = int((windowRect.w - layerDestRect.w) / 2.0);
+		layerDestRect.y = int((windowRect.h - layerDestRect.h) / 2.0);
 
 		SDL_LockSurface(layer);
 		SDL_SetSurfaceRLE(layer, true);

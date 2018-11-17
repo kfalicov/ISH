@@ -62,11 +62,15 @@ std::vector<Entity*> Tile::getTopOccupants() {
 		}
 	}
 }
+Chunk * Tile::getParentChunk()
+{
+	return parent;
+}
 
 Chunk::Chunk(int x, int y)
 {
 	chunkPos = vec2(x, y);
-	neighbors = vector<Chunk*>(4);
+	neighbors = std::vector<Chunk*>(4);
 	//TODO instantialize a 16x16 chunk
 	//set chunk pos
 	//create array of tiles who are members of the chunk

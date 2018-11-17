@@ -87,7 +87,7 @@ public:
 
 
 private:
-	vector<Chunk*> neighbors;
+	std::vector<Chunk*> neighbors;
 	//vector< std::vector<Tile*> > grid; // a row-major matrix of tiles
 	Tile*** tileGrid;
 };
