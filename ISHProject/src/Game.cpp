@@ -66,7 +66,45 @@ void Game::Update() {
 }
 
 void Game::Render(float interpolation) {
-	
+	SDL_RenderClear(renderer);
+
+	int w, h;
+	SDL_GetRendererOutputSize(renderer, &w, &h);
+	SDL_Rect windowRect = SDL_Rect();
+	windowRect.x = windowRect.y = 0;
+	windowRect.w = w;
+	windowRect.h = h;
+
+	std::vector<SDL_Surface*> surfaces;
+	activeState->Render(surfaces, interpolation);
+
+	for (SDL_Surface* layer : surfaces) {
+		SDL_Texture* layerTexture = SDL_CreateTextureFromSurface(renderer, layer);
+
+		//Scale each layer accordingly to fit the window
+		float widthRatio = (float)windowRect.w / layer->clip_rect.w;
+		float heightRatio = (float)windowRect.h / layer->clip_rect.h;
+		int scaleMultiplier = floor((widthRatio < heightRatio) ? widthRatio : heightRatio);
+		//Disable scaling (DEBUG)
+		//scaleMultiplier = 1;
+		SDL_Rect layerDestRect;
+		layerDestRect.w = scaleMultiplier * layer->clip_rect.w;
+		layerDestRect.h = scaleMultiplier * layer->clip_rect.h;
+		layerDestRect.x = (windowRect.w - layerDestRect.w) / 2.0;
+		layerDestRect.y = (windowRect.h - layerDestRect.h) / 2.0;
+
+		SDL_LockSurface(layer);
+		SDL_SetSurfaceRLE(layer, true);
+		SDL_RenderCopy(renderer, layerTexture,
+			&layer->clip_rect,
+			&layerDestRect);
+		SDL_SetSurfaceRLE(layer, false);
+		SDL_UnlockSurface(layer);
+
+		SDL_DestroyTexture(layerTexture);
+	}
+
+	SDL_RenderPresent(renderer);
 }
 
 void Game::Clean() {
