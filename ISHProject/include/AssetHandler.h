@@ -1,10 +1,11 @@
 #pragma once
+#include <vector>
+#include <unordered_map>
+
 #include "Game.h"
 #include "SDL.h"
 #include "Entity.h"
 #include "Sprite.h"
-#include <vector>
-#include <unordered_map>
 
 using std::vector;
 using std::unordered_map;

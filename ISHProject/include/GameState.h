@@ -3,17 +3,15 @@
 #include <SDL.h>
 #include <iostream>
 
-#include "Game.h"
 #include "AssetHandler.h"
 
-class Game;
 class AssetHandler;
 
 class GameState
 {
 public:
-	virtual void HandleEvents(SDL_Event event) {};
-	virtual void Update() {};
+	//virtual void HandleEvents(SDL_Event event) {}; //should be unneeded
+	virtual GameState* Update(SDL_Event event) { return this; };
 	virtual void Render(std::vector<SDL_Surface*> &surfaces, float interpolation, bool forceReRender = false);
 	virtual SDL_Surface* RenderLayers(float interpolation) { return nullptr; };
 	virtual void initializeRenderSurface(int width, int height) {
@@ -25,8 +23,6 @@ public:
 	~GameState() {};
 
 protected:
-	Game* game;
-
 	//the last gamestate you were in, for switching purposes
 	GameState* previous;
 
@@ -45,12 +41,12 @@ class MenuState : public GameState
 {
 public:
 	MenuState() {};
-	MenuState(Game* game, GameState* previous = nullptr);
+	MenuState(GameState* previous = nullptr);
 	SDL_Surface* RenderLayers(float interpolation) override;
 	~MenuState();
 
-	void HandleEvents(SDL_Event event) override;
-	void Update() override;
+	//void HandleEvents(SDL_Event event) override;
+	GameState* Update(SDL_Event event) override;
 private:
 	//std::vector<Element*> menuitems;
 };
@@ -59,11 +55,11 @@ class PlayState : public GameState
 {
 public:
 	PlayState() {};
-	PlayState(Game* game, GameState* previous = nullptr);
+	PlayState(GameState* previous = nullptr);
 	SDL_Surface* RenderLayers(float interpolation) override;
 	~PlayState();
 
-	void HandleEvents(SDL_Event event) override;
-	void Update() override;
+	//void HandleEvents(SDL_Event event) override;
+	GameState* Update(SDL_Event event) override;
 private:
 };

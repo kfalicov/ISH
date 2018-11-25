@@ -30,7 +30,7 @@ Entity* Tile::removeOccupant(int index) {
 	//if you passed in an index for manual removal, use it
 	index = index < 0 ? displayIndex : index;
 	//verify index in range
-	if (index >= 0 && index < occupants.size()) {
+	if (index >= 0 && index < int(occupants.size())) {
 		Entity* removed = occupants.at(index);
 		//decrement display index if entity removed is an item
 		if (!(removed->isSolid())) {
@@ -61,6 +61,7 @@ std::vector<Entity*> Tile::getTopOccupants() {
 			topFew.push_back(occupants.back());
 		}
 	}
+	return topFew;
 }
 Chunk * Tile::getParentChunk()
 {

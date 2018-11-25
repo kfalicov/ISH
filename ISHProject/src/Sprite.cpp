@@ -29,7 +29,7 @@ void Sprite::setRectsFromIndices(const int width, const int height, const std::v
 
 	std::vector<SDL_Rect> frameRects;
 
-	for (int i = 0; i < indices.size(); i++) {
+	for (int i = 0; i < int(indices.size()); i++) {
 		SDL_Rect r = SDL_Rect();
 		r.w = width;
 		r.h = height;

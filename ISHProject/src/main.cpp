@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
 	while (game->Running()) {
 		loops = 0;
 		while (SDL_GetTicks() > next_game_tick && loops < MAX_FRAMESKIP) {
-			game->HandleEvents();
+			//game->HandleEvents(); //unneeded, performed in Update()
 			game->Update();
 
 			next_game_tick += SKIP_TICKS;

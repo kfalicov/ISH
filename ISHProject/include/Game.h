@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include <iostream>
 #include "Util.h"
 #include "GameState.h"
@@ -15,12 +16,12 @@ public:
 	Game();
 	~Game();
 
-	void HandleEvents();
+	//void HandleEvents();
 	void Update();
 	void Render(float interpolation);
 	void Clean();
 	//sets the active state
-	void setActiveState(GameState* state) { this->activeState = state; };
+	//void setActiveState(GameState* state) { this->activeState = state; }; //should be unneeded
 
 	bool Running();
 

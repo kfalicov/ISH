@@ -1,7 +1,4 @@
-#include <SDL_image.h>
-
 #include "AssetHandler.h"
-#include "Environment.h"
 
 AssetHandler::AssetHandler() {
 	animationCounter = 0;

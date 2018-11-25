@@ -1,14 +1,9 @@
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_ttf.h>
-
 #include "Game.h"
-#include "GameState.h"
 
 Game::Game() {
 	//initialize SDL and then our stuff
 	if (SDLInit("ISH", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, false)) {
-		activeState = new MenuState(this);
+		activeState = new MenuState(nullptr);
 		isRunning = true;
 	}
 	else {
@@ -43,12 +38,15 @@ bool Game::SDLInit(const char* title, int xpos, int ypos, int width, int height,
 	return false;
 }
 
-void Game::HandleEvents() {
+//void Game::HandleEvents() {
+//	//TODO remove this unneeded method
+//}
+
+void Game::Update() {
 	//the list of all currently pressed keys and buttons
+	//the following lines used to be part of HandleEvents.
 	SDL_Event event;
 	SDL_PollEvent(&event);
-
-	activeState->HandleEvents(event);
 
 	switch (event.type) {
 	case SDL_QUIT:
@@ -57,10 +55,9 @@ void Game::HandleEvents() {
 	default:
 		break;
 	}
-}
 
-void Game::Update() {
-	//activeState.Update();
+	//This is the way we can change game states without using pointer magic, it's pseudo-immutability.
+	activeState = activeState->Update(event);
 }
 
 void Game::Render(float interpolation) {

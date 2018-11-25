@@ -10,8 +10,8 @@
 #define CHUNK_SIZE 8 //number of tiles per chunk (n * n)
 #define TILE_SIZE 16 //edge length of tile sprites, can be used for spacing
 
-class Entity;
 class Chunk;
+class Entity;
 
 class Tile
 {
@@ -54,7 +54,7 @@ private:
 
 class Chunk {
 public:
-	static enum dir { NORTH, EAST, SOUTH, WEST };
+	enum dir { NORTH, EAST, SOUTH, WEST };
 	Chunk() {};
 	Chunk(int x, int y);
 	//saves data and removes chunk from memory

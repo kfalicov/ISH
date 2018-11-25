@@ -22,22 +22,20 @@ void GameState::Render(std::vector<SDL_Surface*> &surfaces, float interpolation,
 	surfaces.push_back(surface);
 }
 
-MenuState::MenuState(Game* game, GameState* previous)
+MenuState::MenuState(GameState* previous)
 {
-	this->game = game;
 	this->previous = previous;
 }
 
 MenuState::~MenuState(){}
 
-void MenuState::HandleEvents(SDL_Event event){
+
+GameState* MenuState::Update(SDL_Event event){
 	if (event.type == SDL_KEYDOWN) {
 		std::cout << "Changing from menu" << std::endl;
-		game->setActiveState(new PlayState(game, this));
+		return new PlayState(this);
 	}
-}
-
-void MenuState::Update(){
+	return this;
 }
 
 SDL_Surface * MenuState::RenderLayers(float interpolation)
@@ -46,9 +44,8 @@ SDL_Surface * MenuState::RenderLayers(float interpolation)
 }
 
 
-PlayState::PlayState(Game* game, GameState* previous)
+PlayState::PlayState(GameState* previous)
 {
-	this->game = game;
 	this->previous = previous;
 }
 
@@ -57,19 +54,17 @@ PlayState::~PlayState()
 	
 }
 
-void PlayState::HandleEvents(SDL_Event event) {
+GameState* PlayState::Update(SDL_Event event)
+{
 	if (event.type == SDL_KEYDOWN) {
 		std::cout << "Changing from play" << std::endl;
-		game->setActiveState(new MenuState(game, this));
+		return new MenuState(this);
 	}
-}
-
-void PlayState::Update()
-{
 	if (assetHandler->Update()) {
 		//assetHandler->UpdateSpriteFrames(LIST OF SPRITES IN PLAYSTATE);
 		//assetHandler->UpdateEntityAnimations(LIST OF ENTITIES IN PLAYSTATE);
 	}
+	return this;
 }
 
 SDL_Surface* PlayState::RenderLayers(float interpolation)
