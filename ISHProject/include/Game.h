@@ -1,12 +1,5 @@
-#pragma once
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_ttf.h>
-#include <iostream>
-#include "Util.h"
-#include "GameState.h"
-#include "AssetHandler.h"
-
+struct SDL_Renderer;
+struct SDL_Window;
 class GameState;
 class AssetHandler;
 

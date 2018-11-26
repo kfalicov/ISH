@@ -1,9 +1,14 @@
+#pragma once
 #include "Entity.h"
+#include "Sprite.h"
+#include "Environment.h"
 
 Entity::Entity(std::vector<Sprite*>animations, bool solid, std::string name) {
 	this->animations = animations;
 	this->solid = solid;
 	this->name = name;
+	this->displayAnimationIndex = 0;
+	this->nextAnimationIndex = 0;
 }
 
 Entity::~Entity()

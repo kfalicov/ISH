@@ -1,11 +1,10 @@
 #pragma once
-#include "Sprite.h"
-#include "Environment.h"
-//#include "AssetHandler.h"
 #include <string>
 #include <vector>
 
+//forward declarations (for all pointer types used in method signatures)
 class Tile;
+class Sprite;
 
 class Entity {
 public:

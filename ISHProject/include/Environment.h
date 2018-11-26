@@ -3,15 +3,15 @@
 #include <deque>
 #include <algorithm>
 #include "Util.h"
-#include "Sprite.h"
-#include "Entity.h"
 
 #define HEURISTIC diagonal
 #define CHUNK_SIZE 8 //number of tiles per chunk (n * n)
 #define TILE_SIZE 16 //edge length of tile sprites, can be used for spacing
 
+//forward declarations (for all pointer types used in method signatures)
 class Chunk;
 class Entity;
+class Sprite;
 
 class Tile
 {
@@ -40,7 +40,7 @@ public:
 private:
 	//Which item in the tile to display (out of all non-solids)
 	//is -1 if no items to display on the tile.
-	int displayIndex = -1;
+	int displayIndex;
 	//the occupants in the tile. The last item
 	//should be checked if solid.
 	std::vector<Entity*> occupants;
@@ -55,7 +55,7 @@ private:
 class Chunk {
 public:
 	enum dir { NORTH, EAST, SOUTH, WEST };
-	Chunk() {};
+	Chunk();
 	Chunk(int x, int y);
 	//saves data and removes chunk from memory
 	~Chunk() {/*TODO*/};	
@@ -87,8 +87,6 @@ public:
 	// gets a queue representation of the best path between position a and position b
 	std::deque<vec2> AStarPath(vec2& a, vec2& b);
 
-
-
 private:
 	std::vector<Chunk*> neighbors;
 	//vector< std::vector<Tile*> > grid; // a row-major matrix of tiles
@@ -97,7 +95,7 @@ private:
 
 class World {
 	//TODO make the world class essentially the world generator.
-	//initialize it with the assethandler, and it will pass along the assets to the 
+	//initialize it with the assethandler, and it will pass along the assets to the tiles it creates.
 };
 
 /*

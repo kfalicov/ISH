@@ -1,10 +1,14 @@
+#pragma once
+#include <iostream>
 #include "GameState.h"
+#include "AssetHandler.h"
 
-GameState::GameState() {
+GameState::GameState(AssetHandler* asshand) {
 	//TODO each state can have a different sized surface. For example, PlayState will have
 	//a square surface to render the environment.
 	initializeRenderSurface(800, 600);
-	assetHandler = new AssetHandler();
+	this->assetHandler = asshand;
+	this->previous = nullptr;
 }
 
 void GameState::Render(std::vector<SDL_Surface*> &surfaces, float interpolation, bool forceReRender) {
@@ -22,7 +26,8 @@ void GameState::Render(std::vector<SDL_Surface*> &surfaces, float interpolation,
 	surfaces.push_back(surface);
 }
 
-MenuState::MenuState(GameState* previous)
+MenuState::MenuState(AssetHandler* assetHandler, GameState* previous)
+	: GameState(assetHandler)
 {
 	this->previous = previous;
 }
@@ -44,7 +49,8 @@ SDL_Surface * MenuState::RenderLayers(float interpolation)
 }
 
 
-PlayState::PlayState(GameState* previous)
+PlayState::PlayState(AssetHandler* assetHandler, GameState* previous)
+	: GameState(assetHandler)
 {
 	this->previous = previous;
 }

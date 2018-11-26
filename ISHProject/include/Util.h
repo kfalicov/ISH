@@ -1,5 +1,4 @@
 #pragma once
-
 #include <iostream>
 #include <stdlib.h>
 #include <ctype.h>
@@ -15,6 +14,11 @@
 class vec2;
 
 enum { VX, VY, VZ, VW };		    // axes
+//compass directions
+#define VEC2_NORTH vec2(0, -1);
+#define VEC2_EAST vec2(1, 0);
+#define VEC2_SOUTH vec2(0, 1);
+#define VEC2_WEST vec2(-1, 0);
 
 class vec2
 {
@@ -55,11 +59,6 @@ public:
 	friend vec2 maxv(const vec2& a, const vec2& b);		    // max(v1, v2)
 	friend vec2 prod(const vec2& a, const vec2& b);		    // term by term *
 	friend std::ostream& operator << (std::ostream& os, const vec2& a);	// for use in cout, requires iostream import
-
-	static vec2 N;
-	static vec2 E;
-	static vec2 S;
-	static vec2 W;
 };
 
 class noise

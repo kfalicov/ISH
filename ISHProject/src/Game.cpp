@@ -1,3 +1,11 @@
+#pragma once
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_ttf.h>
+#include <iostream>
+#include "Util.h"
+#include "GameState.h"
+#include "AssetHandler.h"
 #include "Game.h"
 
 Game::Game() {
@@ -85,8 +93,8 @@ void Game::Render(float interpolation) {
 		SDL_Rect layerDestRect;
 		layerDestRect.w = scaleMultiplier * layer->clip_rect.w;
 		layerDestRect.h = scaleMultiplier * layer->clip_rect.h;
-		layerDestRect.x = int((windowRect.w - layerDestRect.w) / 2.0);
-		layerDestRect.y = int((windowRect.h - layerDestRect.h) / 2.0);
+		layerDestRect.x = int((int(windowRect.w) - int(layerDestRect.w)) / 2.0);
+		layerDestRect.y = int((int(windowRect.h) - int(layerDestRect.h)) / 2.0);
 
 		SDL_LockSurface(layer);
 		SDL_SetSurfaceRLE(layer, true);

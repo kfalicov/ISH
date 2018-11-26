@@ -2,15 +2,10 @@
 #include <vector>
 #include <unordered_map>
 
-#include "Game.h"
-#include "SDL.h"
-#include "Entity.h"
-#include "Sprite.h"
-
-using std::vector;
-using std::unordered_map;
-
+//forward declarations (for all pointer types used in method signatures)
 class Entity;
+class Sprite;
+struct SDL_Surface;
 
 class AssetHandler {
 public:

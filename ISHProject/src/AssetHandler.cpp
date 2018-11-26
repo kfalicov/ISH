@@ -1,3 +1,9 @@
+#pragma once
+#include "SDL.h"
+#include "SDL_image.h"
+#include "Entity.h"
+#include "Sprite.h"
+#include "Environment.h"
 #include "AssetHandler.h"
 
 AssetHandler::AssetHandler() {

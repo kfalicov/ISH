@@ -1,6 +1,8 @@
+#pragma once
 #include "Sprite.h"
 
 Sprite::Sprite() {
+	this->spriteSheet = nullptr;
 }
 
 Sprite::Sprite(SDL_Surface* spriteSheet, SDL_Rect srcRect)

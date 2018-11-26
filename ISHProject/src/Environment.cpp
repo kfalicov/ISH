@@ -1,9 +1,14 @@
+#pragma once
+#include "Sprite.h"
+#include "Entity.h"
 #include "Environment.h"
 
 Tile::Tile(vec2 pos, Chunk* parent) {
 	this->pos = pos;
 	this->parent = parent;
-};
+	this->displayIndex = -1;
+	this->sprite = nullptr; //TODO give this tile a sprite somehow
+}
 bool Tile::addOccupant(Entity* e) {
 	//if there are already occupants
 	if (occupants.size() > 0) {
@@ -68,9 +73,14 @@ Chunk * Tile::getParentChunk()
 	return parent;
 }
 
+Chunk::Chunk()
+{
+	this->tileGrid = nullptr;
+}
+
 Chunk::Chunk(int x, int y)
 {
-	chunkPos = vec2(x, y);
+	chunkPos = vec2(double(x), double(y));
 	neighbors = std::vector<Chunk*>(4);
 	//TODO instantialize a 16x16 chunk
 	//set chunk pos
@@ -140,7 +150,7 @@ Chunk* Chunk::getChunk(vec2& tilePos, vec2 direction) {
 	vec2 newPos = tilePos + direction;
 	if (newPos[0] >= CHUNK_SIZE) {
 		if (getEast() != nullptr) {
-			newPos -= CHUNK_SIZE * vec2::E;
+			newPos -= CHUNK_SIZE * VEC2_EAST;
 			tilePos = newPos;
 			return getEast();
 		}
@@ -150,7 +160,7 @@ Chunk* Chunk::getChunk(vec2& tilePos, vec2 direction) {
 	}
 	if (newPos[0] < 0) {
 		if (getWest() != nullptr) {
-			newPos -= CHUNK_SIZE * vec2::W;
+			newPos -= CHUNK_SIZE * VEC2_WEST;
 			tilePos = newPos;
 			return getWest();
 		}
@@ -160,7 +170,7 @@ Chunk* Chunk::getChunk(vec2& tilePos, vec2 direction) {
 	}
 	if (newPos[1] >= CHUNK_SIZE) {
 		if (getSouth() != nullptr) {
-			newPos -= CHUNK_SIZE * vec2::S;
+			newPos -= CHUNK_SIZE * VEC2_SOUTH;
 			tilePos = newPos;
 			return getSouth();
 		}
@@ -170,7 +180,7 @@ Chunk* Chunk::getChunk(vec2& tilePos, vec2 direction) {
 	}
 	if (newPos[1] < 0) {
 		if (getNorth() != nullptr) {
-			newPos -= CHUNK_SIZE * vec2::N;
+			newPos -= CHUNK_SIZE * VEC2_NORTH;
 			tilePos = newPos;
 			return getNorth();
 		}
