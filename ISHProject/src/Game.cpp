@@ -13,6 +13,8 @@ Game::Game() {
 	if (SDLInit("ISH", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, false)) {
 		assetHandler = new AssetHandler();
 		activeState = new MenuState(assetHandler);
+		console = new ConsoleState(assetHandler, nullptr);
+		canOpenConsole = true;
 		isRunning = true;
 	}
 	else {
@@ -55,14 +57,31 @@ void Game::Update() {
 	//the list of all currently pressed keys and buttons
 	//the following lines used to be part of HandleEvents.
 	SDL_Event event;
-	SDL_PollEvent(&event);
-
-	switch (event.type) {
-	case SDL_QUIT:
-		isRunning = false;
-		break;
-	default:
-		break;
+	while (SDL_PollEvent(&event)) {
+		switch (event.type) {
+		case SDL_QUIT:
+			isRunning = false;
+			break;
+		case SDL_KEYDOWN:
+			if (event.key.keysym.sym == SDLK_BACKQUOTE) {
+				//checks if the console is not already open, 
+				//and you aren't holding the button from closing it.
+				if (console->getPrevious() == nullptr && canOpenConsole) {
+					std::cout << "switched to console" << std::endl;
+					console->setPrevious(activeState);
+					activeState = console;
+				}
+				canOpenConsole = false;
+			}
+			break;
+		case SDL_KEYUP:
+			if (event.key.keysym.sym == SDLK_BACKQUOTE) {
+				canOpenConsole = true;
+			}
+			break;
+		default:
+			break;
+		}
 	}
 
 	//This is the way we can change game states without using pointer magic, it's pseudo-immutability.

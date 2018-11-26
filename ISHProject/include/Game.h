@@ -1,6 +1,7 @@
 struct SDL_Renderer;
 struct SDL_Window;
 class GameState;
+class ConsoleState;
 class AssetHandler;
 
 class Game
@@ -34,6 +35,12 @@ private:
 	
 	bool SDLInit(const char* title, int xpos, int ypos, int width, int height, bool fullscreen);
 	GameState* activeState; //activeState changes itself to the next state based on inputs it recieves
+	
+	//the game's console. All gamestates have access.
+	ConsoleState* console;
+	//a boolean which checks that the key for opening console has 
+	//been released before being pressed again.
+	bool canOpenConsole;
 
 	bool isRunning;
 };
