@@ -11,7 +11,8 @@
 Game::Game() {
 	//initialize SDL and then our stuff
 	if (SDLInit("ISH", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, false)) {
-		activeState = new MenuState(nullptr);
+		assetHandler = new AssetHandler();
+		activeState = new MenuState(assetHandler);
 		isRunning = true;
 	}
 	else {

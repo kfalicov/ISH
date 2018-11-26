@@ -3,11 +3,11 @@
 #include "AssetHandler.h"
 #include "GameState.h"
 
-GameState::GameState(AssetHandler* asshand) {
+GameState::GameState(AssetHandler* assetHandler) {
 	//TODO each state can have a different sized surface. For example, PlayState will have
 	//a square surface to render the environment.
 	initializeRenderSurface(800, 600);
-	this->assetHandler = asshand;
+	this->assetHandler = assetHandler;
 	this->previous = nullptr;
 }
 
