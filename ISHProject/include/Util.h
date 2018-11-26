@@ -1,9 +1,3 @@
-#pragma once
-#include <iostream>
-#include <stdlib.h>
-#include <ctype.h>
-#include <math.h>
-
 // min-max macros
 #define MIN(A,B) ((A) < (B) ? (A) : (B))
 #define MAX(A,B) ((A) > (B) ? (A) : (B))
@@ -11,14 +5,7 @@
 // error handling macro
 #define V_ERROR(E) { std::cerr << E; exit(1); }
 
-class vec2;
-
 enum { VX, VY, VZ, VW };		    // axes
-//compass directions
-#define VEC2_NORTH vec2(0, -1);
-#define VEC2_EAST vec2(1, 0);
-#define VEC2_SOUTH vec2(0, 1);
-#define VEC2_WEST vec2(-1, 0);
 
 class vec2
 {
@@ -59,6 +46,12 @@ public:
 	friend vec2 maxv(const vec2& a, const vec2& b);		    // max(v1, v2)
 	friend vec2 prod(const vec2& a, const vec2& b);		    // term by term *
 	friend std::ostream& operator << (std::ostream& os, const vec2& a);	// for use in cout, requires iostream import
+
+	//compass directions
+	static vec2 NORTH;
+	static vec2 EAST;
+	static vec2 SOUTH;
+	static vec2 WEST;
 };
 
 class noise

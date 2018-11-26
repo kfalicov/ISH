@@ -9,6 +9,9 @@ Tile::Tile(vec2 pos, Chunk* parent) {
 	this->displayIndex = -1;
 	this->sprite = nullptr; //TODO give this tile a sprite somehow
 }
+Tile::~Tile()
+{
+}
 bool Tile::addOccupant(Entity* e) {
 	//if there are already occupants
 	if (occupants.size() > 0) {
@@ -31,7 +34,7 @@ void Tile::cycleItems() {
 		displayIndex = (displayIndex + 1) % numOfItems;
 	}
 }
-Entity* Tile::removeOccupant(int index) {
+Entity* Tile::removeOccupant(int index = -1) {
 	//if you passed in an index for manual removal, use it
 	index = index < 0 ? displayIndex : index;
 	//verify index in range
@@ -68,19 +71,14 @@ std::vector<Entity*> Tile::getTopOccupants() {
 	}
 	return topFew;
 }
-Chunk * Tile::getParentChunk()
+Chunk* Tile::getParentChunk()
 {
 	return parent;
 }
 
-Chunk::Chunk()
-{
-	this->tileGrid = nullptr;
-}
-
 Chunk::Chunk(int x, int y)
 {
-	chunkPos = vec2(double(x), double(y));
+	this->chunkPos = vec2(double(x), double(y));
 	neighbors = std::vector<Chunk*>(4);
 	//TODO instantialize a 16x16 chunk
 	//set chunk pos
@@ -91,9 +89,9 @@ Chunk::Chunk(int x, int y)
 		tileGrid[i] = new Tile*[CHUNK_SIZE];
 	}
 
-	for (int x = 0; x < CHUNK_SIZE; x++) {
-		for (int y = 0; y < CHUNK_SIZE; y++) {
-			tileGrid[x][y] = new Tile(vec2((chunkPos[0] * CHUNK_SIZE) + x, (chunkPos[1] * CHUNK_SIZE) + y), this);
+	for (int i = 0; i < CHUNK_SIZE; i++) {
+		for (int j = 0; j < CHUNK_SIZE; i++) {
+			tileGrid[i][j] = new Tile(vec2((x * CHUNK_SIZE) + i, (y * CHUNK_SIZE) + j), this);
 			//tileGrid[x][y]->s = AssetHandler::Instance()->GetSprite("Assets/AnimTest.png", 0);
 			/*tileGrid[x][y]->getSprite() = worldGen.getBackgroundSprite(
 				tileGrid[x][y]->tilePos[0],
@@ -102,6 +100,10 @@ Chunk::Chunk(int x, int y)
 			//std::cout << tileGrid[x][y]->tilePos << std::endl;
 		}
 	}
+}
+
+Chunk::~Chunk()
+{
 }
 
 
@@ -146,11 +148,11 @@ std::vector<vec2> Chunk::neighborsOf(vec2 tilePos)
 }
 
 //Gets the chunk to load based on a world position. Updates the tilepos to be relative to that chunk's internal coordinate system.
-Chunk* Chunk::getChunk(vec2& tilePos, vec2 direction) {
+Chunk* Chunk::getChunk(vec2 tilePos, vec2 direction) {
 	vec2 newPos = tilePos + direction;
 	if (newPos[0] >= CHUNK_SIZE) {
 		if (getEast() != nullptr) {
-			newPos -= CHUNK_SIZE * VEC2_EAST;
+			newPos -= CHUNK_SIZE * vec2::EAST;
 			tilePos = newPos;
 			return getEast();
 		}
@@ -160,7 +162,7 @@ Chunk* Chunk::getChunk(vec2& tilePos, vec2 direction) {
 	}
 	if (newPos[0] < 0) {
 		if (getWest() != nullptr) {
-			newPos -= CHUNK_SIZE * VEC2_WEST;
+			newPos -= CHUNK_SIZE * vec2::WEST;
 			tilePos = newPos;
 			return getWest();
 		}
@@ -170,7 +172,7 @@ Chunk* Chunk::getChunk(vec2& tilePos, vec2 direction) {
 	}
 	if (newPos[1] >= CHUNK_SIZE) {
 		if (getSouth() != nullptr) {
-			newPos -= CHUNK_SIZE * VEC2_SOUTH;
+			newPos -= CHUNK_SIZE * vec2::SOUTH;
 			tilePos = newPos;
 			return getSouth();
 		}
@@ -180,7 +182,7 @@ Chunk* Chunk::getChunk(vec2& tilePos, vec2 direction) {
 	}
 	if (newPos[1] < 0) {
 		if (getNorth() != nullptr) {
-			newPos -= CHUNK_SIZE * VEC2_NORTH;
+			newPos -= CHUNK_SIZE * vec2::NORTH;
 			tilePos = newPos;
 			return getNorth();
 		}

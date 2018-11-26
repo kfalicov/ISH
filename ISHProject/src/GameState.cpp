@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
-#include "GameState.h"
 #include "AssetHandler.h"
+#include "GameState.h"
 
 GameState::GameState(AssetHandler* asshand) {
 	//TODO each state can have a different sized surface. For example, PlayState will have
@@ -38,7 +38,7 @@ MenuState::~MenuState(){}
 GameState* MenuState::Update(SDL_Event event){
 	if (event.type == SDL_KEYDOWN) {
 		std::cout << "Changing from menu" << std::endl;
-		return new PlayState(this);
+		return new PlayState(assetHandler, this);
 	}
 	return this;
 }
@@ -64,7 +64,7 @@ GameState* PlayState::Update(SDL_Event event)
 {
 	if (event.type == SDL_KEYDOWN) {
 		std::cout << "Changing from play" << std::endl;
-		return new MenuState(this);
+		return new MenuState(assetHandler, this);
 	}
 	if (assetHandler->Update()) {
 		//assetHandler->UpdateSpriteFrames(LIST OF SPRITES IN PLAYSTATE);

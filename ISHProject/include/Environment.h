@@ -1,12 +1,11 @@
-#pragma once
 #include <vector>
 #include <deque>
 #include <algorithm>
 #include "Util.h"
 
 #define HEURISTIC diagonal
-#define CHUNK_SIZE 8 //number of tiles per chunk (n * n)
-#define TILE_SIZE 16 //edge length of tile sprites, can be used for spacing
+constexpr auto CHUNK_SIZE = 8; //number of tiles per chunk (n * n);
+constexpr auto TILE_SIZE = 16; //edge length of tile sprites, can be used for spacing;
 
 //forward declarations (for all pointer types used in method signatures)
 class Chunk;
@@ -19,7 +18,7 @@ public:
 	//creates a Tile with the given coordinate (bounded by 0-15) and knowing the chunk it belongs to
 	Tile(vec2 pos, Chunk* parent);
 	//destroys the tile TODO
-	~Tile() {};
+	~Tile();
 
 	//returns whether it successfully added an entity to this tile
 	bool addOccupant(Entity* e);
@@ -27,7 +26,7 @@ public:
 	//cycles through the displayed entities on the tile
 	void cycleItems();
 	//removes the current display item unless a specific index is passed in
-	Entity* removeOccupant(int index=-1);
+	Entity* removeOccupant(int index);
 
 	//returns the position of the tile in pixel-space of the Chunk
 	vec2 getPosition();
@@ -54,11 +53,9 @@ private:
 
 class Chunk {
 public:
-	enum dir { NORTH, EAST, SOUTH, WEST };
-	Chunk();
 	Chunk(int x, int y);
 	//saves data and removes chunk from memory
-	~Chunk() {/*TODO*/};	
+	~Chunk();	
 
 	void Render(float interpolation);
 
@@ -77,7 +74,7 @@ public:
 	Tile* getTile(vec2 tilePos);
 	std::vector<vec2> neighborsOf(vec2 tilePos);
 
-	Chunk* getChunk(vec2& tilePos, vec2 direction);
+	Chunk* getChunk(vec2 tilePos, vec2 direction);
 
 	//various heuristics for distance of pathfinding
 	double manhattan(vec2 a, vec2 b);	//gets distance along "blocks"
@@ -88,6 +85,7 @@ public:
 	std::deque<vec2> AStarPath(vec2& a, vec2& b);
 
 private:
+	enum dir { NORTH, EAST, SOUTH, WEST };
 	std::vector<Chunk*> neighbors;
 	//vector< std::vector<Tile*> > grid; // a row-major matrix of tiles
 	Tile*** tileGrid;

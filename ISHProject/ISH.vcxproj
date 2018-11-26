@@ -26,6 +26,7 @@
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
+    <ClCompile Include="src\Util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AssetHandler.h" />
@@ -35,7 +36,6 @@
     <ClInclude Include="include\GameState.h" />
     <ClInclude Include="include\Sprite.h" />
     <ClInclude Include="include\Util.h" />
-    <ClInclude Include="src\Util.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
