@@ -113,3 +113,18 @@ private:
 	vec2 size;
 	vec2 target; // Where the camera is moving to over time
 };
+
+//the hashing function of vec2, used automatically by the unordered_map
+template <>
+struct std::hash<vec2>
+{
+	std::size_t operator()(const vec2& v) const
+	{
+
+		// Compute individual hash values for first,
+		// second and third and combine them using XOR
+		// and bit shifting:
+
+		return ((std::hash<double>()(v[0]) ^ (std::hash<double>()(v[1]) << 1)));
+	}
+};

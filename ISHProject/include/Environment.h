@@ -115,7 +115,7 @@ public:
 	void loadChunks();
 	Chunk* getLoadedChunk(vec2 position);
 
-	std::unordered_map<vec2*, Chunk*> loadedChunks;
+	std::unordered_map<vec2, Chunk*> loadedChunks;
 	
 	int chunkSquareRadius = 4;
 	int renderChunkSquareRadius = 4;

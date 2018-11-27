@@ -326,22 +326,22 @@ void Environment::loadChunks() {
 	//For all chunks that SHOULD BE loaded...
 	for (int chunkX = minX; chunkX <= maxX; chunkX++) {
 		for (int chunkY = minY; chunkY <= maxY; chunkY++) {
-			vec2* pos = new vec2(chunkX, chunkY);
+			vec2 pos = vec2(chunkX, chunkY);
 
 			// TODO properly load/generate chunk
 			if (getLoadedChunk(vec2(chunkX, chunkY)) == nullptr) { //If they are not already loaded, load them
 				//Chunk* newChunk = new Chunk(worldGen, chunkX, chunkY);
 				Chunk* newChunk = new Chunk(chunkX, chunkY);
 				newChunk->setTiles(Generator::generateTiles(assetHandler, newChunk));
-				loadedChunks.insert(std::pair<vec2*, Chunk*>(pos, newChunk));
+				loadedChunks.insert(std::pair<vec2, Chunk*>(pos, newChunk));
 			}
 			//std::cout << chunkX << ", " << chunkY << std::endl;
 		}
 	}
 
 	//Set up NSEW chunks
-	for (std::unordered_map<vec2*, Chunk*>::iterator it = loadedChunks.begin(); it != loadedChunks.end();) {
-		vec2 p = (*it->first);
+	for (std::unordered_map<vec2, Chunk*>::iterator it = loadedChunks.begin(); it != loadedChunks.end();) {
+		vec2 p = (it->first);
 
 		//if a chunk is loaded and it shouldn't be, unload it
 		if (p[0] < minX || p[0] > maxX || p[1] < minY || p[1] > maxY) {
@@ -368,9 +368,9 @@ void Environment::loadChunks() {
 }
 
 Chunk* Environment::getLoadedChunk(vec2 position) {
-	for (std::unordered_map<vec2*, Chunk*>::iterator it = loadedChunks.begin(); it != loadedChunks.end(); ++it) {
-		vec2* p = it->first;
-		if ((*p) == position) {
+	for (std::unordered_map<vec2, Chunk*>::iterator it = loadedChunks.begin(); it != loadedChunks.end(); ++it) {
+		vec2 p = it->first;
+		if (p == position) {
 			return it->second;
 		}
 	}

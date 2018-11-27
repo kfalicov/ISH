@@ -72,11 +72,19 @@ PlayState::PlayState(AssetHandler* assetHandler, GameState* previous)
 
 	environment = new Environment(assetHandler);
 	environmentCamera = new Camera(vec2(0,0), 256, 256);
+
+	SDL_Surface* environmentSurface = SDL_CreateRGBSurface(0,
+		int(environmentCamera->getSize()[0]),
+		int(environmentCamera->getSize()[1]),
+		32, 0, 0, 0, 0);
 }
 
 PlayState::~PlayState()
 {
-	
+	SDL_FreeSurface(environmentSurface);
+	SDL_FreeSurface(uiSurface);
+	delete environment;
+	delete environmentCamera;
 }
 
 GameState* PlayState::Update(SDL_Event event)
@@ -85,38 +93,35 @@ GameState* PlayState::Update(SDL_Event event)
 	const Uint8 *keystates = SDL_GetKeyboardState(NULL);
 	if (keystates[SDL_SCANCODE_RIGHT]) {
 		//this is the format for using keyboard inputs in this
+		//if the player is moving, the state should re-render
+		needsRender = true;
 	}
 	if (assetHandler->Update()) {
 		//assetHandler->UpdateSpriteFrames(LIST OF SPRITES IN PLAYSTATE);
 		//assetHandler->UpdateEntityAnimations(LIST OF ENTITIES IN PLAYSTATE);
+		//if any of the sprites have changed, the state should re-render
+		needsRender = true;
 	}
 
+	//if nothing changes, then needsRender should remain false.
+	//temporary for diagnostic
 	needsRender = true;
-
 	return this;
 }
 
 void PlayState::WriteSurface(float interpolation)
 {
-	//Render World (background, items, entities) and return their combined surface.
-	//delete this after it is blitted to surface
-	SDL_Surface* environmentSurface = RenderEnvironment();
-	//Combine world surface with UI
-	//delete this after it is blitted to surface
-	SDL_Surface* uiSurface = RenderUI();
+	//Render World (background, items, entities) to environmentSurface
+	RenderEnvironment();
+	//Render UI to uiSurface
+	RenderUI();
 
 	SDL_BlitSurface(environmentSurface, &environmentSurface->clip_rect,
 		surface, &surface->clip_rect);
-	//delete environmentSurface;
-	delete uiSurface;
 }
 
-SDL_Surface* PlayState::RenderEnvironment() {
+void PlayState::RenderEnvironment() {
 	//Create a surface with the dimensions of the portion of the environment that is visible
-	SDL_Surface* surface = SDL_CreateRGBSurface(0,
-		int(environmentCamera->getSize()[0]),
-		int(environmentCamera->getSize()[1]),
-		32, 0, 0, 0, 0);
 
 	//Get bounds of chunks to render
 	int minX = int(environment->centerChunkPos[0] - environment->renderChunkSquareRadius);
@@ -125,37 +130,37 @@ SDL_Surface* PlayState::RenderEnvironment() {
 	int maxY = int(environment->centerChunkPos[1] + environment->renderChunkSquareRadius);
 
 	//For each loaded chunk (both visible and not), render the chunk if it is within visible bounds
-	for (std::unordered_map<vec2*, Chunk*>::iterator it = environment->loadedChunks.begin();
+	for (std::unordered_map<vec2, Chunk*>::iterator it = environment->loadedChunks.begin();
 		it != environment->loadedChunks.end(); ++it) {
-		Chunk c = *(it->second);
+		Chunk* c = (it->second);
 
 		//Render the chunk if the chunk is one of the visible chunks
-		if (c.chunkPos[0] >= minX && c.chunkPos[0] <= maxX && c.chunkPos[1] >= minY && c.chunkPos[1] <= maxY) {
+		if (c->chunkPos[0] >= minX && c->chunkPos[0] <= maxX && c->chunkPos[1] >= minY && c->chunkPos[1] <= maxY) {
 			//For each tile in the chunk, render the tile
 			for (int x = 0; x < CHUNK_SIZE; ++x) {
 				for (int y = 0; y < CHUNK_SIZE; ++y) {
-					Tile t = (*c.getTile(vec2(x, y)));
+					Tile* t = (c->getTile(vec2(x, y)));
 
 					//std::cout << t.getPosition() << std::endl;
 
 					//Get visible occupants of the tile
-					std::vector<Entity*> tileOccupants = t.getTopOccupants();
+					std::vector<Entity*> tileOccupants = t->getTopOccupants();
 
 					//If the tile has a background, render it
-					if (t.getSprite() != nullptr) {
+					if (t->getSprite() != nullptr) {
 						//Put sprite onto environment surface
-						Sprite* backgroundSprite = t.getSprite();
+						Sprite* backgroundSprite = t->getSprite();
 						SDL_Rect destRect = SDL_Rect();
 						SDL_Rect srcRect = backgroundSprite->frames[backgroundSprite->currentFrameIndex];
 						destRect.w = srcRect.w;
 						destRect.h = srcRect.h;
 
-						vec2 renderPos = t.getPixelPosition();
+						vec2 renderPos = t->getPixelPosition();
 						destRect.x = int(renderPos[0] - environmentCamera->getPos()[0]);
 						destRect.y = int(renderPos[1] - environmentCamera->getPos()[1]);
 
 						//std::cout << "x: " << destRect.x << ", y: " << destRect.y << std::endl;
-						SDL_BlitSurface(backgroundSprite->spriteSheet, &srcRect, surface, &destRect);
+						SDL_BlitSurface(backgroundSprite->spriteSheet, &srcRect, environmentSurface, NULL);
 					}
 					if (tileOccupants.size() > 0) { //transparent is a list of entities occupying the tile
 						//Render the visible occupants of the tile
@@ -165,12 +170,10 @@ SDL_Surface* PlayState::RenderEnvironment() {
 			}
 		}
 	}
-	return surface;
 }
 
-SDL_Surface* PlayState::RenderUI() {
-	SDL_Surface* surface = SDL_CreateRGBSurface(0, 256, 256, 32, 0, 0, 0, 0);
-	return nullptr;
+void PlayState::RenderUI() {
+	//TODO blit stuff to uiSurface
 }
 
 /*

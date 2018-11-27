@@ -27,17 +27,18 @@ public:
 	virtual SDL_Surface* Render(float interpolation, bool forceReRender = false);
 	//modifies the surface to 
 	virtual void WriteSurface(float interpolation) = 0;
-	void initializeRenderSurface(int width, int height) {
-		surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
-		SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGBA(surface->format, 0, 0, 0, 0));
-	}
 	void setPrevious(GameState* previous) {
 		this->previous = previous;
 	}
 	GameState* getPrevious() {
 		return previous;
 	}
-	~GameState() {};
+	virtual ~GameState() {
+		SDL_FreeSurface(surface);
+		std::cout << "deleted gamestate" << std::endl;
+		if(previous)
+			delete previous;
+	}
 
 protected:
 	//the last gamestate you were in, for switching purposes
@@ -52,6 +53,12 @@ protected:
 	SDL_Surface* surface;
 	// whether the surface has been updated visually and needs to be re-written to a surface
 	bool needsRender;
+
+	//sets up the render surface
+	void initializeRenderSurface(int width, int height) {
+		surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
+		SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGBA(surface->format, 0, 0, 0, 0));
+	}
 };
 
 class MenuState : public GameState
@@ -80,10 +87,13 @@ private:
 	Environment* environment;
 	Camera* environmentCamera;
 
-	//returns a surface of environment elements (tile backgrounds, entities, items, etc) AKA world objects
-	SDL_Surface* RenderEnvironment();
-	//returns a surface of the UI for the playstate (health, hotbar, etc)
-	SDL_Surface* RenderUI();
+	SDL_Surface* environmentSurface;
+	SDL_Surface* uiSurface;
+
+	//renders the environment to the EnvironmentSurface
+	void RenderEnvironment();
+	//renders the UI to the UISurface
+	void RenderUI();
 };
 
 class ConsoleState : public GameState
