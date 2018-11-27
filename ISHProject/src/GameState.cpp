@@ -112,15 +112,15 @@ SDL_Surface* PlayState::RenderLayers(float interpolation)
 SDL_Surface* PlayState::RenderEnvironment() {
 	//Create a surface with the dimensions of the portion of the environment that is visible
 	SDL_Surface* surface = SDL_CreateRGBSurface(0,
-		environmentCamera->getSize()[0],
-		environmentCamera->getSize()[1],
+		int(environmentCamera->getSize()[0]),
+		int(environmentCamera->getSize()[1]),
 		32, 0, 0, 0, 0);
 
 	//Get bounds of chunks to render
-	int minX = environment->centerChunkPos[0] - environment->renderChunkSquareRadius;
-	int maxX = environment->centerChunkPos[0] + environment->renderChunkSquareRadius;
-	int minY = environment->centerChunkPos[1] - environment->renderChunkSquareRadius;
-	int maxY = environment->centerChunkPos[1] + environment->renderChunkSquareRadius;
+	int minX = int(environment->centerChunkPos[0] - environment->renderChunkSquareRadius);
+	int maxX = int(environment->centerChunkPos[0] + environment->renderChunkSquareRadius);
+	int minY = int(environment->centerChunkPos[1] - environment->renderChunkSquareRadius);
+	int maxY = int(environment->centerChunkPos[1] + environment->renderChunkSquareRadius);
 
 	//For each loaded chunk (both visible and not), render the chunk if it is within visible bounds
 	for (std::unordered_map<vec2*, Chunk*>::iterator it = environment->loadedChunks.begin();
@@ -149,8 +149,8 @@ SDL_Surface* PlayState::RenderEnvironment() {
 						destRect.h = srcRect.h;
 
 						vec2 renderPos = t.getPixelPosition();
-						destRect.x = renderPos[0] - environmentCamera->getPos()[0];
-						destRect.y = renderPos[1] - environmentCamera->getPos()[1];
+						destRect.x = int(renderPos[0] - environmentCamera->getPos()[0]);
+						destRect.y = int(renderPos[1] - environmentCamera->getPos()[1]);
 
 						//std::cout << "x: " << destRect.x << ", y: " << destRect.y << std::endl;
 						SDL_BlitSurface(backgroundSprite->spriteSheet, &srcRect, surface, &destRect);
@@ -193,15 +193,10 @@ ConsoleState::ConsoleState(AssetHandler* assetHandler, GameState* previous)
 	catch statement in ParseCommand()).
 	*/
 
-	functions["hello"] = [](std::vector<std::string>, std::string &msg) {
-		msg = "hello there";
-		std::cout << "\r\ntest command execution";
-		return 0; //completed successfully
-	};
-	functions["help"] = [](std::vector<std::string>, std::string &msg) {
-		msg = "commands: [hello|state]";
-		return 0; //completed successfully
-	};
+	functions["hello"] = &ConsoleState::hello;
+	functions["state"] = &ConsoleState::changeState;
+	functions["turnbased"] = &ConsoleState::toggleTurnBased;
+	functions["help"] = &ConsoleState::displayHelp;
 	//TODO more functions
 }
 
@@ -215,10 +210,19 @@ ConsoleState::~ConsoleState()
 }
 
 GameState * ConsoleState::Update(SDL_Event event)
-{
+{	
+	
 	switch (event.type) {
 	case SDL_KEYDOWN:
 		switch (event.key.keysym.sym) {
+		case SDLK_ESCAPE: {
+			std::cout << "exited console" << std::endl;
+			canType = false;
+			GameState* returnstate = this->previous;
+			//sets the previous to null to indicate that the console is deactivated
+			this->previous = nullptr;
+			return returnstate;
+		}
 		case SDLK_BACKSPACE:
 			if (currentCommand.length() > 0) { currentCommand.pop_back(); }
 			break;
@@ -240,8 +244,8 @@ GameState * ConsoleState::Update(SDL_Event event)
 			}
 			break;
 		case SDLK_DOWN:
-			commandIndex = (commandIndex + 1 > commands.size() ? commands.size() : commandIndex + 1);
-			if (commandIndex < commands.size()) {
+			commandIndex = (commandIndex + 1 > int(commands.size()) ? commands.size() : commandIndex + 1);
+			if (commandIndex < int(commands.size())) {
 				currentCommand = commands.at(commandIndex);
 			}
 			else {
@@ -281,30 +285,15 @@ GameState * ConsoleState::Update(SDL_Event event)
 }
 
 void ConsoleState::parseCommand(std::string command) {
-	std::vector<std::string> args = split(currentCommand, ' ');
+	args = split(currentCommand, ' ');
 	if (args.size() > 0) {
 		std::string cin = args[0];
 		args.erase(args.begin());
 		if (functions.find(cin) == functions.end()) {
 			consoleOutput.push_back("Invalid command");
+			return;
 		}
-		else {
-			try {
-				std::string msg = "Command Failure";
-				int errorcode = (*functions[cin])(args, msg);
-				if (errorcode != 0) {
-					//msg = "Invalid arguments";
-					//this functionality was replaced by making the message reflect
-					//correct usage. However, the functions still return nonzero when
-					//they fail, so that can be used for something if desired.
-				}
-				consoleOutput.push_back(msg);
-			}
-			catch (const std::exception& e) {
-				std::cout << "fail: " << std::endl;
-			}
-			//execute the function at that place in the map
-		}
+		(this->*(functions[cin]))();
 	}
 }
 

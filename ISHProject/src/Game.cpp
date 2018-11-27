@@ -58,15 +58,13 @@ void Game::Update() {
 	//the following lines used to be part of HandleEvents.
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) {
-		//This is the way we can change game states without using pointer magic, it's pseudo-immutability.
-		activeState = activeState->Update(event);
-
 		switch (event.type) {
 		case SDL_QUIT:
 			isRunning = false;
 			break;
 		case SDL_KEYDOWN:
-			if (event.key.keysym.sym == SDLK_BACKQUOTE) {
+			switch (event.key.keysym.sym) {
+			case SDLK_BACKQUOTE:
 				//checks if the console is not already open, 
 				//and you aren't holding the button from closing it.
 				if (console->getPrevious() == nullptr && canOpenConsole) {
@@ -75,6 +73,7 @@ void Game::Update() {
 					activeState = console;
 				}
 				canOpenConsole = false;
+				break;
 			}
 			break;
 		case SDL_KEYUP:
@@ -86,6 +85,8 @@ void Game::Update() {
 			break;
 		}
 	}
+	//This is the way we can change game states without using pointer magic, it's pseudo-immutability.
+	activeState = activeState->Update(event);
 }
 
 void Game::Render(float interpolation) {
@@ -114,7 +115,7 @@ void Game::Render(float interpolation) {
 		layerDestRect.w = scaleMultiplier * layer->clip_rect.w;
 		layerDestRect.h = scaleMultiplier * layer->clip_rect.h;
 		layerDestRect.x = int((int(windowRect.w) - int(layerDestRect.w)) / 2.0);
-		layerDestRect.y = int((int(windowRect.h) - int(layerDestRect.h)) / 2.0);
+		layerDestRect.y = int((windowRect.h - layerDestRect.h) / 2.0);
 
 		SDL_LockSurface(layer);
 		SDL_SetSurfaceRLE(layer, true);

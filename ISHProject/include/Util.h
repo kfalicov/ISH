@@ -79,10 +79,10 @@ static vec2 lerp(vec2 a, vec2 b, double t) {
 
 class Camera {
 public:
-	Camera() {};
 	Camera(vec2 center, int w, int h) {
 		setCenter(center);
 		size = vec2(w, h);
+		followSpeed = 10;
 	};
 	~Camera() {};
 

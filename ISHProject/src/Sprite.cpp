@@ -3,6 +3,7 @@
 
 Sprite::Sprite() {
 	this->spriteSheet = nullptr;
+	this->currentFrameIndex = 0;
 }
 
 Sprite::Sprite(SDL_Surface* spriteSheet, SDL_Rect srcRect)

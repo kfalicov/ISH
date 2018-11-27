@@ -88,6 +88,7 @@ void Tile::setSprite(Sprite* sprite) {
 Chunk::Chunk(int x, int y)
 {
 	this->chunkPos = vec2(double(x), double(y));
+	this->tileGrid = nullptr;
 	neighbors = std::vector<Chunk*>(4);
 }
 
@@ -272,18 +273,10 @@ void Chunk::Render(float interpolation) {
 	}
 }
 
-Environment::Environment() {
-
-}
-
-Environment::Environment(AssetHandler* assetHandler) {
+Environment::Environment(AssetHandler* assetHandler, int seed) {
 	this->assetHandler = assetHandler;
 	centerChunkPos = vec2(0, 0);
 	loadChunks();
-}
-
-Environment::Environment(int seed) {
-
 }
 
 Environment::~Environment() {
@@ -325,10 +318,10 @@ Tile*** Environment::Generator::generateTiles(AssetHandler* assetHandler, Chunk*
 }
 
 void Environment::loadChunks() {
-	int minX = centerChunkPos[0] - chunkSquareRadius;
-	int maxX = centerChunkPos[0] + chunkSquareRadius;
-	int minY = centerChunkPos[1] - chunkSquareRadius;
-	int maxY = centerChunkPos[1] + chunkSquareRadius;
+	int minX = int(centerChunkPos[0] - chunkSquareRadius);
+	int maxX = int(centerChunkPos[0] + chunkSquareRadius);
+	int minY = int(centerChunkPos[1] - chunkSquareRadius);
+	int maxY = int(centerChunkPos[1] + chunkSquareRadius);
 
 	//For all chunks that SHOULD BE loaded...
 	for (int chunkX = minX; chunkX <= maxX; chunkX++) {

@@ -2,6 +2,7 @@
 #include <string>
 #include <unordered_map>
 #include <SDL.h>
+#include <functional>
 
 //forward declarations (for all pointer types used in method signatures)
 class GameState;
@@ -81,8 +82,6 @@ private:
 	SDL_Surface* RenderUI();
 };
 
-typedef int(*ConsoleCallbackFunction)(std::vector<std::string>, std::string&);
-
 class ConsoleState : public GameState
 {
 public:
@@ -95,10 +94,41 @@ public:
 	void parseCommand(std::string command);
 	std::vector<std::string> split(const std::string & s, char delimiter);
 private:
-	std::unordered_map<std::string, ConsoleCallbackFunction> functions;
+	std::unordered_map<std::string, void(ConsoleState::*)()> functions;
 	std::string currentCommand;
 	int commandIndex = 0;
 	std::vector<std::string> consoleOutput;
 	std::vector<std::string> commands;
 	bool canType;
+
+//console functions
+private:
+	//the arguments are stored here when a command is entered.
+	//it can be used in any of the functions below, but make sure to check
+	//for argument length.
+	std::vector<std::string> args;
+	void hello() { 
+		consoleOutput.push_back("hello there");
+		std::cout << "hello" << std::endl; 
+	}
+	void changeState() { 
+		if (args.size() > 0) {
+			if (args[0] == "menu") {
+				delete previous;
+				previous = new MenuState(assetHandler);
+				consoleOutput.push_back("Switched to Menu");
+			}
+			else if (args[0] == "play") {
+				delete previous;
+				previous = new PlayState(assetHandler);
+				consoleOutput.push_back("Switched to Play");
+			}
+		}
+	}
+	void toggleTurnBased() {
+		//TODO
+	}
+	void displayHelp() {
+		//TODO
+	}
 };

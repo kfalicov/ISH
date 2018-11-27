@@ -10,6 +10,9 @@ Entity::Entity(std::vector<Sprite*>animations, bool solid, std::string name) {
 	this->name = name;
 	this->displayAnimationIndex = 0;
 	this->nextAnimationIndex = 0;
+	this->currentTile = nullptr;
+	this->previousTile = nullptr;
+	this->facingTile = nullptr;
 }
 
 Entity::~Entity()

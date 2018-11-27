@@ -18,7 +18,6 @@ class Tile
 {
 public:
 	//creates a Tile with the given coordinate (bounded by 0-15) and knowing the chunk it belongs to
-	Tile() {}
 	Tile(vec2 pos, Chunk* parent);
 	//destroys the tile TODO
 	~Tile();
@@ -107,9 +106,7 @@ class Environment {
 public:
 	//TODO make the world class essentially the world generator.
 	//initialize it with the assethandler, and it will pass along the assets to the tiles it creates.
-	Environment();
-	Environment(AssetHandler* assetHandler);
-	Environment(int seed);
+	Environment(AssetHandler* assetHandler, int seed=0);
 	~Environment();
 
 	void Update();
@@ -141,7 +138,7 @@ public:
 	double acost;	//distance from point a
 	double bcost;	//distance to point b
 
-	Node(vec2 place) { data = place; }
+	Node(vec2 place) { data = place; parent = nullptr; acost = 0.; bcost = 0.; }
 	bool operator < (const Node& other) { return acost + bcost > other.acost + other.bcost; }
 	bool operator == (const Node& other) { return data == other.data; }
 };
