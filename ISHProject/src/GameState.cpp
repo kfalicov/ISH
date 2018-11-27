@@ -39,8 +39,8 @@ MenuState::MenuState(AssetHandler* assetHandler, GameState* previous)
 MenuState::~MenuState(){}
 
 
-GameState* MenuState::Update(SDL_Event event){
-	if (event.type == SDL_KEYDOWN) {
+GameState* MenuState::Update(SDL_Event m_event){
+	if (m_event.type == SDL_KEYDOWN) {
 		std::cout << "Changing from menu" << std::endl;
 		return new PlayState(assetHandler, nullptr);
 	}
@@ -182,7 +182,6 @@ ConsoleState::ConsoleState(AssetHandler* assetHandler, GameState* previous)
 {
 	this->previous = previous;
 	this->canType = false;
-	SDL_StartTextInput();
 	/*
 	This section is the addition of all of the functions that the console
 	can recognize. The string that the function will use is the 'key' in
@@ -221,6 +220,8 @@ GameState * ConsoleState::Update(SDL_Event event)
 			GameState* returnstate = this->previous;
 			//sets the previous to null to indicate that the console is deactivated
 			this->previous = nullptr;
+			//returns to regular control
+			SDL_StopTextInput();
 			return returnstate;
 		}
 		case SDLK_BACKSPACE:
@@ -270,6 +271,8 @@ GameState * ConsoleState::Update(SDL_Event event)
 				GameState* returnstate = previous;
 				//sets the previous to null to indicate that the console is deactivated
 				this->previous = nullptr;
+				//returns to regular control
+				SDL_StopTextInput();
 				return returnstate;
 			}
 			currentCommand += event.text.text;

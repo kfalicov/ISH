@@ -32,6 +32,7 @@ bool Game::SDLInit(const char* title, int xpos, int ypos, int width, int height,
 
 	//Initialize SDL2, SDL Image, and SDL ttf
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0 && IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG && TTF_Init() != -1) {
+		SDL_StopTextInput();
 		std::cout << "Subsystems initialized..." << std::endl;
 		window = SDL_CreateWindow(title, xpos, ypos, width, height, fullscreenFlag);
 		if (window) {
@@ -56,19 +57,20 @@ bool Game::SDLInit(const char* title, int xpos, int ypos, int width, int height,
 void Game::Update() {
 	//the list of all currently pressed keys and buttons
 	//the following lines used to be part of HandleEvents.
-	SDL_Event event;
-	while (SDL_PollEvent(&event)) {
-		switch (event.type) {
+	SDL_Event m_event;
+	while (SDL_PollEvent(&m_event)) {
+		switch (m_event.type) {
 		case SDL_QUIT:
 			isRunning = false;
 			break;
 		case SDL_KEYDOWN:
-			switch (event.key.keysym.sym) {
+			switch (m_event.key.keysym.sym) {
 			case SDLK_BACKQUOTE:
 				//checks if the console is not already open, 
 				//and you aren't holding the button from closing it.
 				if (console->getPrevious() == nullptr && canOpenConsole) {
 					std::cout << "switched to console" << std::endl;
+					SDL_StartTextInput();
 					console->setPrevious(activeState);
 					activeState = console;
 				}
@@ -77,7 +79,7 @@ void Game::Update() {
 			}
 			break;
 		case SDL_KEYUP:
-			if (event.key.keysym.sym == SDLK_BACKQUOTE) {
+			if (m_event.key.keysym.sym == SDLK_BACKQUOTE) {
 				canOpenConsole = true;
 			}
 			break;
@@ -86,7 +88,7 @@ void Game::Update() {
 		}
 	}
 	//This is the way we can change game states without using pointer magic, it's pseudo-immutability.
-	activeState = activeState->Update(event);
+	activeState = activeState->Update(m_event);
 }
 
 void Game::Render(float interpolation) {
