@@ -64,7 +64,7 @@ public:
 	//TODO save data and remove chunk from memory
 	~Chunk();
 
-	void setTiles(Tile*** tiles);
+	void setTiles(std::vector<Tile*> tileGrid);
 
 	void Render(float interpolation);
 
@@ -84,8 +84,6 @@ public:
 	std::vector<vec2> neighborsOf(vec2 tilePos);
 
 	Chunk* getChunk(vec2 tilePos, vec2 direction);
-	//TODO basically deconstruct the chunk;
-	void Unload() {};
 
 	//various heuristics for distance of pathfinding
 	double manhattan(vec2 a, vec2 b);	//gets distance along "blocks"
@@ -98,8 +96,8 @@ public:
 private:
 	enum dir { NORTH, EAST, SOUTH, WEST };
 	std::vector<Chunk*> neighbors;
-	//vector< std::vector<Tile*> > grid; // a row-major matrix of tiles
-	Tile*** tileGrid;
+	std::vector<Tile*> tileGrid; // all of the tiles in the current Chunk
+	//Tile*** tileGrid;
 };
 
 class Environment {
@@ -117,12 +115,12 @@ public:
 
 	std::unordered_map<vec2, Chunk*> loadedChunks;
 	
-	int chunkSquareRadius = 4;
-	int renderChunkSquareRadius = 4;
+	int chunkSquareRadius = 1;
+	int renderChunkSquareRadius = 1;
 
 	class Generator {
 	public:
-		static Tile*** generateTiles(AssetHandler* assetHandler, Chunk* chunk);
+		static std::vector<Tile*> generateTiles(AssetHandler* assetHandler, Chunk* chunk);
 	};
 
 private:

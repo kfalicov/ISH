@@ -12,6 +12,7 @@ Tile::Tile(vec2 pos, Chunk* parent) {
 }
 Tile::~Tile()
 {
+
 }
 bool Tile::addOccupant(Entity* e) {
 	//if there are already occupants
@@ -88,16 +89,18 @@ void Tile::setSprite(Sprite* sprite) {
 Chunk::Chunk(int x, int y)
 {
 	this->chunkPos = vec2(double(x), double(y));
-	this->tileGrid = nullptr;
 	neighbors = std::vector<Chunk*>(4);
 }
 
 Chunk::~Chunk()
 {
+	for (int i = 0; i < tileGrid.size(); i++) {
+		delete tileGrid[i];
+	}
 }
 
-void Chunk::setTiles(Tile*** tiles) {
-	tileGrid = tiles;
+void Chunk::setTiles(std::vector<Tile*> tileGrid) {
+	this->tileGrid = tileGrid;
 }
 
 Chunk* Chunk::getNorth() { return neighbors[dir::NORTH]; }
@@ -126,7 +129,8 @@ void Chunk::setWest(Chunk* W) {
 */
 Tile* Chunk::getTile(vec2 tilePos)
 {
-	return tileGrid[(int)tilePos[0]][(int)tilePos[1]];
+	//a fast vector access of a tile
+	return tileGrid[(int)tilePos[0]*CHUNK_SIZE + (int)tilePos[1]];
 }
 
 //A helper function that gets the neighbors of the input coordinates
@@ -287,34 +291,29 @@ void Environment::Update() {
 
 }
 
-Tile*** Environment::Generator::generateTiles(AssetHandler* assetHandler, Chunk* chunk) {
+std::vector<Tile*> Environment::Generator::generateTiles(AssetHandler* assetHandler, Chunk* chunk) {
 	//TODO instantialize a 16x16 chunk
 	//set chunk pos
 	//create array of tiles who are members of the chunk
 	//new Tile(vec2(0-15,0-15), chunk's pos)
-	Tile*** tileGrid = new Tile**[CHUNK_SIZE];
-	for (int i = 0; i < CHUNK_SIZE; i++) {
-		tileGrid[i] = new Tile*[CHUNK_SIZE];
-	}
-
-	for (int x = 0; x < CHUNK_SIZE; x++) {
-		for (int y = 0; y < CHUNK_SIZE; y++) {
-			tileGrid[x][y] = new Tile(vec2(
-				chunk->chunkPos[0]*CHUNK_SIZE + x,
-				chunk->chunkPos[1]*CHUNK_SIZE + y), chunk);
-
-			if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1)) {
-				Sprite* s = assetHandler->GetSprite("Assets/Temps.png", 2, TILE_SIZE);
-				tileGrid[x][y]->setSprite(s);
-			}
-			else {
-				Sprite* s = assetHandler->GetSprite("Assets/Temps.png", 1, TILE_SIZE);
-				tileGrid[x][y]->setSprite(s);
-			}
+	std::vector<Tile*> tiles;
+	for (int i = 0; i < CHUNK_SIZE*CHUNK_SIZE; i++) {
+		int x = i % CHUNK_SIZE;
+		int y = int(i / CHUNK_SIZE);
+		Tile* tempTile = new Tile(vec2(
+			chunk->chunkPos[0] * CHUNK_SIZE + x,
+			chunk->chunkPos[1] * CHUNK_SIZE + y), chunk);
+		if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1)) {
+			Sprite* s = assetHandler->GetSprite("Assets/Temps.png", 2, TILE_SIZE);
+			tempTile->setSprite(s);
 		}
+		else {
+			Sprite* s = assetHandler->GetSprite("Assets/Temps.png", 1, TILE_SIZE);
+			tempTile->setSprite(s);
+		}
+		tiles.push_back(tempTile);
 	}
-
-	return tileGrid;
+	return tiles;
 }
 
 void Environment::loadChunks() {
@@ -345,7 +344,8 @@ void Environment::loadChunks() {
 
 		//if a chunk is loaded and it shouldn't be, unload it
 		if (p[0] < minX || p[0] > maxX || p[1] < minY || p[1] > maxY) {
-			it->second->Unload();
+			//use chunk destructor
+			delete it->second;
 			it = loadedChunks.erase(it);
 			continue;
 		}
