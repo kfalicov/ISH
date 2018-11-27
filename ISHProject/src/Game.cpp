@@ -101,34 +101,31 @@ void Game::Render(float interpolation) {
 	windowRect.w = w;
 	windowRect.h = h;
 
-	std::vector<SDL_Surface*> surfaces;
-	activeState->Render(surfaces, interpolation);
+	SDL_Surface* surface = activeState->Render(interpolation);
 
-	for (SDL_Surface* layer : surfaces) {
-		SDL_Texture* layerTexture = SDL_CreateTextureFromSurface(renderer, layer);
+	SDL_Texture* surfaceTexture = SDL_CreateTextureFromSurface(renderer, surface);
 
-		//Scale each layer accordingly to fit the window
-		float widthRatio = (float)windowRect.w / layer->clip_rect.w;
-		float heightRatio = (float)windowRect.h / layer->clip_rect.h;
-		int scaleMultiplier = (int)floor((widthRatio < heightRatio) ? widthRatio : heightRatio);
-		//Disable scaling (DEBUG)
-		//scaleMultiplier = 1;
-		SDL_Rect layerDestRect;
-		layerDestRect.w = scaleMultiplier * layer->clip_rect.w;
-		layerDestRect.h = scaleMultiplier * layer->clip_rect.h;
-		layerDestRect.x = int((int(windowRect.w) - int(layerDestRect.w)) / 2.0);
-		layerDestRect.y = int((windowRect.h - layerDestRect.h) / 2.0);
+	//Scale each layer accordingly to fit the window
+	float widthRatio = (float)windowRect.w / surface->clip_rect.w;
+	float heightRatio = (float)windowRect.h / surface->clip_rect.h;
+	int scaleMultiplier = (int)floor((widthRatio < heightRatio) ? widthRatio : heightRatio);
+	//Disable scaling (DEBUG)
+	//scaleMultiplier = 1;
+	SDL_Rect windowDestRect;
+	windowDestRect.w = scaleMultiplier * surface->clip_rect.w;
+	windowDestRect.h = scaleMultiplier * surface->clip_rect.h;
+	windowDestRect.x = int((int(windowRect.w) - int(windowDestRect.w)) / 2.0);
+	windowDestRect.y = int((windowRect.h - windowDestRect.h) / 2.0);
 
-		SDL_LockSurface(layer);
-		SDL_SetSurfaceRLE(layer, true);
-		SDL_RenderCopy(renderer, layerTexture,
-			&layer->clip_rect,
-			&layerDestRect);
-		SDL_SetSurfaceRLE(layer, false);
-		SDL_UnlockSurface(layer);
+	SDL_LockSurface(surface);
+	SDL_SetSurfaceRLE(surface, true);
+	SDL_RenderCopy(renderer, surfaceTexture,
+		&surface->clip_rect,
+		&windowDestRect);
+	SDL_SetSurfaceRLE(surface, false);
+	SDL_UnlockSurface(surface);
 
-		SDL_DestroyTexture(layerTexture);
-	}
+	SDL_DestroyTexture(surfaceTexture);
 
 	SDL_RenderPresent(renderer);
 }

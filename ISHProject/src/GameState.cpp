@@ -8,20 +8,19 @@
 #include "Environment.h"
 #include "Sprite.h"
 
-void GameState::Render(std::vector<SDL_Surface*> &surfaces, float interpolation, bool forceReRender) {
-	if (previous) {
-		previous->Render(surfaces, interpolation);
-	}
-
+SDL_Surface* GameState::Render(float interpolation, bool forceReRender) {
 	if (needsRender || forceReRender) {
 		//Clear the surface in order to be rendered again
 		SDL_FillRect(surface, &surface->clip_rect,
 			SDL_MapRGBA(surface->format, 0, 0, 0, 0));
-		surface = RenderLayers(interpolation);
+		//each GameState will need to implement the WriteSurface function
+		WriteSurface(interpolation);
 		forceReRender = false;
+		needsRender = false;
 	}
 
-	surfaces.push_back(surface);
+	//surfaces.push_back(surface);
+	return surface;
 }
 
 /*
@@ -48,9 +47,16 @@ GameState* MenuState::Update(SDL_Event m_event){
 	return this;
 }
 
-SDL_Surface * MenuState::RenderLayers(float interpolation)
+void MenuState::WriteSurface(float interpolation)
 {
-	return nullptr;
+	if (previous) {
+		//note: since this is a pointer to previous's surface, it should not be deleted as it is only
+		//created once and reused.
+		SDL_Surface* underSurface = previous->Render(interpolation);
+		SDL_BlitSurface(underSurface, &underSurface->clip_rect,
+			this->surface, &surface->clip_rect);
+	}
+	//TODO render the menu objects to the Surface overtop of underSurface
 }
 
 /*
@@ -90,25 +96,19 @@ GameState* PlayState::Update(SDL_Event event)
 	return this;
 }
 
-SDL_Surface* PlayState::RenderLayers(float interpolation)
+void PlayState::WriteSurface(float interpolation)
 {
 	//Render World (background, items, entities) and return their combined surface.
+	//delete this after it is blitted to surface
 	SDL_Surface* environmentSurface = RenderEnvironment();
 	//Combine world surface with UI
+	//delete this after it is blitted to surface
 	SDL_Surface* uiSurface = RenderUI();
 
-	//Combine surfaces
-	int width = environmentSurface->w;// std::max(environmentSurface->w, uiSurface->w);
-	int height = environmentSurface->h;// std::max(environmentSurface->h, uiSurface->h);
-	SDL_Surface* combinedSurface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
-
-	//Blit each layer to the combined layer
 	SDL_BlitSurface(environmentSurface, &environmentSurface->clip_rect,
-		combinedSurface, &combinedSurface->clip_rect);
-	//SDL_BlitSurface(uiSurface, &uiSurface->clip_rect,
-	//	combinedSurface, &combinedSurface->clip_rect);
-
-	return combinedSurface;
+		surface, &surface->clip_rect);
+	//delete environmentSurface;
+	delete uiSurface;
 }
 
 SDL_Surface* PlayState::RenderEnvironment() {
@@ -201,9 +201,16 @@ ConsoleState::ConsoleState(AssetHandler* assetHandler, GameState* previous)
 	//TODO more functions
 }
 
-SDL_Surface * ConsoleState::RenderLayers(float interpolation)
+void ConsoleState::WriteSurface(float interpolation)
 {
-	return nullptr;
+	if (previous) {
+		//note: since this is a pointer to previous's surface, it should not be deleted as it is only
+		//created once and reused.
+		SDL_Surface* underSurface = previous->Render(interpolation);
+		SDL_BlitSurface(underSurface, &underSurface->clip_rect,
+			this->surface, &surface->clip_rect);
+	}
+	//TODO render the console to the Surface overtop of underSurface
 }
 
 ConsoleState::~ConsoleState()

@@ -20,10 +20,13 @@ public:
 		initializeRenderSurface(800, 600);
 		this->assetHandler = assetHandler;
 		this->previous = nullptr;
+		//when it is created it needs to have its surface rendered at least once
+		this->needsRender = true;
 	}
 	virtual GameState* Update(SDL_Event event) { return this; };
-	virtual void Render(std::vector<SDL_Surface*> &surfaces, float interpolation, bool forceReRender = false);
-	virtual SDL_Surface* RenderLayers(float interpolation) { return nullptr; };
+	virtual SDL_Surface* Render(float interpolation, bool forceReRender = false);
+	//modifies the surface to 
+	virtual void WriteSurface(float interpolation) = 0;
 	void initializeRenderSurface(int width, int height) {
 		surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
 		SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGBA(surface->format, 0, 0, 0, 0));
@@ -43,8 +46,9 @@ protected:
 	//AssetHandler generates sprites and reads from a file. AssetHandler needs to be given to the various generators
 	AssetHandler* assetHandler;
 
-	//an internal storage so that rerendering doesn't have to happen constantly
-	//This surface only contains the layers that belong to this state.
+	//an internal storage so that rerendering doesn't have to happen constantly.
+	//Contains a snapshot of exactly what the surface and its subsurfaces looked like
+	//when Render() was last called.
 	SDL_Surface* surface;
 	// whether the surface has been updated visually and needs to be re-written to a surface
 	bool needsRender;
@@ -54,7 +58,7 @@ class MenuState : public GameState
 {
 public:
 	MenuState(AssetHandler* assetHandler, GameState* previous = nullptr);
-	SDL_Surface* RenderLayers(float interpolation) override;
+	void WriteSurface(float interpolation) override;
 	~MenuState();
 
 	//void HandleEvents(SDL_Event event) override;
@@ -67,7 +71,7 @@ class PlayState : public GameState
 {
 public:
 	PlayState(AssetHandler* assetHandler, GameState* previous = nullptr);
-	SDL_Surface* RenderLayers(float interpolation) override;
+	void WriteSurface(float interpolation) override;
 	~PlayState();
 
 	//void HandleEvents(SDL_Event event) override;
@@ -86,7 +90,7 @@ class ConsoleState : public GameState
 {
 public:
 	ConsoleState(AssetHandler* assetHandler, GameState* previous);
-	SDL_Surface* RenderLayers(float interpolation) override;
+	void WriteSurface(float interpolation) override;
 	~ConsoleState();
 
 	//void HandleEvents(SDL_Event event) override;
