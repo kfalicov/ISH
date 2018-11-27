@@ -1,4 +1,6 @@
 #include <vector>
+#include <string>
+#include <unordered_map>
 #include <SDL.h>
 
 //forward declarations (for all pointer types used in method signatures)
@@ -11,16 +13,26 @@ class Camera;
 class GameState
 {
 public:
-	//virtual void HandleEvents(SDL_Event event) {}; //should be unneeded
+	GameState(AssetHandler* assetHandler) {
+		//TODO each state can have a different sized surface. For example, PlayState will have
+		//a square surface to render the environment.
+		initializeRenderSurface(800, 600);
+		this->assetHandler = assetHandler;
+		this->previous = nullptr;
+	}
 	virtual GameState* Update(SDL_Event event) { return this; };
 	virtual void Render(std::vector<SDL_Surface*> &surfaces, float interpolation, bool forceReRender = false);
 	virtual SDL_Surface* RenderLayers(float interpolation) { return nullptr; };
 	void initializeRenderSurface(int width, int height) {
 		surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
 		SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGBA(surface->format, 0, 0, 0, 0));
-	};
-	
-	GameState(AssetHandler* assetHandler);
+	}
+	void setPrevious(GameState* previous) {
+		this->previous = previous;
+	}
+	GameState* getPrevious() {
+		return previous;
+	}
 	~GameState() {};
 
 protected:
@@ -35,7 +47,6 @@ protected:
 	SDL_Surface* surface;
 	// whether the surface has been updated visually and needs to be re-written to a surface
 	bool needsRender;
-	
 };
 
 class MenuState : public GameState
@@ -68,4 +79,26 @@ private:
 	SDL_Surface* RenderEnvironment();
 	//returns a surface of the UI for the playstate (health, hotbar, etc)
 	SDL_Surface* RenderUI();
+};
+
+typedef int(*ConsoleCallbackFunction)(std::vector<std::string>, std::string&);
+
+class ConsoleState : public GameState
+{
+public:
+	ConsoleState(AssetHandler* assetHandler, GameState* previous);
+	SDL_Surface* RenderLayers(float interpolation) override;
+	~ConsoleState();
+
+	//void HandleEvents(SDL_Event event) override;
+	GameState* Update(SDL_Event event) override;
+	void parseCommand(std::string command);
+	std::vector<std::string> split(const std::string & s, char delimiter);
+private:
+	std::unordered_map<std::string, ConsoleCallbackFunction> functions;
+	std::string currentCommand;
+	int commandIndex = 0;
+	std::vector<std::string> consoleOutput;
+	std::vector<std::string> commands;
+	bool canType;
 };
