@@ -40,6 +40,7 @@ MenuState::~MenuState(){}
 
 
 GameState* MenuState::Update(SDL_Event m_event){
+
 	if (m_event.type == SDL_KEYDOWN) {
 		std::cout << "Changing from menu" << std::endl;
 		return new PlayState(assetHandler, nullptr);
@@ -74,9 +75,10 @@ PlayState::~PlayState()
 
 GameState* PlayState::Update(SDL_Event event)
 {
-	if (event.type == SDL_KEYDOWN) {
-		std::cout << "Changing from play" << std::endl;
-		return new MenuState(assetHandler, nullptr);
+	//Get the keystates
+	const Uint8 *keystates = SDL_GetKeyboardState(NULL);
+	if (keystates[SDL_SCANCODE_RIGHT]) {
+		//this is the format for using keyboard inputs in this
 	}
 	if (assetHandler->Update()) {
 		//assetHandler->UpdateSpriteFrames(LIST OF SPRITES IN PLAYSTATE);
@@ -125,7 +127,7 @@ SDL_Surface* PlayState::RenderEnvironment() {
 	//For each loaded chunk (both visible and not), render the chunk if it is within visible bounds
 	for (std::unordered_map<vec2*, Chunk*>::iterator it = environment->loadedChunks.begin();
 		it != environment->loadedChunks.end(); ++it) {
-		Chunk c = (*it->second);
+		Chunk c = *(it->second);
 
 		//Render the chunk if the chunk is one of the visible chunks
 		if (c.chunkPos[0] >= minX && c.chunkPos[0] <= maxX && c.chunkPos[1] >= minY && c.chunkPos[1] <= maxY) {
