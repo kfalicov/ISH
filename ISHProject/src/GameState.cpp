@@ -73,7 +73,7 @@ PlayState::PlayState(AssetHandler* assetHandler, GameState* previous)
 	environment = new Environment(assetHandler);
 	environmentCamera = new Camera(vec2(0,0), 256, 256);
 
-	SDL_Surface* environmentSurface = SDL_CreateRGBSurface(0,
+	environmentSurface = SDL_CreateRGBSurface(0,
 		int(environmentCamera->getSize()[0]),
 		int(environmentCamera->getSize()[1]),
 		32, 0, 0, 0, 0);
@@ -160,7 +160,7 @@ void PlayState::RenderEnvironment() {
 						destRect.y = int(renderPos[1] - environmentCamera->getPos()[1]);
 
 						//std::cout << "x: " << destRect.x << ", y: " << destRect.y << std::endl;
-						SDL_BlitSurface(backgroundSprite->spriteSheet, &srcRect, environmentSurface, NULL);
+						SDL_BlitSurface(backgroundSprite->spriteSheet, &srcRect, environmentSurface, &destRect);
 					}
 					if (tileOccupants.size() > 0) { //transparent is a list of entities occupying the tile
 						//Render the visible occupants of the tile
