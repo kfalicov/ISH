@@ -14,7 +14,7 @@ public:
 	void Clean();
 	bool Update();
 
-	Sprite* GetSprite(const char* spriteSheet, int spriteIndex);
+	Sprite* GetSprite(const char* spriteSheet, int spriteIndex, int size);
 
 	//Progresses each sprite to the next frame of their animation.
 	void UpdateSpriteFrames(std::vector<Sprite*> sprites);

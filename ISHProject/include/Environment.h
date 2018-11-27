@@ -1,6 +1,7 @@
 #include <vector>
 #include <deque>
 #include <algorithm>
+#include <unordered_map>
 #include "Util.h"
 
 #define HEURISTIC diagonal
@@ -11,11 +12,13 @@ constexpr auto TILE_SIZE = 16; //edge length of tile sprites, can be used for sp
 class Chunk;
 class Entity;
 class Sprite;
+class AssetHandler;
 
 class Tile
 {
 public:
 	//creates a Tile with the given coordinate (bounded by 0-15) and knowing the chunk it belongs to
+	Tile() {}
 	Tile(vec2 pos, Chunk* parent);
 	//destroys the tile TODO
 	~Tile();
@@ -28,13 +31,18 @@ public:
 	//removes the current display item unless a specific index is passed in
 	Entity* removeOccupant(int index);
 
-	//returns the position of the tile in pixel-space of the Chunk
-	vec2 getPosition();
+	//returns the position of the tile in pixel-space
+	vec2 getPixelPosition();
+	//returns the position of the tile in world space
+	vec2 getWorldPosition();
+
 	//returns the tile's background sprite
 	Sprite* getSprite();
 	//returns the last transparent entity and the solid entity (if either is applicable)
 	std::vector<Entity*> getTopOccupants();
 	Chunk* getParentChunk();
+
+	void setSprite(Sprite* sprite);
 
 private:
 	//Which item in the tile to display (out of all non-solids)
@@ -54,8 +62,10 @@ private:
 class Chunk {
 public:
 	Chunk(int x, int y);
-	//saves data and removes chunk from memory
-	~Chunk();	
+	//TODO save data and remove chunk from memory
+	~Chunk();
+
+	void setTiles(Tile*** tiles);
 
 	void Render(float interpolation);
 
@@ -75,6 +85,8 @@ public:
 	std::vector<vec2> neighborsOf(vec2 tilePos);
 
 	Chunk* getChunk(vec2 tilePos, vec2 direction);
+	//TODO basically deconstruct the chunk;
+	void Unload() {};
 
 	//various heuristics for distance of pathfinding
 	double manhattan(vec2 a, vec2 b);	//gets distance along "blocks"
@@ -91,14 +103,36 @@ private:
 	Tile*** tileGrid;
 };
 
-class World {
+class Environment {
+public:
 	//TODO make the world class essentially the world generator.
 	//initialize it with the assethandler, and it will pass along the assets to the tiles it creates.
+	Environment();
+	Environment(AssetHandler* assetHandler);
+	Environment(int seed);
+	~Environment();
+
+	void Update();
+	
+	vec2 centerChunkPos;
+	void loadChunks();
+	Chunk* getLoadedChunk(vec2 position);
+
+	std::unordered_map<vec2*, Chunk*> loadedChunks;
+	
+	int chunkSquareRadius = 4;
+	int renderChunkSquareRadius = 4;
+
+	class Generator {
+	public:
+		static Tile*** generateTiles(AssetHandler* assetHandler, Chunk* chunk);
+	};
+
+private:
+	AssetHandler* assetHandler;
 };
 
-/*
-HELPER FUNCTIONS FOR PATHFINDING
-*/
+//HELPER FUNCTIONS FOR PATHFINDING
 
 class Node {
 public:

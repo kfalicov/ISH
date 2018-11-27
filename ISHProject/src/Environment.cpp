@@ -2,6 +2,7 @@
 #include "Sprite.h"
 #include "Entity.h"
 #include "Environment.h"
+#include "AssetHandler.h"
 
 Tile::Tile(vec2 pos, Chunk* parent) {
 	this->pos = pos;
@@ -49,10 +50,14 @@ Entity* Tile::removeOccupant(int index = -1) {
 	}
 	return nullptr;
 }
-vec2 Tile::getPosition() {
+vec2 Tile::getWorldPosition() {
 	//pixel position based on coordinate in chunk and tile pixel dimensions
+	return this->pos;
+}
+vec2 Tile::getPixelPosition() {
 	return this->pos * TILE_SIZE;
 }
+
 Sprite* Tile::getSprite() {
 	return sprite;
 }
@@ -76,36 +81,23 @@ Chunk* Tile::getParentChunk()
 	return parent;
 }
 
+void Tile::setSprite(Sprite* sprite) {
+	this->sprite = sprite;
+}
+
 Chunk::Chunk(int x, int y)
 {
 	this->chunkPos = vec2(double(x), double(y));
 	neighbors = std::vector<Chunk*>(4);
-	//TODO instantialize a 16x16 chunk
-	//set chunk pos
-	//create array of tiles who are members of the chunk
-	//new Tile(vec2(0-15,0-15), chunk's pos)
-	tileGrid = new Tile**[CHUNK_SIZE];
-	for (int i = 0; i < CHUNK_SIZE; i++) {
-		tileGrid[i] = new Tile*[CHUNK_SIZE];
-	}
-
-	for (int i = 0; i < CHUNK_SIZE; i++) {
-		for (int j = 0; j < CHUNK_SIZE; i++) {
-			tileGrid[i][j] = new Tile(vec2((x * CHUNK_SIZE) + i, (y * CHUNK_SIZE) + j), this);
-			//tileGrid[x][y]->s = AssetHandler::Instance()->GetSprite("Assets/AnimTest.png", 0);
-			/*tileGrid[x][y]->getSprite() = worldGen.getBackgroundSprite(
-				tileGrid[x][y]->tilePos[0],
-				tileGrid[x][y]->tilePos[1]);*/
-			//TODO somehow add sprites to the tiles
-			//std::cout << tileGrid[x][y]->tilePos << std::endl;
-		}
-	}
 }
 
 Chunk::~Chunk()
 {
 }
 
+void Chunk::setTiles(Tile*** tiles) {
+	tileGrid = tiles;
+}
 
 Chunk* Chunk::getNorth() { return neighbors[dir::NORTH]; }
 Chunk* Chunk::getEast() { return neighbors[dir::EAST]; }
@@ -278,4 +270,116 @@ void Chunk::Render(float interpolation) {
 			//surface.blit(tileGrid[x][y]->getSprite(), tileGrid[x][y]->displayPos);
 		}
 	}
+}
+
+Environment::Environment() {
+
+}
+
+Environment::Environment(AssetHandler* assetHandler) {
+	this->assetHandler = assetHandler;
+	centerChunkPos = vec2(0, 0);
+	loadChunks();
+}
+
+Environment::Environment(int seed) {
+
+}
+
+Environment::~Environment() {
+
+}
+
+void Environment::Update() {
+
+}
+
+Tile*** Environment::Generator::generateTiles(AssetHandler* assetHandler, Chunk* chunk) {
+	//TODO instantialize a 16x16 chunk
+	//set chunk pos
+	//create array of tiles who are members of the chunk
+	//new Tile(vec2(0-15,0-15), chunk's pos)
+	Tile*** tileGrid = new Tile**[CHUNK_SIZE];
+	for (int i = 0; i < CHUNK_SIZE; i++) {
+		tileGrid[i] = new Tile*[CHUNK_SIZE];
+	}
+
+	for (int x = 0; x < CHUNK_SIZE; x++) {
+		for (int y = 0; y < CHUNK_SIZE; y++) {
+			tileGrid[x][y] = new Tile(vec2(
+				chunk->chunkPos[0]*CHUNK_SIZE + x,
+				chunk->chunkPos[1]*CHUNK_SIZE + y), chunk);
+
+			if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1)) {
+				Sprite* s = assetHandler->GetSprite("Assets/Temps.png", 2, TILE_SIZE);
+				tileGrid[x][y]->setSprite(s);
+			}
+			else {
+				Sprite* s = assetHandler->GetSprite("Assets/Temps.png", 1, TILE_SIZE);
+				tileGrid[x][y]->setSprite(s);
+			}
+		}
+	}
+
+	return tileGrid;
+}
+
+void Environment::loadChunks() {
+	int minX = centerChunkPos[0] - chunkSquareRadius;
+	int maxX = centerChunkPos[0] + chunkSquareRadius;
+	int minY = centerChunkPos[1] - chunkSquareRadius;
+	int maxY = centerChunkPos[1] + chunkSquareRadius;
+
+	//For all chunks that SHOULD BE loaded...
+	for (int chunkX = minX; chunkX <= maxX; chunkX++) {
+		for (int chunkY = minY; chunkY <= maxY; chunkY++) {
+			vec2* pos = new vec2(chunkX, chunkY);
+
+			// TODO properly load/generate chunk
+			if (getLoadedChunk(vec2(chunkX, chunkY)) == nullptr) { //If they are not already loaded, load them
+				//Chunk* newChunk = new Chunk(worldGen, chunkX, chunkY);
+				Chunk* newChunk = new Chunk(chunkX, chunkY);
+				newChunk->setTiles(Generator::generateTiles(assetHandler, newChunk));
+				loadedChunks.insert(std::pair<vec2*, Chunk*>(pos, newChunk));
+			}
+			//std::cout << chunkX << ", " << chunkY << std::endl;
+		}
+	}
+
+	//Set up NSEW chunks
+	for (std::unordered_map<vec2*, Chunk*>::iterator it = loadedChunks.begin(); it != loadedChunks.end();) {
+		vec2 p = (*it->first);
+
+		//if a chunk is loaded and it shouldn't be, unload it
+		if (p[0] < minX || p[0] > maxX || p[1] < minY || p[1] > maxY) {
+			it->second->Unload();
+			it = loadedChunks.erase(it);
+			continue;
+		}
+
+		if (it->second->getNorth() == nullptr) {
+			it->second->setNorth(getLoadedChunk(p + vec2::NORTH));
+		}
+		if (it->second->getEast() == nullptr) {
+			it->second->setEast(getLoadedChunk(p + vec2::EAST));
+		}
+		if (it->second->getSouth() == nullptr) {
+			it->second->setSouth(getLoadedChunk(p + vec2::SOUTH));
+		}
+		if (it->second->getWest() == nullptr) {
+			it->second->setWest(getLoadedChunk(p + vec2::WEST));
+		}
+
+		it++;
+	}
+}
+
+Chunk* Environment::getLoadedChunk(vec2 position) {
+	for (std::unordered_map<vec2*, Chunk*>::iterator it = loadedChunks.begin(); it != loadedChunks.end(); ++it) {
+		vec2* p = it->first;
+		if ((*p) == position) {
+			return it->second;
+		}
+	}
+	return nullptr;
 }

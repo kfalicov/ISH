@@ -3,7 +3,6 @@
 #include "SDL_image.h"
 #include "Entity.h"
 #include "Sprite.h"
-#include "Environment.h"
 #include "AssetHandler.h"
 
 AssetHandler::AssetHandler() {
@@ -17,7 +16,7 @@ void AssetHandler::Clean()
 {
 }
 
-Sprite* AssetHandler::GetSprite(const char* spriteSheet, int spriteIndex)
+Sprite* AssetHandler::GetSprite(const char* spriteSheet, int spriteIndex, int size)
 {
 	SDL_Surface* surface;
 
@@ -41,12 +40,12 @@ Sprite* AssetHandler::GetSprite(const char* spriteSheet, int spriteIndex)
 	//using Game::instance here will break the game's startup with an infinite loop because AssetHandler is created
 	//before Game is fully initialized, so it will try and re-instance the Game which will then create AssetHandler again
 	//and you get the idea.
-	w /= TILE_SIZE;
-	h /= TILE_SIZE;
+	w /= size;
+	h /= size;
 
-	srcRect.x = (spriteIndex % w) * TILE_SIZE;
-	srcRect.y = (spriteIndex / w) * TILE_SIZE;
-	srcRect.w = srcRect.h = TILE_SIZE;
+	srcRect.x = (spriteIndex % w) * size;
+	srcRect.y = (spriteIndex / w) * size;
+	srcRect.w = srcRect.h = size;
 
 	return new Sprite(surface, srcRect);
 }

@@ -76,3 +76,40 @@ static vec2 lerp(vec2 a, vec2 b, double t) {
 	}
 	return a * (1 - t) + b * t;
 }
+
+class Camera {
+public:
+	Camera() {};
+	Camera(vec2 center, int w, int h) {
+		setCenter(center);
+		size = vec2(w, h);
+	};
+	~Camera() {};
+
+	void Update() {
+		setCenter(lerp(getCenter(), target, followSpeed));
+	};
+
+	void TrackTo(vec2 dest) {
+		target = dest;
+	};
+	vec2 getPos() { return camPosition; };
+	vec2 getCenter() { return camPosition + (size / 2); };
+	vec2 getSize() { return size; };
+
+	//sets the center of the camera
+	void setCenter(vec2 dest) {
+		camPosition = dest - (size / 2);
+	};
+
+	//sets the top left corner
+	void setCorner(vec2 dest) {
+		camPosition = dest;
+	};
+
+private:
+	double followSpeed;
+	vec2 camPosition; // The top left of the camera
+	vec2 size;
+	vec2 target; // Where the camera is moving to over time
+};

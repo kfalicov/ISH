@@ -1,7 +1,6 @@
 #include <SDL.h>
 #include <vector>
 
-
 class Sprite {
 public:
 	Sprite();

@@ -5,6 +5,8 @@
 class GameState;
 class AssetHandler;
 struct SDL_Surface;
+class Environment;
+class Camera;
 
 class GameState
 {
@@ -59,4 +61,11 @@ public:
 	//void HandleEvents(SDL_Event event) override;
 	GameState* Update(SDL_Event event) override;
 private:
+	Environment* environment;
+	Camera* environmentCamera;
+
+	//returns a surface of environment elements (tile backgrounds, entities, items, etc) AKA world objects
+	SDL_Surface* RenderEnvironment();
+	//returns a surface of the UI for the playstate (health, hotbar, etc)
+	SDL_Surface* RenderUI();
 };
