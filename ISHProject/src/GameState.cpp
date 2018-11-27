@@ -40,6 +40,10 @@ MenuState::~MenuState(){}
 
 
 GameState* MenuState::Update(SDL_Event event){
+	if (event.type == SDL_KEYDOWN) {
+		std::cout << "Changing from menu" << std::endl;
+		return new PlayState(assetHandler, nullptr);
+	}
 	return this;
 }
 

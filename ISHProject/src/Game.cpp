@@ -58,6 +58,9 @@ void Game::Update() {
 	//the following lines used to be part of HandleEvents.
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) {
+		//This is the way we can change game states without using pointer magic, it's pseudo-immutability.
+		activeState = activeState->Update(event);
+
 		switch (event.type) {
 		case SDL_QUIT:
 			isRunning = false;
@@ -83,9 +86,6 @@ void Game::Update() {
 			break;
 		}
 	}
-
-	//This is the way we can change game states without using pointer magic, it's pseudo-immutability.
-	activeState = activeState->Update(event);
 }
 
 void Game::Render(float interpolation) {
