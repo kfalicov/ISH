@@ -14,13 +14,11 @@ int main(int argc, char *argv[]) {
 	float interpolation;
 
 	Game* game = new Game();
-	//game->ChangeState(MainMenu::Instance()); //TODO Start the game on the main menu gamestate
 
 	//Main game loop
 	while (game->Running()) {
 		loops = 0;
-		while (SDL_GetTicks() > next_game_tick && loops < MAX_FRAMESKIP) {
-			//game->HandleEvents(); //unneeded, performed in Update()
+		while (next_game_tick < SDL_GetTicks() && loops < MAX_FRAMESKIP) {
 			game->Update();
 
 			next_game_tick += SKIP_TICKS;

@@ -23,8 +23,9 @@ Entity::~Entity()
 
 }
 
-void Entity::Update()
+bool Entity::Update()
 {
+	bool hasMoved = false;
 	if (shouldChangeAnimation) {
 		shouldChangeAnimation = false;
 		if (nextAnimationIndex != displayAnimationIndex) {
@@ -40,9 +41,11 @@ void Entity::Update()
 			previousTile = currentTile;
 			currentTile = nextTile;
 			nextTile = nullptr;
+			hasMoved = true;
 		}
 	}
 	updatesSinceMove++;
+	return hasMoved;
 }
 
 void Entity::Attack() {

@@ -120,7 +120,7 @@ GameState* PlayState::Update(SDL_Event event)
 		needsRender = true;
 	}
 	Tile* currentTile = player->getCurrentTile();
-	Chunk* nextChunk = currentTile->getParentChunk()->getAdjacentChunk(currentTile, dir);
+	Chunk* nextChunk = currentTile->getParentChunk()->getAdjacentChunk(&currentTile, dir);
 
 	player->setNext(currentTile);
 	if (player->Update()) {

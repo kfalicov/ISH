@@ -156,27 +156,28 @@ std::vector<vec2> Chunk::neighborsOf(vec2 tilePos)
 }
 
 //Gets the chunk to load based on a tile position and direction, and updates the currentTile passed in
-Chunk* Chunk::getAdjacentChunk(Tile* currentTile, vec2 direction) {
+Chunk* Chunk::getAdjacentChunk(Tile** currentTile, vec2 direction) {
 	if (direction == vec2(0, 0)) {
 		return this;
 	}
-	vec2 newPos = (currentTile)->getWorldPosition() + direction;
+	vec2 newPos = (*currentTile)->getWorldPosition() + direction;
 	if (newPos[0] >= CHUNK_SIZE) {
-		currentTile = getEast()->getTile(newPos - CHUNK_SIZE * vec2::EAST);
+		*currentTile = getEast()->getTile(newPos - CHUNK_SIZE * vec2::EAST);
 		return getEast();
 	}
 	if (newPos[0] < 0) {
-		currentTile = getWest()->getTile(newPos - CHUNK_SIZE * vec2::WEST);
+		*currentTile = getWest()->getTile(newPos - CHUNK_SIZE * vec2::WEST);
 		return getWest();
 	}
 	if (newPos[1] >= CHUNK_SIZE) {
-		currentTile = getSouth()->getTile(newPos - CHUNK_SIZE * vec2::SOUTH);
+		*currentTile = getSouth()->getTile(newPos - CHUNK_SIZE * vec2::SOUTH);
 		return getSouth();
 	}
 	if (newPos[1] < 0) {
-		currentTile = getNorth()->getTile(newPos - CHUNK_SIZE * vec2::NORTH);
+		*currentTile = getNorth()->getTile(newPos - CHUNK_SIZE * vec2::NORTH);
 		return getNorth();
 	}
+	*currentTile = getTile(newPos);
 	return this;
 }
 
