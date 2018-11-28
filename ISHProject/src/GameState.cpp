@@ -147,13 +147,14 @@ GameState* PlayState::Update(SDL_Event event)
 	//TODO update all entities
 
 	//if nothing changes, then needsRender should remain false.
-	if (player->getCurrentTile()->getParentChunk() != environment->centerChunk) {
+
+	//loads the chunks around the player
+	if (player->getCurrentTile()->getParentChunk() != environment->getCenterLoadedChunk()) {
 		environment->loadChunks(player->getCurrentTile()->getParentChunk());
 	}
 	//Make the camera track to the player
 	double playerLerpTime = player->getUpdatesSinceMove() / double(player->getUpdatesPerMove());
 	
-	environmentCamera->TrackTo(lerp(player->getPreviousTile()->getPixelPosition() + TILE_SIZE / 2, player->getCurrentTile()->getPixelPosition() + TILE_SIZE / 2, playerLerpTime));
 	needsRender = true;
 	return this;
 }
@@ -175,10 +176,10 @@ void PlayState::RenderEnvironment() {
 	//Create a surface with the dimensions of the portion of the environment that is visible
 
 	//Get bounds of chunks to render
-	int minX = int(environment->centerChunk->chunkPos[0] - environment->chunkSquareRadius);
-	int maxX = int(environment->centerChunk->chunkPos[0] + environment->chunkSquareRadius);
-	int minY = int(environment->centerChunk->chunkPos[1] - environment->chunkSquareRadius);
-	int maxY = int(environment->centerChunk->chunkPos[1] + environment->chunkSquareRadius);
+	int minX = int(environment->getCenterLoadedChunk()->chunkPos[0] - environment->chunkSquareRadius);
+	int maxX = int(environment->getCenterLoadedChunk()->chunkPos[0] + environment->chunkSquareRadius);
+	int minY = int(environment->getCenterLoadedChunk()->chunkPos[1] - environment->chunkSquareRadius);
+	int maxY = int(environment->getCenterLoadedChunk()->chunkPos[1] + environment->chunkSquareRadius);
 
 	//For each loaded chunk (both visible and not), render the chunk if it is within visible bounds
 	for (std::unordered_map<vec2, Chunk*>::iterator it = environment->loadedChunks.begin();
@@ -238,7 +239,8 @@ void PlayState::RenderEntity(Entity* e, float interpolation) {
 
 	vec2 renderPos = lerp(e->getPreviousTile()->getPixelPosition(),
 		e->getCurrentTile()->getPixelPosition(),
-		(e->getUpdatesSinceMove() + interpolation) / e->getUpdatesPerMove());
+		(e->getUpdatesSinceMove() + interpolation) / double(e->getVisualMoveDuration()));
+	environmentCamera->TrackTo(renderPos+vec2(TILE_SIZE/2, TILE_SIZE/2));
 
 	destRect.x = int(renderPos[0] - environmentCamera->getPos()[0]);
 	destRect.y = int(renderPos[1] - environmentCamera->getPos()[1]);

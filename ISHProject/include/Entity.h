@@ -43,6 +43,7 @@ public:
 	Tile* getFacingTIle() { return facingTile; }
 	int getUpdatesSinceMove() { return updatesSinceMove; }
 	int getUpdatesPerMove() { return updatesPerMove; }
+	int getVisualMoveDuration() { return visualMoveDuration; }
 
 	//asset handler uses this to make all entities update animations simultaneously
 	void queueAnimationChange();
@@ -76,8 +77,9 @@ private:
 	int visualMoveDuration = 8;
 	//Elapsed updates since last move.
 	int updatesSinceMove = 0;
-	//Number of updates per move. Must be >= visualMoveDuration. "Time entity takes to move," lower = faster.
-	int updatesPerMove = 8;
+	//Number of updates after a move before an entity can move again. 
+	//Must be >= visualMoveDuration. "Time entity takes to move," lower = faster.
+	int updatesPerMove = 10;
 
 	//The tile that the entity is on.
 	Tile* currentTile;

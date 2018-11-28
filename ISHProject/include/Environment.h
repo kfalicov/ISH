@@ -118,8 +118,9 @@ public:
 
 	void Update();
 	
-	Chunk* centerChunk;
+	
 	void loadChunks(Chunk* center);
+	Chunk* getCenterLoadedChunk();
 	Chunk* getLoadedChunk(vec2 position);
 
 	std::unordered_map<vec2, Chunk*> loadedChunks;
@@ -133,6 +134,7 @@ public:
 	};
 
 private:
+	Chunk* centerChunk;
 	AssetHandler* assetHandler;
 };
 

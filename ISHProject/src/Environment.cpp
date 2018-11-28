@@ -360,6 +360,9 @@ std::vector<Tile*> Environment::Generator::generateTiles(AssetHandler* assetHand
 }
 
 void Environment::loadChunks(Chunk* center) {
+	if (center == centerChunk) {
+		return;
+	}
 	centerChunk = center;
 	int minX = int(center->chunkPos[0] - chunkSquareRadius);
 	int maxX = int(center->chunkPos[0] + chunkSquareRadius);
@@ -408,6 +411,11 @@ void Environment::loadChunks(Chunk* center) {
 
 		it++;
 	}
+}
+
+Chunk * Environment::getCenterLoadedChunk()
+{
+	return centerChunk;
 }
 
 Chunk* Environment::getLoadedChunk(vec2 position) {

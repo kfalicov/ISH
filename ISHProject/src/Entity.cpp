@@ -12,6 +12,7 @@ Entity::Entity(Tile* spawnTile, bool solid, std::string name) {
 	this->nextAnimationIndex = 0;
 	this->currentTile = spawnTile;
 	this->previousTile = spawnTile;
+	this->updatesSinceMove = updatesPerMove;
 	this->nextTile = nullptr;
 	this->facingTile = spawnTile;
 	spawnTile->addOccupant(this);
@@ -32,13 +33,13 @@ void Entity::Update()
 		}
 	}
 	//TODO movement stuff
-	if (updatesSinceMove > updatesPerMove) {
+	if (updatesSinceMove >= updatesPerMove) {
 		if (nextTile != currentTile && nextTile != nullptr) {
 			std::cout << nextTile->getWorldPosition() << std::endl;
 			updatesSinceMove = 0;
 			previousTile = currentTile;
 			currentTile = nextTile;
-			//nextTile = nullptr;
+			nextTile = nullptr;
 		}
 	}
 	updatesSinceMove++;
