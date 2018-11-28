@@ -82,12 +82,18 @@ public:
 	Camera(vec2 center, int w, int h) {
 		setCenter(center);
 		size = vec2(w, h);
-		followSpeed = 0.1;
+		followSpeed = 0.15;
 	};
 	~Camera() {};
 
 	void Update() {
-		setCenter(lerp(getCenter(), target, followSpeed));
+		if ((getCenter() - target).length2() < 1) {
+			setCenter(target);
+		}
+		else {
+			setCenter(lerp(getCenter(), target, followSpeed));
+		}
+		
 	};
 
 	void TrackTo(vec2 dest) {

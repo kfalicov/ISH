@@ -35,6 +35,15 @@ public:
 	//returns the position of the tile in world space
 	vec2 getWorldPosition();
 
+	//helper to get neighboring tile (uses parent chunk's tile retrieval)
+	Tile* getEast();
+	//helper to get neighboring tile (uses parent chunk's tile retrieval)
+	Tile* getWest();
+	//helper to get neighboring tile (uses parent chunk's tile retrieval)
+	Tile* getNorth();
+	//helper to get neighboring tile (uses parent chunk's tile retrieval)
+	Tile* getSouth();
+
 	//returns the tile's background sprite
 	Sprite* getSprite();
 	//returns the last transparent entity and the solid entity (if either is applicable)
@@ -109,8 +118,8 @@ public:
 
 	void Update();
 	
-	vec2 centerChunkPos;
-	void loadChunks();
+	Chunk* centerChunk;
+	void loadChunks(Chunk* center);
 	Chunk* getLoadedChunk(vec2 position);
 
 	std::unordered_map<vec2, Chunk*> loadedChunks;

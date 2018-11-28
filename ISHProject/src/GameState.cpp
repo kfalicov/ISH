@@ -105,12 +105,36 @@ GameState* PlayState::Update(SDL_Event event)
 
 	//Get the keystates
 	const Uint8 *keystates = SDL_GetKeyboardState(NULL);
+	Tile* nextTile = nullptr;
 	if (keystates[SDL_SCANCODE_D]) {
-		//this is the format for using keyboard inputs in this
-		//if the player is moving, the state should re-render
+		//sets the player's next tile
+		nextTile = player->getCurrentTile()->getEast();
 		
+		//if the player is moving, the state should re-render
 		needsRender = true;
 	}
+	else if (keystates[SDL_SCANCODE_S]) {
+		//sets the player's next tile
+		nextTile = player->getCurrentTile()->getSouth();
+
+		//if the player is moving, the state should re-render
+		needsRender = true;
+	}
+	else if (keystates[SDL_SCANCODE_A]) {
+		//sets the player's next tile
+		nextTile = player->getCurrentTile()->getWest();
+
+		//if the player is moving, the state should re-render
+		needsRender = true;
+	}
+	else if (keystates[SDL_SCANCODE_W]) {
+		//sets the player's next tile
+		nextTile = player->getCurrentTile()->getNorth();
+
+		//if the player is moving, the state should re-render
+		needsRender = true;
+	}
+	
 	if (assetHandler->Update()) {
 		//assetHandler->UpdateSpriteFrames(LIST OF SPRITES IN PLAYSTATE);
 		//assetHandler->UpdateEntityAnimations(LIST OF ENTITIES IN PLAYSTATE);
@@ -118,12 +142,18 @@ GameState* PlayState::Update(SDL_Event event)
 		needsRender = true;
 	}
 
+	player->setNext(nextTile);
+	player->Update();
+	//TODO update all entities
+
 	//if nothing changes, then needsRender should remain false.
-	//temporary for diagnostic
-
+	if (player->getCurrentTile()->getParentChunk() != environment->centerChunk) {
+		environment->loadChunks(player->getCurrentTile()->getParentChunk());
+	}
 	//Make the camera track to the player
-	environmentCamera->TrackTo(player->getCurrentTile()->getPixelPosition() + TILE_SIZE / 2);
-
+	double playerLerpTime = player->getUpdatesSinceMove() / double(player->getUpdatesPerMove());
+	
+	environmentCamera->TrackTo(lerp(player->getPreviousTile()->getPixelPosition() + TILE_SIZE / 2, player->getCurrentTile()->getPixelPosition() + TILE_SIZE / 2, playerLerpTime));
 	needsRender = true;
 	return this;
 }
@@ -145,10 +175,10 @@ void PlayState::RenderEnvironment() {
 	//Create a surface with the dimensions of the portion of the environment that is visible
 
 	//Get bounds of chunks to render
-	int minX = int(environment->centerChunkPos[0] - environment->renderChunkSquareRadius);
-	int maxX = int(environment->centerChunkPos[0] + environment->renderChunkSquareRadius);
-	int minY = int(environment->centerChunkPos[1] - environment->renderChunkSquareRadius);
-	int maxY = int(environment->centerChunkPos[1] + environment->renderChunkSquareRadius);
+	int minX = int(environment->centerChunk->chunkPos[0] - environment->chunkSquareRadius);
+	int maxX = int(environment->centerChunk->chunkPos[0] + environment->chunkSquareRadius);
+	int minY = int(environment->centerChunk->chunkPos[1] - environment->chunkSquareRadius);
+	int maxY = int(environment->centerChunk->chunkPos[1] + environment->chunkSquareRadius);
 
 	//For each loaded chunk (both visible and not), render the chunk if it is within visible bounds
 	for (std::unordered_map<vec2, Chunk*>::iterator it = environment->loadedChunks.begin();

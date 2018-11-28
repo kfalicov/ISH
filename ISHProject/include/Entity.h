@@ -29,6 +29,10 @@ public:
 
 	//adds a sprite to the list of animations
 	void addSprite(Sprite* sprite);
+	
+	//sets the destination for movement
+	void setNext(Tile* nextTile);
+
 	//returns a pointer to the sprite of the current animation
 	//using the displayAnimationIndex and the animations vector
 	Sprite* getDisplaySprite();
@@ -79,6 +83,8 @@ private:
 	Tile* currentTile;
 	//The tile that the entity is lerping from.
 	Tile* previousTile;
+	//The tile that the entity will move to (null if not planning on moving)
+	Tile* nextTile;
 	//The tile in the direction that the entity is facing.
 	//This is useful as the "attack target" tile.
 	Tile* facingTile;

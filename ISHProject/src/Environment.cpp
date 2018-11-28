@@ -3,6 +3,7 @@
 #include "Entity.h"
 #include "Environment.h"
 #include "AssetHandler.h"
+#include <iostream>
 
 Tile::Tile(vec2 pos, Chunk* parent) {
 	this->pos = pos;
@@ -59,10 +60,46 @@ Entity* Tile::removeOccupant(int index = -1) {
 }
 vec2 Tile::getWorldPosition() {
 	//pixel position based on coordinate in chunk and tile pixel dimensions
-	return this->pos;
+	return this->pos+(CHUNK_SIZE*parent->chunkPos);
+}
+Tile * Tile::getEast()
+{
+	std::cout << "going east" << std::endl;
+	//if you're on the border of the chunk
+	if (pos[0] == CHUNK_SIZE-1) {
+		return parent->getEast()->getTile(vec2(0, pos[1]));
+	}
+	return parent->getTile(pos + vec2::EAST);
+}
+Tile * Tile::getWest()
+{
+	std::cout << "going west" << std::endl;
+	//if you're on the border of the chunk
+	if (pos[0] == 0) {
+		return parent->getWest()->getTile(vec2(CHUNK_SIZE-1, pos[1]));
+	}
+	return	parent->getTile(pos + vec2::WEST);
+}
+Tile * Tile::getNorth()
+{
+	std::cout << "going north" << std::endl;
+	//if you're on the border of the chunk
+	if (pos[1] == 0) {
+		return parent->getNorth()->getTile(vec2(pos[0], CHUNK_SIZE - 1));
+	}
+	return	parent->getTile(pos + vec2::NORTH);
+}
+Tile * Tile::getSouth()
+{
+	std::cout << "going south" << std::endl;
+	//if you're on the border of the chunk
+	if (pos[1] == CHUNK_SIZE - 1) {
+		return parent->getSouth()->getTile(vec2(pos[0], 0));
+	}
+	return	parent->getTile(pos + vec2::SOUTH);
 }
 vec2 Tile::getPixelPosition() {
-	return this->pos * TILE_SIZE;
+	return this->getWorldPosition() * TILE_SIZE;
 }
 
 Sprite* Tile::getSprite() {
@@ -139,17 +176,17 @@ void Chunk::setWest(Chunk* W) {
 Tile* Chunk::getTile(vec2 tilePos)
 {
 	//a fast vector access of a tile
-	return tileGrid[(int)tilePos[0]*CHUNK_SIZE + (int)tilePos[1]];
+	return tileGrid[(int)tilePos[1]*CHUNK_SIZE + (int)tilePos[0]];
 }
 
 //A helper function that gets the neighbors of the input coordinates
 std::vector<vec2> Chunk::neighborsOf(vec2 tilePos)
 {
 	std::vector<vec2> tneighbors;
-	tneighbors.push_back(tilePos + vec2(-1, 0));
-	tneighbors.push_back(tilePos + vec2(1, 0));
-	tneighbors.push_back(tilePos + vec2(0, -1));
-	tneighbors.push_back(tilePos + vec2(0, 1));
+	tneighbors.push_back(tilePos + vec2::NORTH);
+	tneighbors.push_back(tilePos + vec2::EAST);
+	tneighbors.push_back(tilePos + vec2::SOUTH);
+	tneighbors.push_back(tilePos + vec2::WEST);
 	return tneighbors;
 }
 
@@ -288,8 +325,7 @@ void Chunk::Render(float interpolation) {
 
 Environment::Environment(AssetHandler* assetHandler, int seed) {
 	this->assetHandler = assetHandler;
-	centerChunkPos = vec2(0, 0);
-	loadChunks();
+	loadChunks(new Chunk(0,0));
 }
 
 Environment::~Environment() {
@@ -309,9 +345,7 @@ std::vector<Tile*> Environment::Generator::generateTiles(AssetHandler* assetHand
 	for (int i = 0; i < CHUNK_SIZE*CHUNK_SIZE; i++) {
 		int x = i % CHUNK_SIZE;
 		int y = int(i / CHUNK_SIZE);
-		Tile* tempTile = new Tile(vec2(
-			chunk->chunkPos[0] * CHUNK_SIZE + x,
-			chunk->chunkPos[1] * CHUNK_SIZE + y), chunk);
+		Tile* tempTile = new Tile(vec2(x, y), chunk);
 		if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1)) {
 			Sprite* s = assetHandler->GetSprite("Assets/Temps.png", 2, TILE_SIZE);
 			tempTile->setSprite(s);
@@ -325,11 +359,12 @@ std::vector<Tile*> Environment::Generator::generateTiles(AssetHandler* assetHand
 	return tiles;
 }
 
-void Environment::loadChunks() {
-	int minX = int(centerChunkPos[0] - chunkSquareRadius);
-	int maxX = int(centerChunkPos[0] + chunkSquareRadius);
-	int minY = int(centerChunkPos[1] - chunkSquareRadius);
-	int maxY = int(centerChunkPos[1] + chunkSquareRadius);
+void Environment::loadChunks(Chunk* center) {
+	centerChunk = center;
+	int minX = int(center->chunkPos[0] - chunkSquareRadius);
+	int maxX = int(center->chunkPos[0] + chunkSquareRadius);
+	int minY = int(center->chunkPos[1] - chunkSquareRadius);
+	int maxY = int(center->chunkPos[1] + chunkSquareRadius);
 
 	//For all chunks that SHOULD BE loaded...
 	for (int chunkX = minX; chunkX <= maxX; chunkX++) {

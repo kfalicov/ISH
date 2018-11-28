@@ -6,9 +6,13 @@
 #include "Util.h"
 
 #ifndef COMPASS_VECTOR
+//(0, -1)
 vec2 vec2::NORTH = vec2(0, -1);
+//(1, 0)
 vec2 vec2::EAST = vec2(1, 0);
+//(0, 1)
 vec2 vec2::SOUTH = vec2(0, 1);
+//(-1, 0)
 vec2 vec2::WEST = vec2(-1, 0);
 #endif // !COMPASS_VECTOR
 

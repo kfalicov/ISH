@@ -12,12 +12,14 @@ Entity::Entity(Tile* spawnTile, bool solid, std::string name) {
 	this->nextAnimationIndex = 0;
 	this->currentTile = spawnTile;
 	this->previousTile = spawnTile;
+	this->nextTile = nullptr;
 	this->facingTile = spawnTile;
 	spawnTile->addOccupant(this);
 }
 
 Entity::~Entity()
 {
+
 }
 
 void Entity::Update()
@@ -30,6 +32,16 @@ void Entity::Update()
 		}
 	}
 	//TODO movement stuff
+	if (updatesSinceMove > updatesPerMove) {
+		if (nextTile != currentTile && nextTile != nullptr) {
+			std::cout << nextTile->getWorldPosition() << std::endl;
+			updatesSinceMove = 0;
+			previousTile = currentTile;
+			currentTile = nextTile;
+			//nextTile = nullptr;
+		}
+	}
+	updatesSinceMove++;
 }
 
 void Entity::Attack() {
@@ -57,6 +69,11 @@ void Entity::TakeDamage(int damage) {
 
 void Entity::addSprite(Sprite* sprite) {
 	animations.push_back(sprite);
+}
+
+void Entity::setNext(Tile * nextTile)
+{
+	this->nextTile = nextTile;
 }
 
 Sprite* Entity::getDisplaySprite() {
