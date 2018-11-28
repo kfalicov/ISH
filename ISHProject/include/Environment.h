@@ -28,7 +28,8 @@ public:
 	//cycles through the displayed entities on the tile
 	void cycleItems();
 	//removes the current display item unless a specific index is passed in
-	Entity* removeOccupant(int index);
+	Entity* removeOccupant(int index=-1);
+	void depart();
 
 	//returns the position of the tile in pixel-space
 	vec2 getPixelPosition();

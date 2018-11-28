@@ -38,8 +38,10 @@ bool Entity::Update()
 		if (nextTile != currentTile && nextTile != nullptr) {
 			std::cout << nextTile->getWorldPosition() << std::endl;
 			updatesSinceMove = 0;
+			currentTile->depart();
 			previousTile = currentTile;
 			currentTile = nextTile;
+			nextTile->addOccupant(this);
 			nextTile = nullptr;
 			hasMoved = true;
 		}

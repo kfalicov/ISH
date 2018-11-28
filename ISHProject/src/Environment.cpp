@@ -43,7 +43,7 @@ void Tile::cycleItems() {
 		displayIndex = (displayIndex + 1) % numOfItems;
 	}
 }
-Entity* Tile::removeOccupant(int index = -1) {
+Entity* Tile::removeOccupant(int index) {
 	//if you passed in an index for manual removal, use it
 	index = index < 0 ? displayIndex : index;
 	//verify index in range
@@ -57,6 +57,11 @@ Entity* Tile::removeOccupant(int index = -1) {
 		return removed;
 	}
 	return nullptr;
+}
+void Tile::depart() {
+	if (occupants.size() > 0 && occupants.back()->isSolid()) {
+		occupants.pop_back();
+	}
 }
 vec2 Tile::getWorldPosition() {
 	//pixel position based on coordinate in chunk and tile pixel dimensions
