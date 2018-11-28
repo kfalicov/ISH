@@ -28,7 +28,7 @@ public:
 	virtual SDL_Surface* Render(float interpolation, bool forceReRender = false);
 	//modifies the surface to 
 	virtual void WriteSurface(float interpolation) = 0;
-	void setPrevious(GameState* previous) {
+	virtual void setPrevious(GameState* previous) {
 		this->previous = previous;
 	}
 	GameState* getPrevious() {
@@ -110,6 +110,8 @@ public:
 	void WriteSurface(float interpolation) override;
 	~ConsoleState();
 
+	void setPrevious(GameState* previous) override;
+
 	//void HandleEvents(SDL_Event event) override;
 	GameState* Update(SDL_Event event) override;
 	void parseCommand(std::string command);
@@ -136,12 +138,13 @@ private:
 		if (args.size() > 0) {
 			if (args[0] == "menu") {
 				delete previous;
-				previous = new MenuState(assetHandler);
+				setPrevious(new MenuState(assetHandler));
 				consoleOutput.push_back("Switched to Menu");
 			}
 			else if (args[0] == "play") {
 				delete previous;
-				previous = new PlayState(assetHandler);
+				setPrevious(new PlayState(assetHandler));
+				needsRender = true;
 				consoleOutput.push_back("Switched to Play");
 			}
 		}

@@ -36,7 +36,9 @@ MenuState::MenuState(AssetHandler* assetHandler, GameState* previous)
 	this->previous = previous;
 }
 
-MenuState::~MenuState(){}
+MenuState::~MenuState(){
+//TODO delete pointers once menu gets more stuff
+}
 
 
 GameState* MenuState::Update(SDL_Event m_event){
@@ -262,9 +264,14 @@ ConsoleState::~ConsoleState()
 {
 }
 
+void ConsoleState::setPrevious(GameState * previous)
+{
+	GameState::setPrevious(previous);
+	this->needsRender = true;
+}
+
 GameState * ConsoleState::Update(SDL_Event event)
 {	
-	
 	switch (event.type) {
 	case SDL_KEYDOWN:
 		switch (event.key.keysym.sym) {
@@ -331,6 +338,7 @@ GameState * ConsoleState::Update(SDL_Event event)
 			}
 			currentCommand += event.text.text;
 			std::cout << '\r'  << currentCommand << std::flush;
+			needsRender = true;
 		}
 		break;
 	case SDL_KEYUP:
