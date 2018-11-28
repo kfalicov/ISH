@@ -85,7 +85,7 @@ public:
 	Tile* getTile(vec2 tilePos);
 	std::vector<vec2> neighborsOf(vec2 tilePos);
 
-	Chunk* getAdjacentChunk(Tile* currentTile, vec2 direction);
+	Tile* getAdjacentTile(Tile* currentTile, vec2 direction);
 
 	//various heuristics for distance of pathfinding
 	double manhattan(vec2 a, vec2 b);	//gets distance along "blocks"

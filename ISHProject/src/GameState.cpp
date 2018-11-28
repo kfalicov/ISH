@@ -119,14 +119,14 @@ GameState* PlayState::Update(SDL_Event event)
 		//if any of the sprites have changed, the state should re-render
 		needsRender = true;
 	}
-	Tile* currentTile = player->getCurrentTile();
-	Chunk* nextChunk = currentTile->getParentChunk()->getAdjacentChunk(currentTile, dir);
+	vec2 currentPos = player->getCurrentTile()->getPosition();
+	Tile* nextTile = environment->getCenterLoadedChunk()->getTile(currentPos+dir);
 
-	player->setNext(currentTile);
+	player->setNext(nextTile);
 	if (player->Update()) {
 		//loads the chunks around the player
-		if (nextChunk != environment->getCenterLoadedChunk()) {
-			environment->loadChunks(nextChunk);
+		if (nextTile->getParentChunk() != environment->getCenterLoadedChunk()) {
+			environment->loadChunks(nextTile->getParentChunk());
 		}
 	}
 	//TODO update all entities
