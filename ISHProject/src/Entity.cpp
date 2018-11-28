@@ -4,15 +4,16 @@
 #include "Environment.h"
 #include "Entity.h"
 
-Entity::Entity(std::vector<Sprite*>animations, bool solid, std::string name) {
-	this->animations = animations;
+Entity::Entity(Tile* spawnTile, bool solid, std::string name) {
+	animations = std::vector<Sprite*>();
 	this->solid = solid;
 	this->name = name;
 	this->displayAnimationIndex = 0;
 	this->nextAnimationIndex = 0;
-	this->currentTile = nullptr;
-	this->previousTile = nullptr;
-	this->facingTile = nullptr;
+	this->currentTile = spawnTile;
+	this->previousTile = spawnTile;
+	this->facingTile = spawnTile;
+	spawnTile->addOccupant(this);
 }
 
 Entity::~Entity()
@@ -52,6 +53,10 @@ void Entity::TakeDamage(int damage) {
 	if (currentHealth < 0) {
 		std::cout << "i died" << std::endl;
 	}
+}
+
+void Entity::addSprite(Sprite* sprite) {
+	animations.push_back(sprite);
 }
 
 Sprite* Entity::getDisplaySprite() {

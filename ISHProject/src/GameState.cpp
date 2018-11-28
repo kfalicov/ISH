@@ -7,6 +7,7 @@
 #include "GameState.h"
 #include "Environment.h"
 #include "Sprite.h"
+#include "Entity.h"
 
 SDL_Surface* GameState::Render(float interpolation, bool forceReRender) {
 	if (needsRender || forceReRender) {
@@ -71,7 +72,16 @@ PlayState::PlayState(AssetHandler* assetHandler, GameState* previous)
 	this->previous = previous;
 
 	environment = new Environment(assetHandler);
-	environmentCamera = new Camera(vec2(0,0), 256, 256);
+
+	//Create the player and add them to the world
+	player = new Entity(environment->
+		getLoadedChunk(vec2(0, 0))->
+		getTile(vec2(0, 0)),
+		true, "Player");
+	player->addSprite(assetHandler->GetSprite("Assets/Lemon.png", 0, TILE_SIZE));
+
+	environmentCamera = new Camera(vec2(0, 0), 256, 256);
+	environmentCamera->setCenter(player->getCurrentTile()->getPixelPosition());
 
 	environmentSurface = SDL_CreateRGBSurface(0,
 		int(environmentCamera->getSize()[0]),
@@ -89,11 +99,14 @@ PlayState::~PlayState()
 
 GameState* PlayState::Update(SDL_Event event)
 {
+	environmentCamera->Update();
+
 	//Get the keystates
 	const Uint8 *keystates = SDL_GetKeyboardState(NULL);
-	if (keystates[SDL_SCANCODE_RIGHT]) {
+	if (keystates[SDL_SCANCODE_D]) {
 		//this is the format for using keyboard inputs in this
 		//if the player is moving, the state should re-render
+		
 		needsRender = true;
 	}
 	if (assetHandler->Update()) {
@@ -105,6 +118,10 @@ GameState* PlayState::Update(SDL_Event event)
 
 	//if nothing changes, then needsRender should remain false.
 	//temporary for diagnostic
+
+	//Make the camera track to the player
+	environmentCamera->TrackTo(player->getCurrentTile()->getPixelPosition() + TILE_SIZE / 2);
+
 	needsRender = true;
 	return this;
 }
@@ -113,6 +130,8 @@ void PlayState::WriteSurface(float interpolation)
 {
 	//Render World (background, items, entities) to environmentSurface
 	RenderEnvironment();
+	//Render the entities of the world
+	RenderEntities(interpolation);
 	//Render UI to uiSurface
 	RenderUI();
 
@@ -170,6 +189,29 @@ void PlayState::RenderEnvironment() {
 			}
 		}
 	}
+}
+
+void PlayState::RenderEntities(float interpolation) {
+	//Render the player
+	RenderEntity(player, interpolation);
+}
+
+void PlayState::RenderEntity(Entity* e, float interpolation) {
+	//Put sprite onto environment surface
+	Sprite* backgroundSprite = e->getDisplaySprite();
+	SDL_Rect destRect = SDL_Rect();
+	SDL_Rect srcRect = backgroundSprite->frames[backgroundSprite->currentFrameIndex];
+	destRect.w = srcRect.w;
+	destRect.h = srcRect.h;
+
+	vec2 renderPos = lerp(e->getPreviousTile()->getPixelPosition(),
+		e->getCurrentTile()->getPixelPosition(),
+		(e->getUpdatesSinceMove() + interpolation) / e->getUpdatesPerMove());
+
+	destRect.x = int(renderPos[0] - environmentCamera->getPos()[0]);
+	destRect.y = int(renderPos[1] - environmentCamera->getPos()[1]);
+
+	SDL_BlitSurface(backgroundSprite->spriteSheet, &srcRect, environmentSurface, &destRect);
 }
 
 void PlayState::RenderUI() {

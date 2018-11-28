@@ -82,7 +82,7 @@ public:
 	Camera(vec2 center, int w, int h) {
 		setCenter(center);
 		size = vec2(w, h);
-		followSpeed = 10;
+		followSpeed = 0.1;
 	};
 	~Camera() {};
 

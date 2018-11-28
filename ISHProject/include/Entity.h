@@ -7,7 +7,7 @@ class Sprite;
 
 class Entity {
 public:
-	Entity(std::vector<Sprite*> animations, bool solid = false, std::string name = "entity");
+	Entity(Tile* spawnTile, bool solid = false, std::string name = "entity");
 	//TODO
 	~Entity();
 
@@ -27,9 +27,18 @@ public:
 		return this->resistanceType;
 	}
 
+	//adds a sprite to the list of animations
+	void addSprite(Sprite* sprite);
 	//returns a pointer to the sprite of the current animation
 	//using the displayAnimationIndex and the animations vector
 	Sprite* getDisplaySprite();
+
+	//Getters
+	Tile* getCurrentTile() { return currentTile; }
+	Tile* getPreviousTile() { return previousTile; }
+	Tile* getFacingTIle() { return facingTile; }
+	int getUpdatesSinceMove() { return updatesSinceMove; }
+	int getUpdatesPerMove() { return updatesPerMove; }
 
 	//asset handler uses this to make all entities update animations simultaneously
 	void queueAnimationChange();

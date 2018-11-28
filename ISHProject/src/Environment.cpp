@@ -23,6 +23,7 @@ bool Tile::addOccupant(Entity* e) {
 		}
 	}
 	occupants.push_back(e);
+
 	//increment display index to reflect last transparent item
 	if (!e->isSolid()) {
 		displayIndex++;

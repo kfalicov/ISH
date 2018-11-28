@@ -10,6 +10,7 @@ class AssetHandler;
 struct SDL_Surface;
 class Environment;
 class Camera;
+class Entity;
 
 class GameState
 {
@@ -90,8 +91,14 @@ private:
 	SDL_Surface* environmentSurface;
 	SDL_Surface* uiSurface;
 
+	Entity* player;
+
 	//renders the environment to the EnvironmentSurface
 	void RenderEnvironment();
+	//renders the entities to the 
+	void RenderEntities(float interpolation);
+	//render a single entity (helper function)
+	void RenderEntity(Entity* e, float interpolation);
 	//renders the UI to the UISurface
 	void RenderUI();
 };
