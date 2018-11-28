@@ -12,7 +12,12 @@ Tile::Tile(vec2 pos, Chunk* parent) {
 }
 Tile::~Tile()
 {
-
+	//TODO
+	//Does anything need to be done here?
+	//we can't delete parent since if the tile gets to this it means parent is already being deleted, and calling delete
+	//would lead to an infinite loop.
+	//we can't delete sprite since it's a reference to something stored in AssetHandler.
+	//everything else is a non-pointer and would automatically be discarded.
 }
 bool Tile::addOccupant(Entity* e) {
 	//if there are already occupants
@@ -94,9 +99,12 @@ Chunk::Chunk(int x, int y)
 
 Chunk::~Chunk()
 {
+	//clears out the tile grid.
 	for (int i = 0; i < tileGrid.size(); i++) {
 		delete tileGrid[i];
 	}
+	//TODO chunk destructor
+	//is there anything more that needs to be deleted?
 }
 
 void Chunk::setTiles(std::vector<Tile*> tileGrid) {
@@ -284,7 +292,7 @@ Environment::Environment(AssetHandler* assetHandler, int seed) {
 }
 
 Environment::~Environment() {
-
+	
 }
 
 void Environment::Update() {
@@ -327,9 +335,8 @@ void Environment::loadChunks() {
 		for (int chunkY = minY; chunkY <= maxY; chunkY++) {
 			vec2 pos = vec2(chunkX, chunkY);
 
-			// TODO properly load/generate chunk
-			if (getLoadedChunk(vec2(chunkX, chunkY)) == nullptr) { //If they are not already loaded, load them
-				//Chunk* newChunk = new Chunk(worldGen, chunkX, chunkY);
+			//if this key isn't already found in the map
+			if (loadedChunks.find(pos) == loadedChunks.end()) { //If they are not already loaded, load them
 				Chunk* newChunk = new Chunk(chunkX, chunkY);
 				newChunk->setTiles(Generator::generateTiles(assetHandler, newChunk));
 				loadedChunks.insert(std::pair<vec2, Chunk*>(pos, newChunk));
@@ -368,11 +375,9 @@ void Environment::loadChunks() {
 }
 
 Chunk* Environment::getLoadedChunk(vec2 position) {
-	for (std::unordered_map<vec2, Chunk*>::iterator it = loadedChunks.begin(); it != loadedChunks.end(); ++it) {
-		vec2 p = it->first;
-		if (p == position) {
-			return it->second;
-		}
+	std::unordered_map<vec2, Chunk*>::iterator it = loadedChunks.find(position);
+	if (it != loadedChunks.end()) {
+		return it->second;
 	}
 	return nullptr;
 }
