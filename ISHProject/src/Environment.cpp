@@ -96,9 +96,9 @@ void Tile::setSprite(Sprite* sprite) {
 	this->sprite = sprite;
 }
 
-Chunk::Chunk(int x, int y)
+Chunk::Chunk(const vec2 pos)
 {
-	this->chunkPos = vec2(double(x), double(y));
+	this->chunkPos = pos;
 	neighbors = std::vector<Chunk*>(4);
 }
 
@@ -261,9 +261,9 @@ void Chunk::Render(float interpolation) {
 	}
 }
 
-Environment::Environment(AssetHandler* assetHandler, int seed) {
-	this->assetHandler = assetHandler;
-	loadChunks(new Chunk(0,0));
+Environment::Environment() {
+	centerChunk = nullptr;
+
 }
 
 Environment::~Environment() {
@@ -274,92 +274,26 @@ void Environment::Update() {
 
 }
 
-std::vector<Tile*> Environment::Generator::generateTiles(AssetHandler* assetHandler, Chunk* chunk) {
-	//TODO instantialize a 16x16 chunk
-	//set chunk pos
-	//create array of tiles who are members of the chunk
-	//new Tile(vec2(0-15,0-15), chunk's pos)
-	std::vector<Tile*> tiles;
-	for (int i = 0; i < CHUNK_SIZE*CHUNK_SIZE; i++) {
-		int x = i % CHUNK_SIZE;
-		int y = int(i / CHUNK_SIZE);
-		Tile* tempTile = new Tile(vec2(x, y), chunk);
-		if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1)) {
-			Sprite* s = assetHandler->GetSprite("Assets/Temps.png", 2, TILE_SIZE);
-			tempTile->setSprite(s);
-		}
-		else {
-			Sprite* s = assetHandler->GetSprite("Assets/Temps.png", 1, TILE_SIZE);
-			tempTile->setSprite(s);
-		}
-		tiles.push_back(tempTile);
-	}
-	return tiles;
-}
-
-void Environment::loadChunks(Chunk* center) {
-	if (center == centerChunk) {
-		return;
-	}
-	centerChunk = center;
-	int minX = int(center->chunkPos[0] - chunkSquareRadius);
-	int maxX = int(center->chunkPos[0] + chunkSquareRadius);
-	int minY = int(center->chunkPos[1] - chunkSquareRadius);
-	int maxY = int(center->chunkPos[1] + chunkSquareRadius);
-
-	//For all chunks that SHOULD BE loaded...
-	for (int chunkX = minX; chunkX <= maxX; chunkX++) {
-		for (int chunkY = minY; chunkY <= maxY; chunkY++) {
-			vec2 pos = vec2(chunkX, chunkY);
-
-			//if this key isn't already found in the map
-			if (loadedChunks.find(pos) == loadedChunks.end()) { //If they are not already loaded, load them
-				Chunk* newChunk = new Chunk(chunkX, chunkY);
-				newChunk->setTiles(Generator::generateTiles(assetHandler, newChunk));
-				loadedChunks.insert(std::pair<vec2, Chunk*>(pos, newChunk));
-			}
-			//std::cout << chunkX << ", " << chunkY << std::endl;
-		}
-	}
-
-	//Set up NSEW chunks
-	for (std::unordered_map<vec2, Chunk*>::iterator it = loadedChunks.begin(); it != loadedChunks.end();) {
-		vec2 p = (it->first);
-
-		//if a chunk is loaded and it shouldn't be, unload it
-		if (p[0] < minX || p[0] > maxX || p[1] < minY || p[1] > maxY) {
-			//use chunk destructor
-			delete it->second;
-			it = loadedChunks.erase(it);
-			continue;
-		}
-
-		if (it->second->getNorth() == nullptr) {
-			it->second->setNorth(getLoadedChunk(p + vec2::NORTH));
-		}
-		if (it->second->getEast() == nullptr) {
-			it->second->setEast(getLoadedChunk(p + vec2::EAST));
-		}
-		if (it->second->getSouth() == nullptr) {
-			it->second->setSouth(getLoadedChunk(p + vec2::SOUTH));
-		}
-		if (it->second->getWest() == nullptr) {
-			it->second->setWest(getLoadedChunk(p + vec2::WEST));
-		}
-
-		it++;
-	}
-}
-
-Chunk * Environment::getCenterLoadedChunk()
+void Environment::insertChunk(Chunk * c)
 {
-	return centerChunk;
+	loadedChunks.insert(std::pair<vec2, Chunk*>(c->chunkPos, c));
 }
 
-Chunk* Environment::getLoadedChunk(vec2 position) {
-	std::unordered_map<vec2, Chunk*>::iterator it = loadedChunks.find(position);
+void Environment::setCenter(Chunk * c)
+{
+	this->centerChunk = c;
+}
+
+Chunk* Environment::getloadedChunk(vec2 pos)
+{
+	std::unordered_map<vec2, Chunk*>::iterator it = loadedChunks.find(pos);
 	if (it != loadedChunks.end()) {
 		return it->second;
 	}
 	return nullptr;
+}
+
+std::unordered_map<vec2, Chunk*> Environment::getLoadedChunks()
+{
+	return loadedChunks;
 }

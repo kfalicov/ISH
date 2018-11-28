@@ -62,7 +62,7 @@ private:
 
 class Chunk {
 public:
-	Chunk(int x, int y);
+	Chunk(vec2 pos);
 	//TODO save data and remove chunk from memory
 	~Chunk();
 
@@ -104,31 +104,24 @@ private:
 
 class Environment {
 public:
-	//TODO make the world class essentially the world generator.
+	//TODO make the Environment class essentially the world storage
 	//initialize it with the assethandler, and it will pass along the assets to the tiles it creates.
-	Environment(AssetHandler* assetHandler, int seed=0);
+	Environment();
 	~Environment();
 
 	void Update();
-	
-	
-	void loadChunks(Chunk* center);
-	Chunk* getCenterLoadedChunk();
-	Chunk* getLoadedChunk(vec2 position);
 
-	std::unordered_map<vec2, Chunk*> loadedChunks;
-	
-	int chunkSquareRadius = 1;
-	int renderChunkSquareRadius = 1;
-
-	class Generator {
-	public:
-		static std::vector<Tile*> generateTiles(AssetHandler* assetHandler, Chunk* chunk);
-	};
+	void insertChunk(Chunk* c);
+	void setCenter(Chunk* c);
+	Chunk* getCenterChunk() { return centerChunk; }
+	Chunk* getloadedChunk(vec2 pos);
+	std::unordered_map<vec2, Chunk*> getLoadedChunks();
 
 private:
+	std::unordered_map<vec2, Chunk*> loadedChunks;
 	Chunk* centerChunk;
-	AssetHandler* assetHandler;
+	Chunk* topLeftLoadedChunk;
+	Chunk* BottomRightLoadedChunk;
 };
 
 //HELPER FUNCTIONS FOR PATHFINDING

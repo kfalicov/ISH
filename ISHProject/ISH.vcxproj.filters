@@ -9,6 +9,7 @@
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\AssetHandler.cpp" />
     <ClCompile Include="src\Util.cpp" />
+    <ClCompile Include="src\Generator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Game.h" />
@@ -18,5 +19,6 @@
     <ClInclude Include="include\Entity.h" />
     <ClInclude Include="include\AssetHandler.h" />
     <ClInclude Include="include\Util.h" />
+    <ClInclude Include="include\Generator.h" />
   </ItemGroup>
 </Project>
