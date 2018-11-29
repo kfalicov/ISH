@@ -1,7 +1,7 @@
 #include <vector>
 #include <deque>
 #include <algorithm>
-#include <unordered_map>
+#include <deque>
 #include "Util.h"
 
 #define HEURISTIC diagonal
@@ -115,14 +115,18 @@ public:
 	void insertChunk(Chunk* c);
 	void setCenter(Chunk* c);
 	Chunk* getCenterChunk() { return centerChunk; }
-	Chunk* getloadedChunk(vec2 pos);
-	std::unordered_map<vec2, Chunk*> getLoadedChunks();
-
+	//shifts the loaded chunk space east by 1 chunk
+	void moveEast(std::deque<Chunk*> newChunks);
+	void moveSouth(std::deque<Chunk*> newChunks);
+	void moveWest(std::deque<Chunk*> newChunks);
+	void moveNorth(std::deque<Chunk*> newChunks);
+	vec2 getTopLeft() { return loadedChunks.front()->chunkPos; }
+	vec2 getBottomRight() { return loadedChunks.back()->chunkPos; }
 private:
-	std::unordered_map<vec2, Chunk*> loadedChunks;
+	int loadDistX;
+	int loadDistY;
+	std::deque<Chunk*> loadedChunks;
 	Chunk* centerChunk;
-	Chunk* topLeftLoadedChunk;
-	Chunk* BottomRightLoadedChunk;
 };
 
 //HELPER FUNCTIONS FOR PATHFINDING

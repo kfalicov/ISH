@@ -17,50 +17,42 @@ Generator::Generator(AssetHandler* assetHandler)
 	this->assetHandler = assetHandler;
 }
 
-void Generator::loadChunks(Environment* e, vec2 pos) {
-	Chunk* newCenter = e->getloadedChunk(pos);
-	//if the chunk to load does not exist in the loadedchunks structure
-	if (newCenter == nullptr) {
-		Chunk* chunkToAdd = new Chunk(pos);
-		chunkToAdd->setTiles(generateTiles(chunkToAdd));
-		e->insertChunk(chunkToAdd);
-		newCenter = chunkToAdd;
-	}
-	if (e->getCenterChunk() != newCenter) {
-		e->setCenter(newCenter);
-		verifyNeighbors(e, pos);
-	}
-}
-
-void Generator::verifyNeighbors(Environment* e, vec2 pos) {
-	//Get bounds of chunks to render
-	int minX = int(pos[0] - chunkLoadRadius);
-	int maxX = int(pos[0] + chunkLoadRadius);
-	int minY = int(pos[1] - chunkLoadRadius);
-	int maxY = int(pos[1] + chunkLoadRadius);
-	for (int x = minX; x <= maxX; x++) {
-		for (int y = minY; y <= maxY; y++) {
-
-			Chunk* newNeighbor = e->getloadedChunk(vec2(x, y));
-			//if the chunk to load does not exist in the loadedchunks structure
-			if (newNeighbor == nullptr) {
-				Chunk* chunkToAdd = new Chunk(vec2(x, y));
-				chunkToAdd->setTiles(generateTiles(chunkToAdd));
-				e->insertChunk(chunkToAdd);
-			}
+//generates a new row/column of chunks in the desired direction
+void Generator::loadChunks(Environment* e, vec2 dir) {
+	vec2 upperLeftBound = e->getTopLeft();
+	vec2 lowerRightBound = e->getBottomRight();
+	std::deque<Chunk*> freshChunks;
+	if (dir == vec2::EAST) {
+		for (int y = upperLeftBound[1]; y <= lowerRightBound[1]; y++) {
+			Chunk* eastChunk = new Chunk(vec2(lowerRightBound[0] + 1, y));
+			eastChunk->setTiles(generateTiles(eastChunk));
+			freshChunks.push_back(eastChunk);
 		}
+		e->moveEast(freshChunks);
 	}
-	for (int x = minX; x <= maxX; x++) {
-		for (int y = minY; y <= maxY; y++) {
-			Chunk* newNeighbor = e->getloadedChunk(vec2(x, y));
-			//if the chunk to load does not exist in the loadedchunks structure
-			if (newNeighbor != nullptr) {
-				newNeighbor->setEast(e->getloadedChunk(vec2(x, y) + vec2::EAST));
-				newNeighbor->setWest(e->getloadedChunk(vec2(x, y) + vec2::WEST));
-				newNeighbor->setNorth(e->getloadedChunk(vec2(x, y) + vec2::NORTH));
-				newNeighbor->setSouth(e->getloadedChunk(vec2(x, y) + vec2::SOUTH));
-			}
+	if (dir == vec2::SOUTH) {
+		for (int x = upperLeftBound[0]; x <= lowerRightBound[0]; x++) {
+			Chunk* southChunk = new Chunk(vec2(x, lowerRightBound[1]+1));
+			southChunk->setTiles(generateTiles(southChunk));
+			freshChunks.push_back(southChunk);
 		}
+		e->moveSouth(freshChunks);
+	}
+	if (dir == vec2::WEST) {
+		for (int y = upperLeftBound[1]; y <= lowerRightBound[1]; y++) {
+			Chunk* westChunk = new Chunk(vec2(upperLeftBound[0]-1, y));
+			westChunk->setTiles(generateTiles(westChunk));
+			freshChunks.push_back(westChunk);
+		}
+		e->moveWest(freshChunks);
+	}
+	if (dir == vec2::NORTH) {
+		for (int x = upperLeftBound[0]; x <= lowerRightBound[0]; x++) {
+			Chunk* northChunk = new Chunk(vec2(x, upperLeftBound[1] -1));
+			northChunk->setTiles(generateTiles(northChunk));
+			freshChunks.push_back(northChunk);
+		}
+		e->moveNorth(freshChunks);
 	}
 }
 

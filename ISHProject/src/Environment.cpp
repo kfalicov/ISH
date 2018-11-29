@@ -160,7 +160,7 @@ std::vector<vec2> Chunk::neighborsOf(vec2 tilePos)
 	return tneighbors;
 }
 
-//Gets the chunk to load based on a tile position and direction, and updates the currentTile passed in
+//Gets the tile to load based on a position and direction
 Tile* Chunk::getAdjacentTile(Tile* currentTile, vec2 direction) {
 	if (direction == vec2(0, 0)) {
 		return currentTile;
@@ -279,26 +279,59 @@ void Environment::Update() {
 
 }
 
-void Environment::insertChunk(Chunk * c)
+/*
+0  1  2
+3  4  5
+6  7  8
+*/
+//input deque must be sorted from lowest to highest Y
+void Environment::moveEast(std::deque<Chunk*> newChunks)
 {
-	loadedChunks.insert(std::pair<vec2, Chunk*>(c->chunkPos, c));
-}
+	for (int i = loadDistX; i < (loadDistX*loadDistY); i += loadDistX) {
+		loadedChunks[i] = newChunks.front();
 
-void Environment::setCenter(Chunk * c)
-{
-	this->centerChunk = c;
-}
+		//setting neighbors
+		newChunks.front()->setWest(loadedChunks[i-1]);
+		loadedChunks[i - 1]->setEast(newChunks.front());
 
-Chunk* Environment::getloadedChunk(vec2 pos)
-{
-	std::unordered_map<vec2, Chunk*>::iterator it = loadedChunks.find(pos);
-	if (it != loadedChunks.end()) {
-		return it->second;
+		newChunks.pop_front();
 	}
-	return nullptr;
+	loadedChunks.pop_front();
+	loadedChunks.push_back(newChunks.front());
+	if (newChunks.size() != 1) {
+		std::cout << "size mismatch, check the dimensions of input vector" << std::endl;
+	}
 }
 
-std::unordered_map<vec2, Chunk*> Environment::getLoadedChunks()
+void Environment::moveSouth(std::deque<Chunk*> newChunks)
 {
-	return loadedChunks;
+	//adds a new row to the loaded queue
+	//and pops the first row
+	for (int i = 0; i < loadDistX; i++) {
+		loadedChunks.push_back(newChunks.front());
+
+		//setting neighbors
+		newChunks.front()->setNorth(loadedChunks[((loadDistY - 1)*loadDistX) + i]);
+		loadedChunks[((loadDistY - 1)*loadDistX) + i]->setSouth(newChunks.front());
+
+		newChunks.pop_front();
+		loadedChunks.pop_front();
+	}
+}
+
+void Environment::moveNorth(std::deque<Chunk*> newChunks)
+{
+	//adds a new row to the front of the queue
+	//and pops the last row
+	for (int i = 0; i < loadDistX; i++) {
+
+		loadedChunks.push_front(newChunks.back());
+
+		//setting neighbors
+		newChunks.back()->setSouth(loadedChunks[loadDistX]);
+		loadedChunks[loadDistX]->setNorth(newChunks.back());
+
+		newChunks.pop_back();
+		loadedChunks.pop_back();
+	}
 }
