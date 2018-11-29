@@ -126,6 +126,25 @@ Chunk* Chunk::getEast() { return neighbors[dir::EAST]; }
 Chunk* Chunk::getSouth() { return neighbors[dir::SOUTH]; }
 Chunk* Chunk::getWest() { return neighbors[dir::WEST]; }
 
+void Chunk::pairHorizontal(Chunk * west, Chunk * east)
+{
+	if (west != nullptr) {
+		west->setEast(east);
+	}
+	if (east != nullptr) {
+		east->setWest(west);
+	}
+}
+void Chunk::pairVertical(Chunk * north, Chunk * south)
+{
+	if (north != nullptr) {
+		north->setSouth(south);
+	}
+	if (south != nullptr) {
+		south->setNorth(north);
+	}
+}
+
 void Chunk::setNorth(Chunk* N) {
 	neighbors[dir::NORTH] = N;
 }
@@ -267,8 +286,7 @@ void Chunk::Render(float interpolation) {
 }
 
 Environment::Environment() {
-	centerChunk = nullptr;
-
+	//set everything to null
 }
 
 Environment::~Environment() {
@@ -297,10 +315,12 @@ void Environment::moveEast(std::deque<Chunk*> newChunks)
 		newChunks.pop_front();
 	}
 	loadedChunks.pop_front();
+
+	//sets neighbors of last item
+	loadedChunks.back()->setEast(newChunks.front());
+	newChunks.front()->setWest(loadedChunks.back());
+
 	loadedChunks.push_back(newChunks.front());
-	if (newChunks.size() != 1) {
-		std::cout << "size mismatch, check the dimensions of input vector" << std::endl;
-	}
 }
 
 void Environment::moveSouth(std::deque<Chunk*> newChunks)
@@ -317,6 +337,22 @@ void Environment::moveSouth(std::deque<Chunk*> newChunks)
 		newChunks.pop_front();
 		loadedChunks.pop_front();
 	}
+}
+
+void Environment::moveWest(std::deque<Chunk*> newChunks)
+{
+	//setting neighbors
+	Chunk::pairHorizontal(newChunks.front(), loadedChunks.front());
+	loadedChunks.push_front(newChunks.front());
+
+	for (int i = loadDistX; i < (loadDistX*loadDistY); i += loadDistX) {
+		newChunks.pop_front();
+		loadedChunks[i] = newChunks.front();
+
+		//setting neighbors
+		Chunk::pairHorizontal(newChunks.front(), loadedChunks[i+1]);
+	}
+	loadedChunks.pop_back();
 }
 
 void Environment::moveNorth(std::deque<Chunk*> newChunks)

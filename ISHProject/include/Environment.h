@@ -5,7 +5,7 @@
 #include "Util.h"
 
 #define HEURISTIC diagonal
-constexpr auto CHUNK_SIZE = 8; //number of tiles per chunk (n * n);
+constexpr auto CHUNK_SIZE = 2; //number of tiles per chunk (n * n);
 constexpr auto TILE_SIZE = 16; //edge length of tile sprites, can be used for spacing;
 
 //forward declarations (for all pointer types used in method signatures)
@@ -78,6 +78,10 @@ public:
 	Chunk* getSouth();	//get the chunk to the south of this one
 	Chunk* getWest();	//get the chunk to the west of this one
 
+	//sets the chunk's neighbors to each other
+	static void pairHorizontal(Chunk* west, Chunk* east);
+	static void pairVertical(Chunk* north, Chunk* south);
+
 	void setNorth(Chunk* N);
 	void setEast(Chunk* E);
 	void setSouth(Chunk* S);
@@ -112,13 +116,18 @@ public:
 
 	void Update();
 
-	void insertChunk(Chunk* c);
-	void setCenter(Chunk* c);
-	Chunk* getCenterChunk() { return centerChunk; }
-	//shifts the loaded chunk space east by 1 chunk
+	Chunk* getCenterChunk() { return loadedChunks[int((loadDistX*loadDistY) / 2)]; }
+
+	//shifts the loaded chunk space east by 1 chunk and inserts newchunks
 	void moveEast(std::deque<Chunk*> newChunks);
+
+	//shifts the loaded chunk space south by 1 chunk and inserts newchunks
 	void moveSouth(std::deque<Chunk*> newChunks);
+
+	//shifts the loaded chunk space west by 1 chunk and inserts newchunks
 	void moveWest(std::deque<Chunk*> newChunks);
+
+	//shifts the loaded chunk space north by 1 chunk and inserts newchunks
 	void moveNorth(std::deque<Chunk*> newChunks);
 	vec2 getTopLeft() { return loadedChunks.front()->chunkPos; }
 	vec2 getBottomRight() { return loadedChunks.back()->chunkPos; }
@@ -126,7 +135,6 @@ private:
 	int loadDistX;
 	int loadDistY;
 	std::deque<Chunk*> loadedChunks;
-	Chunk* centerChunk;
 };
 
 //HELPER FUNCTIONS FOR PATHFINDING

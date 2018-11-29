@@ -56,6 +56,15 @@ void Generator::loadChunks(Environment* e, vec2 dir) {
 	}
 }
 
+void Generator::createAllChunks(Environment* e, vec2 pos) {
+	for (int x = 0 - chunkLoadRadius; x <= chunkLoadRadius; x++) {
+		for (int y = 0 - chunkLoadRadius; y <= chunkLoadRadius; y++) {
+			vec2 newPos(x, y);
+
+		}
+	}
+}
+
 std::vector<Tile*> Generator::generateTiles(Chunk* chunk) {
 	//TODO instantialize a 16x16 chunk
 	//set chunk pos

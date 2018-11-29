@@ -73,13 +73,13 @@ PlayState::PlayState(AssetHandler* assetHandler, GameState* previous)
 {
 	this->previous = previous;
 
-	environment = new Environment();
+	
 	OverworldGenerator = Generator(assetHandler);
-	OverworldGenerator.loadChunks(environment, vec2(0, 0));
+	environment = new Environment();
+	OverworldGenerator.createAllChunks(environment, vec2(0, 0));
 
 	//Create the player and add them to the world
-	player = new Entity(environment->
-		getloadedChunk(vec2(0,0))->
+	player = new Entity(environment->getCenterChunk()->
 		getTile(vec2(0, 0)),
 		true, "Player");
 	player->addSprite(assetHandler->GetSprite("Assets/Lemon.png", 0, TILE_SIZE));
@@ -124,14 +124,9 @@ GameState* PlayState::Update(SDL_Event event)
 
 	Tile* destination = player->getCurrentTile()->getParentChunk()->getAdjacentTile(player->getCurrentTile(), dir);
 	player->setNext(destination);
-	if (player->Update()) {
-		//loads the chunks around the player
-		OverworldGenerator.loadChunks(environment, destination->getParentChunk()->chunkPos);
-	}
-	//TODO update all entities
 
-	
-
+	//TODO check if player has left chunk and if so, call
+	//generator.loadChunks(environment, dir);
 	
 	//Make the camera track to the player
 	double playerLerpTime = player->getUpdatesSinceMove() / double(player->getUpdatesPerMove());
@@ -162,9 +157,9 @@ void PlayState::RenderEnvironment() {
 	int maxY = int(pos[1] + 1);
 
 	//For each loaded chunk, render the chunk if it is within visible bounds
-	for (int i = minX; i <= maxX; i++) {
-		for (int j = minY; j <= maxY; j++) {
-			Chunk* c = environment->getloadedChunk(vec2(i, j));
+	//for (int i = minX; i <= maxX; i++) {
+	//	for (int j = minY; j <= maxY; j++) {
+			Chunk* c = environment->getCenterChunk();
 		//Render the chunk if the chunk is one of the visible chunks
 		//if (c->chunkPos[0] >= minX && c->chunkPos[0] <= maxX && c->chunkPos[1] >= minY && c->chunkPos[1] <= maxY) {
 			//For each tile in the chunk, render the tile
@@ -200,8 +195,8 @@ void PlayState::RenderEnvironment() {
 						}
 					}
 				}
-			}
-		}
+			//}
+		//}
 	}
 }
 
