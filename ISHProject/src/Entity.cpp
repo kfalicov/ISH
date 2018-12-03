@@ -41,8 +41,8 @@ bool Entity::Update()
 			if (nextTile->addOccupant(this)) {
 				updatesSinceMove = 0;
 				previousTile = currentTile;
-				currentTile = nextTile;
 				currentTile->depart();
+				currentTile = nextTile;
 				
 				hasMoved = true;
 			}
@@ -86,7 +86,7 @@ void Entity::addSprite(Sprite* sprite) {
 
 void Entity::setNext(Tile * nextTile)
 {
-	if (nextTile == this->currentTile) {
+	if (nextTile->getWorldPosition() == this->currentTile->getWorldPosition()) {
 
 	}
 	else {

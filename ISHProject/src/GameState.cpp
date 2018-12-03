@@ -109,12 +109,13 @@ GameState* PlayState::Update(SDL_Event event)
 	const Uint8 *keystates = SDL_GetKeyboardState(NULL);
 	vec2 dir = vec2(0, 0);
 	needsRender = true;
-	if (keystates[SDL_SCANCODE_D]) { 
-		dir = vec2::EAST; }
+	if (keystates[SDL_SCANCODE_D]) { dir = vec2::EAST; }
 	else if (keystates[SDL_SCANCODE_S]) { dir = vec2::SOUTH; }
 	else if (keystates[SDL_SCANCODE_A]) { dir = vec2::WEST; }
 	else if (keystates[SDL_SCANCODE_W]) { dir = vec2::NORTH; }
-	else { needsRender = false; }
+	else { needsRender = false; 
+	dir = vec2(0, 0);
+	}
 	
 	if (assetHandler->Update()) {
 		//assetHandler->UpdateSpriteFrames(LIST OF SPRITES IN PLAYSTATE);
@@ -123,9 +124,10 @@ GameState* PlayState::Update(SDL_Event event)
 		needsRender = true;
 	}
 
-	Tile* destination = player->getCurrentTile()->getParentChunk()->getAdjacentTile(player->getCurrentTile(), dir);
-	player->setNext(destination);
-
+	if (dir != vec2(0, 0)) {
+		Tile* destination = player->getCurrentTile()->getParentChunk()->getAdjacentTile(player->getCurrentTile(), dir);
+		player->setNext(destination);
+	}
 
 	if (player->Update()) {
 		std::cout << "player moved" << std::endl;
@@ -137,7 +139,7 @@ GameState* PlayState::Update(SDL_Event event)
 	//generator.loadChunks(environment, dir);
 	
 	//Make the camera track to the player
-	//double playerLerpTime = player->getUpdatesSinceMove() / double(player->getUpdatesPerMove());
+	double playerLerpTime = player->getUpdatesSinceMove() / double(player->getUpdatesPerMove());
 	
 	needsRender = true;
 	return this;
