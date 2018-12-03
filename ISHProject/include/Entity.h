@@ -53,6 +53,9 @@ public:
 	//returns whether the entity blocks other entities from sharing its space.
 	bool isSolid();
 
+	//returns whether the entity has relocated to a new chunk
+	bool movedToNewChunk();
+
 	//TODO this goes in tile
 	//virtual vec2 getRenderPosition(float interpolation) {};
 

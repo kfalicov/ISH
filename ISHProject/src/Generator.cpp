@@ -15,6 +15,7 @@ Generator::~Generator()
 Generator::Generator(AssetHandler* assetHandler)
 {
 	this->assetHandler = assetHandler;
+	this->chunkLoadRadius = 1;
 }
 
 //generates a new row/column of chunks in the desired direction
@@ -57,12 +58,17 @@ void Generator::loadChunks(Environment* e, vec2 dir) {
 }
 
 void Generator::createAllChunks(Environment* e, vec2 pos) {
-	for (int x = 0 - chunkLoadRadius; x <= chunkLoadRadius; x++) {
-		for (int y = 0 - chunkLoadRadius; y <= chunkLoadRadius; y++) {
+	std::deque<Chunk*> newChunks;
+	for (int y = 0 - chunkLoadRadius; y <= chunkLoadRadius; y++) {
+		for (int x = 0 - chunkLoadRadius; x <= chunkLoadRadius; x++) {
 			vec2 newPos(x, y);
-
+			Chunk* newChunk = new Chunk(newPos);
+			newChunk->setTiles(generateTiles(newChunk));
+			newChunks.push_back(newChunk);
 		}
 	}
+	e->setChunks(newChunks);
+	e->connectNeighbors();
 }
 
 std::vector<Tile*> Generator::generateTiles(Chunk* chunk) {

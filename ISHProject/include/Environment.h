@@ -5,7 +5,7 @@
 #include "Util.h"
 
 #define HEURISTIC diagonal
-constexpr auto CHUNK_SIZE = 2; //number of tiles per chunk (n * n);
+constexpr auto CHUNK_SIZE = 4; //number of tiles per chunk (n * n);
 constexpr auto TILE_SIZE = 16; //edge length of tile sprites, can be used for spacing;
 
 //forward declarations (for all pointer types used in method signatures)
@@ -111,12 +111,16 @@ class Environment {
 public:
 	//TODO make the Environment class essentially the world storage
 	//initialize it with the assethandler, and it will pass along the assets to the tiles it creates.
-	Environment();
+	Environment(int radius);
 	~Environment();
 
 	void Update();
 
 	Chunk* getCenterChunk() { return loadedChunks[int((loadDistX*loadDistY) / 2)]; }
+
+
+	void setChunks(std::deque<Chunk*> chunks) { loadedChunks = chunks; }
+	void connectNeighbors();
 
 	//shifts the loaded chunk space east by 1 chunk and inserts newchunks
 	void moveEast(std::deque<Chunk*> newChunks);

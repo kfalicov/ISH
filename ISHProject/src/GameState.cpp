@@ -13,7 +13,7 @@ SDL_Surface* GameState::Render(float interpolation, bool forceReRender) {
 	if (needsRender || forceReRender) {
 		//Clear the surface in order to be rendered again
 		SDL_FillRect(surface, &surface->clip_rect,
-			SDL_MapRGBA(surface->format, 0, 0, 0, 0));
+			SDL_MapRGBA(surface->format, 0, 0, 0, 255));
 		//each GameState will need to implement the WriteSurface function
 		WriteSurface(interpolation);
 		forceReRender = false;
@@ -75,7 +75,7 @@ PlayState::PlayState(AssetHandler* assetHandler, GameState* previous)
 
 	
 	OverworldGenerator = Generator(assetHandler);
-	environment = new Environment();
+	environment = new Environment(OverworldGenerator.radius());
 	OverworldGenerator.createAllChunks(environment, vec2(0, 0));
 
 	//Create the player and add them to the world
@@ -109,7 +109,8 @@ GameState* PlayState::Update(SDL_Event event)
 	const Uint8 *keystates = SDL_GetKeyboardState(NULL);
 	vec2 dir = vec2(0, 0);
 	needsRender = true;
-	if (keystates[SDL_SCANCODE_D]) { dir = vec2::EAST; }
+	if (keystates[SDL_SCANCODE_D]) { 
+		dir = vec2::EAST; }
 	else if (keystates[SDL_SCANCODE_S]) { dir = vec2::SOUTH; }
 	else if (keystates[SDL_SCANCODE_A]) { dir = vec2::WEST; }
 	else if (keystates[SDL_SCANCODE_W]) { dir = vec2::NORTH; }
@@ -125,11 +126,18 @@ GameState* PlayState::Update(SDL_Event event)
 	Tile* destination = player->getCurrentTile()->getParentChunk()->getAdjacentTile(player->getCurrentTile(), dir);
 	player->setNext(destination);
 
+
+	if (player->Update()) {
+		std::cout << "player moved" << std::endl;
+		if (player->movedToNewChunk()) {
+			OverworldGenerator.loadChunks(environment, dir);
+		}
+	}
 	//TODO check if player has left chunk and if so, call
 	//generator.loadChunks(environment, dir);
 	
 	//Make the camera track to the player
-	double playerLerpTime = player->getUpdatesSinceMove() / double(player->getUpdatesPerMove());
+	//double playerLerpTime = player->getUpdatesSinceMove() / double(player->getUpdatesPerMove());
 	
 	needsRender = true;
 	return this;

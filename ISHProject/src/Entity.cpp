@@ -12,6 +12,7 @@ Entity::Entity(Tile* spawnTile, bool solid, std::string name) {
 	this->nextAnimationIndex = 0;
 	this->currentTile = spawnTile;
 	this->previousTile = spawnTile;
+	this->updatesPerMove = 20;
 	this->updatesSinceMove = updatesPerMove;
 	this->nextTile = nullptr;
 	this->facingTile = spawnTile;
@@ -36,14 +37,20 @@ bool Entity::Update()
 	//TODO movement stuff
 	if (updatesSinceMove >= updatesPerMove) {
 		if (nextTile != currentTile && nextTile != nullptr) {
-			std::cout << nextTile->getWorldPosition() << std::endl;
-			updatesSinceMove = 0;
-			currentTile->depart();
-			previousTile = currentTile;
-			currentTile = nextTile;
-			nextTile->addOccupant(this);
+			//this will be true if the tile is not occupied by another solid entity
+			if (nextTile->addOccupant(this)) {
+				updatesSinceMove = 0;
+				previousTile = currentTile;
+				currentTile = nextTile;
+				currentTile->depart();
+				
+				hasMoved = true;
+			}
+			else {
+				std::cout << "blocked in this direction" << std::endl;
+			}
 			nextTile = nullptr;
-			hasMoved = true;
+			
 		}
 	}
 	updatesSinceMove++;
@@ -79,7 +86,12 @@ void Entity::addSprite(Sprite* sprite) {
 
 void Entity::setNext(Tile * nextTile)
 {
-	this->nextTile = nextTile;
+	if (nextTile == this->currentTile) {
+
+	}
+	else {
+		this->nextTile = nextTile;
+	}
 }
 
 Sprite* Entity::getDisplaySprite() {
@@ -92,6 +104,11 @@ void Entity::queueAnimationChange() {
 
 bool Entity::isSolid() {
 	return solid;
+}
+
+bool Entity::movedToNewChunk()
+{
+	return !(this->currentTile->getParentChunk()->chunkPos == this->previousTile->getParentChunk()->chunkPos);
 }
 
 std::string Entity::toString() {

@@ -184,20 +184,20 @@ Tile* Chunk::getAdjacentTile(Tile* currentTile, vec2 direction) {
 	if (direction == vec2(0, 0)) {
 		return currentTile;
 	}
-	vec2 newPos = (currentTile)->getWorldPosition() + direction;
+	vec2 newPos = (currentTile)->getPosition() + direction;
 	if (newPos[0] >= CHUNK_SIZE) {
-		return currentTile->getParentChunk()->getEast()->getTile(newPos - CHUNK_SIZE * vec2::EAST);
+		return getEast()->getTile(newPos - CHUNK_SIZE * vec2::EAST);
 	}
 	if (newPos[0] < 0) {
-		return currentTile->getParentChunk()->getWest()->getTile(newPos - CHUNK_SIZE * vec2::WEST);
+		return getWest()->getTile(newPos - CHUNK_SIZE * vec2::WEST);
 	}
 	if (newPos[1] >= CHUNK_SIZE) {
-		return currentTile->getParentChunk()->getSouth()->getTile(newPos - CHUNK_SIZE * vec2::SOUTH);
+		return getSouth()->getTile(newPos - CHUNK_SIZE * vec2::SOUTH);
 	}
 	if (newPos[1] < 0) {
-		return currentTile->getParentChunk()->getNorth()->getTile(newPos - CHUNK_SIZE * vec2::NORTH);
+		return getNorth()->getTile(newPos - CHUNK_SIZE * vec2::NORTH);
 	}
-	return currentTile;
+	return getTile(newPos);
 }
 
 double Chunk::manhattan(vec2 a, vec2 b)
@@ -285,8 +285,10 @@ void Chunk::Render(float interpolation) {
 	}
 }
 
-Environment::Environment() {
+Environment::Environment(int radius) {
 	//set everything to null
+	loadDistX = (radius * 2) + 1;
+	loadDistY = loadDistX;
 }
 
 Environment::~Environment() {
@@ -295,6 +297,19 @@ Environment::~Environment() {
 
 void Environment::Update() {
 
+}
+
+void Environment::connectNeighbors()
+{
+	for (int i = 0; i < loadedChunks.size()-(loadDistX); i++) {
+		Chunk::pairVertical(loadedChunks[i], loadedChunks[i + loadDistX]);
+	}
+	for (int i = 0; i < loadedChunks.size() - 1; i++) {
+		if (i + 1 % loadDistX == 0) {
+			continue;
+		}
+		Chunk::pairHorizontal(loadedChunks[i], loadedChunks[i + 1]);
+	}
 }
 
 /*
