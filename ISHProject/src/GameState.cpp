@@ -85,7 +85,7 @@ PlayState::PlayState(AssetHandler* assetHandler, GameState* previous)
 	player->addSprite(assetHandler->GetSprite("Assets/Lemon.png", 0, TILE_SIZE));
 
 	environmentCamera = new Camera(vec2(0, 0), 256, 256);
-	environmentCamera->setCenter(player->getCurrentTile()->getPixelPosition());
+	environmentCamera->setCenter(player->getCurrentTile()->getPixelPositionInChunk());
 
 	environmentSurface = SDL_CreateRGBSurface(0,
 		int(environmentCamera->getSize()[0]),
@@ -128,6 +128,9 @@ GameState* PlayState::Update(SDL_Event event)
 		Tile* destination = player->getCurrentTile()->getParentChunk()->getAdjacentTile(player->getCurrentTile(), dir);
 		player->setNext(destination);
 	}
+	else {
+		player->setNext(nullptr);
+	}
 
 	if (player->Update()) {
 		std::cout << "player moved" << std::endl;
@@ -154,60 +157,14 @@ void PlayState::WriteSurface(float interpolation)
 	//Render UI to uiSurface
 	RenderUI();
 
+	SDL_Rect cameraPosInRender = SDL_Rect();
+
 	SDL_BlitSurface(environmentSurface, &environmentSurface->clip_rect,
 		surface, &surface->clip_rect);
 }
 
 void PlayState::RenderEnvironment() {
-	//Create a surface with the dimensions of the portion of the environment that is visible
-	vec2 pos = environment->getCenterChunk()->chunkPos;
-	int minX = int(pos[0] - 1);
-	int maxX = int(pos[0] + 1);
-	int minY = int(pos[1] - 1);
-	int maxY = int(pos[1] + 1);
-
-	//For each loaded chunk, render the chunk if it is within visible bounds
-	//for (int i = minX; i <= maxX; i++) {
-	//	for (int j = minY; j <= maxY; j++) {
-			Chunk* c = environment->getCenterChunk();
-		//Render the chunk if the chunk is one of the visible chunks
-		//if (c->chunkPos[0] >= minX && c->chunkPos[0] <= maxX && c->chunkPos[1] >= minY && c->chunkPos[1] <= maxY) {
-			//For each tile in the chunk, render the tile
-			if (c != nullptr) {
-				for (int x = 0; x < CHUNK_SIZE; ++x) {
-					for (int y = 0; y < CHUNK_SIZE; ++y) {
-						Tile* t = (c->getTile(vec2(x, y)));
-
-						//std::cout << t.getPosition() << std::endl;
-
-						//Get visible occupants of the tile
-						std::vector<Entity*> tileOccupants = t->getTopOccupants();
-
-						//If the tile has a background, render it
-						if (t->getSprite() != nullptr) {
-							//Put sprite onto environment surface
-							Sprite* backgroundSprite = t->getSprite();
-							SDL_Rect destRect = SDL_Rect();
-							SDL_Rect srcRect = backgroundSprite->frames[backgroundSprite->currentFrameIndex];
-							destRect.w = srcRect.w;
-							destRect.h = srcRect.h;
-
-							vec2 renderPos = t->getPixelPosition();
-							destRect.x = int(renderPos[0] - environmentCamera->getPos()[0]);
-							destRect.y = int(renderPos[1] - environmentCamera->getPos()[1]);
-
-							//std::cout << "x: " << destRect.x << ", y: " << destRect.y << std::endl;
-							SDL_BlitSurface(backgroundSprite->spriteSheet, &srcRect, environmentSurface, &destRect);
-						}
-						if (tileOccupants.size() > 0) { //transparent is a list of entities occupying the tile
-							//Render the visible occupants of the tile
-							//Game::Instance()->mainCamera->RenderSprite((*transparent.back()->sprite), tilePos*PIXELS_PER_TILE);
-						}
-					}
-				}
-			//}
-		//}
-	}
+	environmentSurface = environment->Render();
 }
 
 void PlayState::RenderEntities(float interpolation) {
@@ -223,8 +180,10 @@ void PlayState::RenderEntity(Entity* e, float interpolation) {
 	destRect.w = srcRect.w;
 	destRect.h = srcRect.h;
 
-	vec2 renderPos = lerp(e->getPreviousTile()->getPixelPosition(),
-		e->getCurrentTile()->getPixelPosition(),
+	//double currentRenderX = e->getPreviousTile()->getPixelPositionInChunk()+e->getPreviousTile()->
+
+	vec2 renderPos = lerp(e->getPreviousTile()->getPixelPositionInChunk(),
+		e->getCurrentTile()->getPixelPositionInChunk(),
 		(e->getUpdatesSinceMove() + interpolation) / double(e->getVisualMoveDuration()));
 	environmentCamera->TrackTo(renderPos+vec2(TILE_SIZE/2, TILE_SIZE/2));
 

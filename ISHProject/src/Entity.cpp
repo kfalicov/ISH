@@ -35,8 +35,9 @@ bool Entity::Update()
 		}
 	}
 	//TODO movement stuff
-	if (updatesSinceMove >= updatesPerMove) {
-		if (nextTile != currentTile && nextTile != nullptr) {
+	if (nextTile != currentTile && nextTile != nullptr) {
+		if (updatesSinceMove >= updatesPerMove) {
+		
 			//this will be true if the tile is not occupied by another solid entity
 			if (nextTile->addOccupant(this)) {
 				updatesSinceMove = 0;
@@ -49,10 +50,9 @@ bool Entity::Update()
 			else {
 				std::cout << "blocked in this direction" << std::endl;
 			}
-			nextTile = nullptr;
-			
 		}
 	}
+	nextTile = nullptr;
 	updatesSinceMove++;
 	return hasMoved;
 }
@@ -86,8 +86,11 @@ void Entity::addSprite(Sprite* sprite) {
 
 void Entity::setNext(Tile * nextTile)
 {
-	if (nextTile->getWorldPosition() == this->currentTile->getWorldPosition()) {
-
+	if (nextTile == nullptr) {
+		return;
+	}
+	if (nextTile->getPositionInWorld() == this->currentTile->getPositionInWorld()) {
+		nextTile = nullptr;
 	}
 	else {
 		this->nextTile = nextTile;

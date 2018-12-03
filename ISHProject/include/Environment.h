@@ -13,6 +13,7 @@ class Chunk;
 class Entity;
 class Sprite;
 class AssetHandler;
+struct SDL_Surface;
 
 class Tile
 {
@@ -31,12 +32,12 @@ public:
 	Entity* removeOccupant(int index=-1);
 	void depart();
 
-	//returns the position of the tile in pixel-space
-	vec2 getPixelPosition();
+	//gets the pixel position for Chunk's render
+	vec2 getPixelPositionInChunk();
 	//returns the position of the tile in world space
-	vec2 getWorldPosition();
+	vec2 getPositionInWorld();
 	//returns the position of the tile within the chunk
-	vec2 getPosition();
+	vec2 getPositionInChunk();
 
 	//returns the tile's background sprite
 	Sprite* getSprite();
@@ -69,7 +70,7 @@ public:
 
 	void setTiles(std::vector<Tile*> tileGrid);
 
-	void Render(float interpolation);
+	SDL_Surface* Render();
 
 	vec2 chunkPos; // the chunk coordinate
 
@@ -88,6 +89,7 @@ public:
 	void setWest(Chunk* W);
 
 	Tile* getTile(vec2 tilePos);
+	std::vector<Tile*> getTileGrid() { return tileGrid; }
 	std::vector<vec2> neighborsOf(vec2 tilePos);
 
 	Tile* getAdjacentTile(Tile* currentTile, vec2 direction);
@@ -104,6 +106,7 @@ private:
 	enum dir { NORTH, EAST, SOUTH, WEST };
 	std::vector<Chunk*> neighbors;
 	std::vector<Tile*> tileGrid; // all of the tiles in the current Chunk
+	SDL_Surface* renderSurface;
 	//Tile*** tileGrid;
 };
 
@@ -135,10 +138,12 @@ public:
 	void moveNorth(std::deque<Chunk*> newChunks);
 	vec2 getTopLeft() { return loadedChunks.front()->chunkPos; }
 	vec2 getBottomRight() { return loadedChunks.back()->chunkPos; }
+	SDL_Surface* Render();
 private:
 	int loadDistX;
 	int loadDistY;
 	std::deque<Chunk*> loadedChunks;
+	SDL_Surface* renderSurface;
 };
 
 //HELPER FUNCTIONS FOR PATHFINDING

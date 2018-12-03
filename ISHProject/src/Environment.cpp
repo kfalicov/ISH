@@ -63,15 +63,16 @@ void Tile::depart() {
 		occupants.pop_back();
 	}
 }
-vec2 Tile::getWorldPosition() {
+vec2 Tile::getPositionInWorld() {
 	//pixel position based on coordinate in chunk and tile pixel dimensions
 	return this->pos+(CHUNK_SIZE*parent->chunkPos);
 }
-vec2 Tile::getPosition() {
+vec2 Tile::getPositionInChunk() {
 	return this->pos;
 }
-vec2 Tile::getPixelPosition() {
-	return this->getWorldPosition() * TILE_SIZE;
+
+vec2 Tile::getPixelPositionInChunk() {
+	return this->pos * TILE_SIZE;
 }
 
 Sprite* Tile::getSprite() {
@@ -104,6 +105,8 @@ void Tile::setSprite(Sprite* sprite) {
 Chunk::Chunk(const vec2 pos)
 {
 	this->chunkPos = pos;
+	this->renderSurface = SDL_CreateRGBSurface(0, CHUNK_SIZE*TILE_SIZE, CHUNK_SIZE*TILE_SIZE, 32, 0, 0, 0, 0);
+	SDL_SetColorKey(renderSurface, SDL_TRUE, SDL_MapRGBA(renderSurface->format, 0, 0, 0, 0));
 	neighbors = std::vector<Chunk*>(4);
 }
 
@@ -113,6 +116,8 @@ Chunk::~Chunk()
 	for (int i = 0; i < tileGrid.size(); i++) {
 		delete tileGrid[i];
 	}
+
+	SDL_FreeSurface(renderSurface);
 	//TODO chunk destructor
 	//is there anything more that needs to be deleted?
 }
@@ -184,7 +189,7 @@ Tile* Chunk::getAdjacentTile(Tile* currentTile, vec2 direction) {
 	if (direction == vec2(0, 0)) {
 		return currentTile;
 	}
-	vec2 newPos = (currentTile)->getPosition() + direction;
+	vec2 newPos = (currentTile)->getPositionInChunk() + direction;
 	if (newPos[0] >= CHUNK_SIZE) {
 		return getEast()->getTile(newPos - CHUNK_SIZE * vec2::EAST);
 	}
@@ -277,18 +282,44 @@ std::deque<vec2> Chunk::AStarPath(vec2 & a, vec2 & b)
 	return path;
 }
 
-void Chunk::Render(float interpolation) {
-	for (int x = 0; x < CHUNK_SIZE; ++x) {
-		for (int y = 0; y < CHUNK_SIZE; ++y) {
-			//surface.blit(tileGrid[x][y]->getSprite(), tileGrid[x][y]->displayPos);
+SDL_Surface* Chunk::Render() {
+	for (Tile* t : tileGrid) {
+		if (t != nullptr)
+			//std::cout << t.getPosition() << std::endl;
+
+			//Get visible occupants of the tile
+			std::vector<Entity*> tileOccupants = t->getTopOccupants();
+
+		//If the tile has a background, render it
+		if (t->getSprite() != nullptr) {
+			//Put sprite onto environment surface
+			Sprite* backgroundSprite = t->getSprite();
+			SDL_Rect destRect = SDL_Rect();
+			SDL_Rect srcRect = backgroundSprite->frames[backgroundSprite->currentFrameIndex];
+			destRect.w = srcRect.w;
+			destRect.h = srcRect.h;
+
+			vec2 renderPos = t->getPixelPositionInChunk();
+			destRect.x = int(renderPos[0]);
+			destRect.y = int(renderPos[1]);
+
+			//std::cout << "x: " << destRect.x << ", y: " << destRect.y << std::endl;
+			SDL_BlitSurface(backgroundSprite->spriteSheet, &srcRect, renderSurface, &destRect);
 		}
 	}
+
+	//returns it whether or not it has had to update
+	return renderSurface;
 }
 
 Environment::Environment(int radius) {
 	//set everything to null
 	loadDistX = (radius * 2) + 1;
 	loadDistY = loadDistX;
+
+	renderSurface = SDL_CreateRGBSurface(0, loadDistX*CHUNK_SIZE*TILE_SIZE, loadDistY*CHUNK_SIZE*TILE_SIZE, 32, 0, 0, 0, 0);
+	SDL_SetColorKey(renderSurface, SDL_TRUE, SDL_MapRGBA(renderSurface->format, 0, 0, 0, 0));
+
 }
 
 Environment::~Environment() {
@@ -385,4 +416,23 @@ void Environment::moveNorth(std::deque<Chunk*> newChunks)
 		newChunks.pop_back();
 		loadedChunks.pop_back();
 	}
+}
+
+SDL_Surface * Environment::Render()
+{
+	for (int i = 0; i < loadedChunks.size();i++) {
+		Chunk* c = loadedChunks[i];
+		if (c != nullptr) {
+			SDL_Surface* chunkSurface = c->Render();
+			SDL_Rect destRect = SDL_Rect();
+			SDL_Rect srcRect = chunkSurface->clip_rect;
+			destRect.w = srcRect.w;
+			destRect.h = srcRect.h;
+
+			destRect.x = int((i%loadDistX)*CHUNK_SIZE*TILE_SIZE);
+			destRect.y = int(floor(i/loadDistX)*CHUNK_SIZE*TILE_SIZE);
+			SDL_BlitSurface(chunkSurface, &chunkSurface->clip_rect, renderSurface, &destRect);
+		}
+	}
+	return renderSurface;
 }
