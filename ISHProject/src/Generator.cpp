@@ -27,6 +27,9 @@ void Generator::loadChunks(Environment* e, vec2 dir) {
 		for (int y = upperLeftBound[1]; y <= lowerRightBound[1]; y++) {
 			Chunk* eastChunk = new Chunk(vec2(lowerRightBound[0] + 1, y));
 			eastChunk->setTiles(generateTiles(eastChunk));
+			if (freshChunks.size() > 0) {
+				Chunk::pairVertical(freshChunks.back(), eastChunk);
+			}
 			freshChunks.push_back(eastChunk);
 		}
 		e->moveEast(freshChunks);
@@ -35,6 +38,9 @@ void Generator::loadChunks(Environment* e, vec2 dir) {
 		for (int x = upperLeftBound[0]; x <= lowerRightBound[0]; x++) {
 			Chunk* southChunk = new Chunk(vec2(x, lowerRightBound[1]+1));
 			southChunk->setTiles(generateTiles(southChunk));
+			if (freshChunks.size() > 0) {
+				Chunk::pairHorizontal(freshChunks.back(), southChunk);
+			}
 			freshChunks.push_back(southChunk);
 		}
 		e->moveSouth(freshChunks);
@@ -43,6 +49,9 @@ void Generator::loadChunks(Environment* e, vec2 dir) {
 		for (int y = upperLeftBound[1]; y <= lowerRightBound[1]; y++) {
 			Chunk* westChunk = new Chunk(vec2(upperLeftBound[0]-1, y));
 			westChunk->setTiles(generateTiles(westChunk));
+			if (freshChunks.size() > 0) {
+				Chunk::pairVertical(freshChunks.back(), westChunk);
+			}
 			freshChunks.push_back(westChunk);
 		}
 		e->moveWest(freshChunks);
@@ -51,6 +60,9 @@ void Generator::loadChunks(Environment* e, vec2 dir) {
 		for (int x = upperLeftBound[0]; x <= lowerRightBound[0]; x++) {
 			Chunk* northChunk = new Chunk(vec2(x, upperLeftBound[1] -1));
 			northChunk->setTiles(generateTiles(northChunk));
+			if (freshChunks.size() > 0) {
+				Chunk::pairHorizontal(freshChunks.back(), northChunk);
+			}
 			freshChunks.push_back(northChunk);
 		}
 		e->moveNorth(freshChunks);

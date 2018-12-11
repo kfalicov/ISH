@@ -4,6 +4,8 @@
 #include "Environment.h"
 #include "AssetHandler.h"
 #include <iostream>
+#include <sstream>
+#include <SDL_ttf.h>
 
 Tile::Tile(vec2 pos, Chunk* parent) {
 	this->pos = pos;
@@ -307,8 +309,29 @@ SDL_Surface* Chunk::Render() {
 			SDL_BlitSurface(backgroundSprite->spriteSheet, &srcRect, renderSurface, &destRect);
 		}
 	}
-
+	TTF_Font* font = TTF_OpenFont("Assets/opensans.ttf", 12);
+	std::stringstream out;
+	if (neighbors[NORTH] != NULL) {
+		out << "^";
+	}if (neighbors[WEST] != NULL) {
+		out << "< ";
+	}
+	out << chunkPos;
+	if (neighbors[EAST] != NULL) {
+		out << " >";
+	}
+	if (neighbors[SOUTH] != NULL) {
+		out << "v";
+	}
+	std::string coords = out.str();
+	const char* coord = coords.c_str();
+	SDL_Color fontColor = { 255, 0, 0 };
+	SDL_Surface* coordinateSurface = TTF_RenderText_Solid(font, coord, fontColor);
+	TTF_CloseFont(font);
+	SDL_Rect destRect = SDL_Rect();
 	//returns it whether or not it has had to update
+	SDL_BlitSurface(coordinateSurface, &coordinateSurface->clip_rect, renderSurface, &coordinateSurface->clip_rect);
+	SDL_FreeSurface(coordinateSurface);
 	return renderSurface;
 }
 
@@ -336,7 +359,7 @@ void Environment::connectNeighbors()
 		Chunk::pairVertical(loadedChunks[i], loadedChunks[i + loadDistX]);
 	}
 	for (int i = 0; i < loadedChunks.size() - 1; i++) {
-		if (i + 1 % loadDistX == 0) {
+		if ((i+1)%loadDistX == 0) {
 			continue;
 		}
 		Chunk::pairHorizontal(loadedChunks[i], loadedChunks[i + 1]);
@@ -374,12 +397,11 @@ void Environment::moveSouth(std::deque<Chunk*> newChunks)
 	//adds a new row to the loaded queue
 	//and pops the first row
 	for (int i = 0; i < loadDistX; i++) {
-		loadedChunks.push_back(newChunks.front());
 
 		//setting neighbors
-		newChunks.front()->setNorth(loadedChunks[((loadDistY - 1)*loadDistX) + i]);
-		loadedChunks[((loadDistY - 1)*loadDistX) + i]->setSouth(newChunks.front());
+		Chunk::pairVertical(loadedChunks[((loadDistY-1)*loadDistX)], newChunks.front());
 
+		loadedChunks.push_back(newChunks.front());
 		newChunks.pop_front();
 		loadedChunks.pop_front();
 	}
@@ -410,8 +432,7 @@ void Environment::moveNorth(std::deque<Chunk*> newChunks)
 		loadedChunks.push_front(newChunks.back());
 
 		//setting neighbors
-		newChunks.back()->setSouth(loadedChunks[loadDistX]);
-		loadedChunks[loadDistX]->setNorth(newChunks.back());
+		Chunk::pairVertical(newChunks.back(), loadedChunks[loadDistX]);
 
 		newChunks.pop_back();
 		loadedChunks.pop_back();
