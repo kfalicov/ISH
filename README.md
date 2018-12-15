@@ -28,8 +28,10 @@ Post-refactor (as described above), we have gained much needed flexibility, and 
 
 #### Asset Handling
 
-Whenever an image needs to be loaded for use in a sprite, the system first checks if the image has already been loaded. If it has, it just returns the existing sprite sheet pointer. Otherwise, it will load the image from the specified file. This allows multiple sprites to all share a single sprite sheet, and the sprite sheet does not have to be reloaded for each sprite that uses it, greatly reducing the memory footprint.
+Whenever an image needs to be loaded for use in a sprite, the system first checks if the image has already been loaded. If it has, it just returns the existing spritesheet pointer. Otherwise, it will load the image from the specified file. This allows multiple sprites to all share a single spritesheet, and the spritesheet does not have to be reloaded for each sprite that uses it, greatly reducing the memory footprint.
 
 #### Sprite Animations
 
-Sprite animations consist of a set of rectangles that each represent a single frame of the animation, as well as a pointer to the sprite sheet used in the animation. When a sprite with animation is created, it is added to a list of animated sprites. The sprite frames and animation changes all occur in unison for visual appeal.
+Sprite animations consist of a set of rectangles that each represent a single frame of the animation, as well as a pointer to the spritesheet used in the animation. When a sprite with animation is created, it is added to a list of animated sprites. The sprite frames and animation changes all occur in unison for visual appeal. To increment the frame that a given animation is on, we just use the next rectangle in the list as the source rect of the spritesheet, or loop back to the first one if needed.
+
+Using this system, an entity can have multiple animations from either a single spritesheet or many spritesheets. Entities can then queue up their animation change, which will occur when the animation systems updates all animations simultaneously.
