@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <SDL.h>
 #include <functional>
+#include "Generator.h"
 
 //forward declarations (for all pointer types used in method signatures)
 class GameState;
@@ -87,6 +88,7 @@ public:
 private:
 	Environment* environment;
 	Camera* environmentCamera;
+	Generator OverworldGenerator;
 
 	SDL_Surface* environmentSurface;
 	SDL_Surface* uiSurface;

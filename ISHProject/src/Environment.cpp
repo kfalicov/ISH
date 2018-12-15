@@ -4,6 +4,8 @@
 #include "Environment.h"
 #include "AssetHandler.h"
 #include <iostream>
+#include <sstream>
+#include <SDL_ttf.h>
 
 Tile::Tile(vec2 pos, Chunk* parent) {
 	this->pos = pos;
@@ -43,7 +45,7 @@ void Tile::cycleItems() {
 		displayIndex = (displayIndex + 1) % numOfItems;
 	}
 }
-Entity* Tile::removeOccupant(int index = -1) {
+Entity* Tile::removeOccupant(int index) {
 	//if you passed in an index for manual removal, use it
 	index = index < 0 ? displayIndex : index;
 	//verify index in range
@@ -58,48 +60,21 @@ Entity* Tile::removeOccupant(int index = -1) {
 	}
 	return nullptr;
 }
-vec2 Tile::getWorldPosition() {
+void Tile::depart() {
+	if (occupants.size() > 0 && occupants.back()->isSolid()) {
+		occupants.pop_back();
+	}
+}
+vec2 Tile::getPositionInWorld() {
 	//pixel position based on coordinate in chunk and tile pixel dimensions
 	return this->pos+(CHUNK_SIZE*parent->chunkPos);
 }
-Tile * Tile::getEast()
-{
-	std::cout << "going east" << std::endl;
-	//if you're on the border of the chunk
-	if (pos[0] == CHUNK_SIZE-1) {
-		return parent->getEast()->getTile(vec2(0, pos[1]));
-	}
-	return parent->getTile(pos + vec2::EAST);
+vec2 Tile::getPositionInChunk() {
+	return this->pos;
 }
-Tile * Tile::getWest()
-{
-	std::cout << "going west" << std::endl;
-	//if you're on the border of the chunk
-	if (pos[0] == 0) {
-		return parent->getWest()->getTile(vec2(CHUNK_SIZE-1, pos[1]));
-	}
-	return	parent->getTile(pos + vec2::WEST);
-}
-Tile * Tile::getNorth()
-{
-	std::cout << "going north" << std::endl;
-	//if you're on the border of the chunk
-	if (pos[1] == 0) {
-		return parent->getNorth()->getTile(vec2(pos[0], CHUNK_SIZE - 1));
-	}
-	return	parent->getTile(pos + vec2::NORTH);
-}
-Tile * Tile::getSouth()
-{
-	std::cout << "going south" << std::endl;
-	//if you're on the border of the chunk
-	if (pos[1] == CHUNK_SIZE - 1) {
-		return parent->getSouth()->getTile(vec2(pos[0], 0));
-	}
-	return	parent->getTile(pos + vec2::SOUTH);
-}
-vec2 Tile::getPixelPosition() {
-	return this->getWorldPosition() * TILE_SIZE;
+
+vec2 Tile::getPixelPositionInChunk() {
+	return this->pos * TILE_SIZE;
 }
 
 Sprite* Tile::getSprite() {
@@ -129,9 +104,11 @@ void Tile::setSprite(Sprite* sprite) {
 	this->sprite = sprite;
 }
 
-Chunk::Chunk(int x, int y)
+Chunk::Chunk(const vec2 pos)
 {
-	this->chunkPos = vec2(double(x), double(y));
+	this->chunkPos = pos;
+	this->renderSurface = SDL_CreateRGBSurface(0, CHUNK_SIZE*TILE_SIZE, CHUNK_SIZE*TILE_SIZE, 32, 0, 0, 0, 0);
+	SDL_SetColorKey(renderSurface, SDL_TRUE, SDL_MapRGBA(renderSurface->format, 0, 0, 0, 0));
 	neighbors = std::vector<Chunk*>(4);
 }
 
@@ -141,6 +118,8 @@ Chunk::~Chunk()
 	for (int i = 0; i < tileGrid.size(); i++) {
 		delete tileGrid[i];
 	}
+
+	SDL_FreeSurface(renderSurface);
 	//TODO chunk destructor
 	//is there anything more that needs to be deleted?
 }
@@ -153,6 +132,25 @@ Chunk* Chunk::getNorth() { return neighbors[dir::NORTH]; }
 Chunk* Chunk::getEast() { return neighbors[dir::EAST]; }
 Chunk* Chunk::getSouth() { return neighbors[dir::SOUTH]; }
 Chunk* Chunk::getWest() { return neighbors[dir::WEST]; }
+
+void Chunk::pairHorizontal(Chunk * west, Chunk * east)
+{
+	if (west != nullptr) {
+		west->setEast(east);
+	}
+	if (east != nullptr) {
+		east->setWest(west);
+	}
+}
+void Chunk::pairVertical(Chunk * north, Chunk * south)
+{
+	if (north != nullptr) {
+		north->setSouth(south);
+	}
+	if (south != nullptr) {
+		south->setNorth(north);
+	}
+}
 
 void Chunk::setNorth(Chunk* N) {
 	neighbors[dir::NORTH] = N;
@@ -169,10 +167,8 @@ void Chunk::setSouth(Chunk* S) {
 void Chunk::setWest(Chunk* W) {
 	neighbors[dir::WEST] = W;
 }
-/*
-	returns the tile relative to calling chunk's 0,0
-	A recursive x-first seek for the target tile
-*/
+
+//returns the tile relative to calling chunk's 0,0
 Tile* Chunk::getTile(vec2 tilePos)
 {
 	//a fast vector access of a tile
@@ -190,52 +186,25 @@ std::vector<vec2> Chunk::neighborsOf(vec2 tilePos)
 	return tneighbors;
 }
 
-//Gets the chunk to load based on a world position. Updates the tilepos to be relative to that chunk's internal coordinate system.
-Chunk* Chunk::getChunk(vec2 tilePos, vec2 direction) {
-	vec2 newPos = tilePos + direction;
+//Gets the tile to load based on a position and direction
+Tile* Chunk::getAdjacentTile(Tile* currentTile, vec2 direction) {
+	if (direction == vec2(0, 0)) {
+		return currentTile;
+	}
+	vec2 newPos = (currentTile)->getPositionInChunk() + direction;
 	if (newPos[0] >= CHUNK_SIZE) {
-		if (getEast() != nullptr) {
-			newPos -= CHUNK_SIZE * vec2::EAST;
-			tilePos = newPos;
-			return getEast();
-		}
-		else {
-			return this;
-		}
+		return getEast()->getTile(newPos - CHUNK_SIZE * vec2::EAST);
 	}
 	if (newPos[0] < 0) {
-		if (getWest() != nullptr) {
-			newPos -= CHUNK_SIZE * vec2::WEST;
-			tilePos = newPos;
-			return getWest();
-		}
-		else {
-			return this;
-		}
+		return getWest()->getTile(newPos - CHUNK_SIZE * vec2::WEST);
 	}
 	if (newPos[1] >= CHUNK_SIZE) {
-		if (getSouth() != nullptr) {
-			newPos -= CHUNK_SIZE * vec2::SOUTH;
-			tilePos = newPos;
-			return getSouth();
-		}
-		else {
-			return this;
-		}
+		return getSouth()->getTile(newPos - CHUNK_SIZE * vec2::SOUTH);
 	}
 	if (newPos[1] < 0) {
-		if (getNorth() != nullptr) {
-			newPos -= CHUNK_SIZE * vec2::NORTH;
-			tilePos = newPos;
-			return getNorth();
-		}
-		else {
-			return this;
-		}
+		return getNorth()->getTile(newPos - CHUNK_SIZE * vec2::NORTH);
 	}
-
-	tilePos = newPos;
-	return this;
+	return getTile(newPos);
 }
 
 double Chunk::manhattan(vec2 a, vec2 b)
@@ -315,17 +284,65 @@ std::deque<vec2> Chunk::AStarPath(vec2 & a, vec2 & b)
 	return path;
 }
 
-void Chunk::Render(float interpolation) {
-	for (int x = 0; x < CHUNK_SIZE; ++x) {
-		for (int y = 0; y < CHUNK_SIZE; ++y) {
-			//surface.blit(tileGrid[x][y]->getSprite(), tileGrid[x][y]->displayPos);
+SDL_Surface* Chunk::Render() {
+	for (Tile* t : tileGrid) {
+		if (t != nullptr)
+			//std::cout << t.getPosition() << std::endl;
+
+			//Get visible occupants of the tile
+			std::vector<Entity*> tileOccupants = t->getTopOccupants();
+
+		//If the tile has a background, render it
+		if (t->getSprite() != nullptr) {
+			//Put sprite onto environment surface
+			Sprite* backgroundSprite = t->getSprite();
+			SDL_Rect destRect = SDL_Rect();
+			SDL_Rect srcRect = backgroundSprite->frames[backgroundSprite->currentFrameIndex];
+			destRect.w = srcRect.w;
+			destRect.h = srcRect.h;
+
+			vec2 renderPos = t->getPixelPositionInChunk();
+			destRect.x = int(renderPos[0]);
+			destRect.y = int(renderPos[1]);
+
+			//std::cout << "x: " << destRect.x << ", y: " << destRect.y << std::endl;
+			SDL_BlitSurface(backgroundSprite->spriteSheet, &srcRect, renderSurface, &destRect);
 		}
 	}
+	TTF_Font* font = TTF_OpenFont("Assets/opensans.ttf", 12);
+	std::stringstream out;
+	if (neighbors[NORTH] != NULL) {
+		out << "^";
+	}if (neighbors[WEST] != NULL) {
+		out << "< ";
+	}
+	out << chunkPos;
+	if (neighbors[EAST] != NULL) {
+		out << " >";
+	}
+	if (neighbors[SOUTH] != NULL) {
+		out << "v";
+	}
+	std::string coords = out.str();
+	const char* coord = coords.c_str();
+	SDL_Color fontColor = { 255, 0, 0 };
+	SDL_Surface* coordinateSurface = TTF_RenderText_Solid(font, coord, fontColor);
+	TTF_CloseFont(font);
+	SDL_Rect destRect = SDL_Rect();
+	//returns it whether or not it has had to update
+	SDL_BlitSurface(coordinateSurface, &coordinateSurface->clip_rect, renderSurface, &coordinateSurface->clip_rect);
+	SDL_FreeSurface(coordinateSurface);
+	return renderSurface;
 }
 
-Environment::Environment(AssetHandler* assetHandler, int seed) {
-	this->assetHandler = assetHandler;
-	loadChunks(new Chunk(0,0));
+Environment::Environment(int radius) {
+	//set everything to null
+	loadDistX = (radius * 2) + 1;
+	loadDistY = loadDistX;
+
+	renderSurface = SDL_CreateRGBSurface(0, loadDistX*CHUNK_SIZE*TILE_SIZE, loadDistY*CHUNK_SIZE*TILE_SIZE, 32, 0, 0, 0, 0);
+	SDL_SetColorKey(renderSurface, SDL_TRUE, SDL_MapRGBA(renderSurface->format, 0, 0, 0, 0));
+
 }
 
 Environment::~Environment() {
@@ -336,92 +353,107 @@ void Environment::Update() {
 
 }
 
-std::vector<Tile*> Environment::Generator::generateTiles(AssetHandler* assetHandler, Chunk* chunk) {
-	//TODO instantialize a 16x16 chunk
-	//set chunk pos
-	//create array of tiles who are members of the chunk
-	//new Tile(vec2(0-15,0-15), chunk's pos)
-	std::vector<Tile*> tiles;
-	for (int i = 0; i < CHUNK_SIZE*CHUNK_SIZE; i++) {
-		int x = i % CHUNK_SIZE;
-		int y = int(i / CHUNK_SIZE);
-		Tile* tempTile = new Tile(vec2(x, y), chunk);
-		if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1)) {
-			Sprite* s = assetHandler->GetSprite("Assets/Temps.png", 2, TILE_SIZE);
-			tempTile->setSprite(s);
-		}
-		else {
-			Sprite* s = assetHandler->GetSprite("Assets/Temps.png", 1, TILE_SIZE);
-			tempTile->setSprite(s);
-		}
-		tiles.push_back(tempTile);
+void Environment::connectNeighbors()
+{
+	for (int i = 0; i < loadedChunks.size()-(loadDistX); i++) {
+		Chunk::pairVertical(loadedChunks[i], loadedChunks[i + loadDistX]);
 	}
-	return tiles;
-}
-
-void Environment::loadChunks(Chunk* center) {
-	if (center == centerChunk) {
-		return;
-	}
-	centerChunk = center;
-	int minX = int(center->chunkPos[0] - chunkSquareRadius);
-	int maxX = int(center->chunkPos[0] + chunkSquareRadius);
-	int minY = int(center->chunkPos[1] - chunkSquareRadius);
-	int maxY = int(center->chunkPos[1] + chunkSquareRadius);
-
-	//For all chunks that SHOULD BE loaded...
-	for (int chunkX = minX; chunkX <= maxX; chunkX++) {
-		for (int chunkY = minY; chunkY <= maxY; chunkY++) {
-			vec2 pos = vec2(chunkX, chunkY);
-
-			//if this key isn't already found in the map
-			if (loadedChunks.find(pos) == loadedChunks.end()) { //If they are not already loaded, load them
-				Chunk* newChunk = new Chunk(chunkX, chunkY);
-				newChunk->setTiles(Generator::generateTiles(assetHandler, newChunk));
-				loadedChunks.insert(std::pair<vec2, Chunk*>(pos, newChunk));
-			}
-			//std::cout << chunkX << ", " << chunkY << std::endl;
-		}
-	}
-
-	//Set up NSEW chunks
-	for (std::unordered_map<vec2, Chunk*>::iterator it = loadedChunks.begin(); it != loadedChunks.end();) {
-		vec2 p = (it->first);
-
-		//if a chunk is loaded and it shouldn't be, unload it
-		if (p[0] < minX || p[0] > maxX || p[1] < minY || p[1] > maxY) {
-			//use chunk destructor
-			delete it->second;
-			it = loadedChunks.erase(it);
+	for (int i = 0; i < loadedChunks.size() - 1; i++) {
+		if ((i+1)%loadDistX == 0) {
 			continue;
 		}
-
-		if (it->second->getNorth() == nullptr) {
-			it->second->setNorth(getLoadedChunk(p + vec2::NORTH));
-		}
-		if (it->second->getEast() == nullptr) {
-			it->second->setEast(getLoadedChunk(p + vec2::EAST));
-		}
-		if (it->second->getSouth() == nullptr) {
-			it->second->setSouth(getLoadedChunk(p + vec2::SOUTH));
-		}
-		if (it->second->getWest() == nullptr) {
-			it->second->setWest(getLoadedChunk(p + vec2::WEST));
-		}
-
-		it++;
+		Chunk::pairHorizontal(loadedChunks[i], loadedChunks[i + 1]);
 	}
 }
 
-Chunk * Environment::getCenterLoadedChunk()
+/*
+0  1  2
+3  4  5
+6  7  8
+*/
+//input deque must be sorted from lowest to highest Y
+void Environment::moveEast(std::deque<Chunk*> newChunks)
 {
-	return centerChunk;
+	for (int i = loadDistX; i < (loadDistX*loadDistY); i += loadDistX) {
+		loadedChunks[i] = newChunks.front();
+
+		//setting neighbors
+		newChunks.front()->setWest(loadedChunks[i-1]);
+		loadedChunks[i - 1]->setEast(newChunks.front());
+
+		newChunks.pop_front();
+	}
+	loadedChunks.pop_front();
+
+	//sets neighbors of last item
+	loadedChunks.back()->setEast(newChunks.front());
+	newChunks.front()->setWest(loadedChunks.back());
+
+	loadedChunks.push_back(newChunks.front());
 }
 
-Chunk* Environment::getLoadedChunk(vec2 position) {
-	std::unordered_map<vec2, Chunk*>::iterator it = loadedChunks.find(position);
-	if (it != loadedChunks.end()) {
-		return it->second;
+void Environment::moveSouth(std::deque<Chunk*> newChunks)
+{
+	//adds a new row to the loaded queue
+	//and pops the first row
+	for (int i = 0; i < loadDistX; i++) {
+
+		//setting neighbors
+		Chunk::pairVertical(loadedChunks[((loadDistY-1)*loadDistX)], newChunks.front());
+
+		loadedChunks.push_back(newChunks.front());
+		newChunks.pop_front();
+		loadedChunks.pop_front();
 	}
-	return nullptr;
+}
+
+void Environment::moveWest(std::deque<Chunk*> newChunks)
+{
+	//setting neighbors
+	Chunk::pairHorizontal(newChunks.front(), loadedChunks.front());
+	loadedChunks.push_front(newChunks.front());
+
+	for (int i = loadDistX; i < (loadDistX*loadDistY); i += loadDistX) {
+		newChunks.pop_front();
+		loadedChunks[i] = newChunks.front();
+
+		//setting neighbors
+		Chunk::pairHorizontal(newChunks.front(), loadedChunks[i+1]);
+	}
+	loadedChunks.pop_back();
+}
+
+void Environment::moveNorth(std::deque<Chunk*> newChunks)
+{
+	//adds a new row to the front of the queue
+	//and pops the last row
+	for (int i = 0; i < loadDistX; i++) {
+
+		loadedChunks.push_front(newChunks.back());
+
+		//setting neighbors
+		Chunk::pairVertical(newChunks.back(), loadedChunks[loadDistX]);
+
+		newChunks.pop_back();
+		loadedChunks.pop_back();
+	}
+}
+
+SDL_Surface * Environment::Render()
+{
+	for (int i = 0; i < loadedChunks.size();i++) {
+		Chunk* c = loadedChunks[i];
+		if (c != nullptr) {
+			SDL_Surface* chunkSurface = c->Render();
+			SDL_Rect destRect = SDL_Rect();
+			SDL_Rect srcRect = chunkSurface->clip_rect;
+			destRect.w = srcRect.w;
+			destRect.h = srcRect.h;
+
+			destRect.x = int((i%loadDistX)*CHUNK_SIZE*TILE_SIZE);
+			destRect.y = int(floor(i/loadDistX)*CHUNK_SIZE*TILE_SIZE);
+			SDL_BlitSurface(chunkSurface, &chunkSurface->clip_rect, renderSurface, &destRect);
+		}
+	}
+	return renderSurface;
 }

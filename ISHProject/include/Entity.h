@@ -11,7 +11,9 @@ public:
 	//TODO
 	~Entity();
 
-	virtual void Update();
+	//updates the entity, handling movement.
+	//returns true if the entity has actually moved during this call.
+	virtual bool Update();
 	void Attack();
 	virtual void TakeDamage(int damage);
 	
@@ -50,6 +52,9 @@ public:
 
 	//returns whether the entity blocks other entities from sharing its space.
 	bool isSolid();
+
+	//returns whether the entity has relocated to a new chunk
+	bool movedToNewChunk();
 
 	//TODO this goes in tile
 	//virtual vec2 getRenderPosition(float interpolation) {};
