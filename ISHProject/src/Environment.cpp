@@ -12,6 +12,7 @@ Tile::Tile(vec2 pos, Chunk* parent) {
 	this->parent = parent;
 	this->displayIndex = -1;
 	this->sprite = nullptr; //TODO give this tile a sprite somehow
+	this->isObstacle = false;
 }
 Tile::~Tile()
 {

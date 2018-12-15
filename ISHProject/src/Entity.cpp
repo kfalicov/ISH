@@ -36,7 +36,7 @@ bool Entity::Update()
 		}
 	}
 	//TODO movement stuff
-	if (nextTile != currentTile && nextTile != nullptr) {
+	if (nextTile != currentTile && nextTile != nullptr && !nextTile->isAnObstacle()) {
 		if (updatesSinceMove >= updatesPerMove) {
 		
 			//this will be true if the tile is not occupied by another solid entity

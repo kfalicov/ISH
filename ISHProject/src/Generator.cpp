@@ -16,6 +16,11 @@ Generator::Generator(AssetHandler* assetHandler, int chunkLoadRadius = 1)
 {
 	this->assetHandler = assetHandler;
 	this->chunkLoadRadius = chunkLoadRadius;
+	this->seed = 69;
+	terrainGen = FastNoise();
+	terrainGen.SetNoiseType(FastNoise::SimplexFractal);
+	terrainGen.SetFrequency(0.08);
+	terrainGen.SetSeed(seed);
 }
 
 //generates a new row/column of chunks in the desired direction
@@ -93,14 +98,38 @@ std::vector<Tile*> Generator::generateTiles(Chunk* chunk) {
 		int x = i % CHUNK_SIZE;
 		int y = int(i / CHUNK_SIZE);
 		Tile* tempTile = new Tile(vec2(x, y), chunk);
-		if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1)) {
+
+		int xPos = (x + (chunk->chunkPos[0] * CHUNK_SIZE));
+		int yPos = (y + (chunk->chunkPos[1] * CHUNK_SIZE));
+		double temp = terrainGen.GetNoise(xPos, yPos);
+		//std::cout << temp << std::endl;
+		Sprite* s;
+		if (temp <= -0.4) {
+			s = assetHandler->GetSprite("Assets/Temps.png",
+				3, TILE_SIZE);
+		}
+		else if (temp <= 0) {
+			s = assetHandler->GetSprite("Assets/Temps.png",
+				2, TILE_SIZE);
+		}
+		else if (temp <= 0.3) {
+			s = assetHandler->GetSprite("Assets/Temps.png",
+				1, TILE_SIZE);
+		}
+		else {
+			s = assetHandler->GetSprite("Assets/Temps.png",
+				0, TILE_SIZE);
+			//tempTile->makeObstacle();
+		}
+		tempTile->setSprite(s);
+		/*if ((x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1)) {
 			Sprite* s = assetHandler->GetSprite("Assets/Temps.png", 2, TILE_SIZE);
 			tempTile->setSprite(s);
 		}
 		else {
 			Sprite* s = assetHandler->GetSprite("Assets/Temps.png", 1, TILE_SIZE);
 			tempTile->setSprite(s);
-		}
+		}*/
 		tiles.push_back(tempTile);
 	}
 	return tiles;

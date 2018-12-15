@@ -22,6 +22,7 @@
     <ClCompile Include="src\AssetHandler.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Environment.cpp" />
+    <ClCompile Include="src\FastNoise.cpp" />
     <ClCompile Include="src\GameState.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Generator.cpp" />
@@ -33,6 +34,7 @@
     <ClInclude Include="include\AssetHandler.h" />
     <ClInclude Include="include\Entity.h" />
     <ClInclude Include="include\Environment.h" />
+    <ClInclude Include="include\FastNoise.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\GameState.h" />
     <ClInclude Include="include\Generator.h" />

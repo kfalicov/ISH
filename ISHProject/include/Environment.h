@@ -5,7 +5,7 @@
 #include "Util.h"
 
 #define HEURISTIC diagonal
-constexpr auto CHUNK_SIZE = 4; //number of tiles per chunk (n * n);
+constexpr auto CHUNK_SIZE = 8; //number of tiles per chunk (n * n);
 constexpr auto TILE_SIZE = 16; //edge length of tile sprites, can be used for spacing;
 
 //forward declarations (for all pointer types used in method signatures)
@@ -48,11 +48,16 @@ public:
 	Chunk* getParentChunk();
 
 	void setSprite(Sprite* sprite);
+	//sets this tile to be an obstacle
+	void makeObstacle() { this->isObstacle = true; }
+	bool isAnObstacle() { return this->isObstacle; }
 
 private:
 	//Which item in the tile to display (out of all non-solids)
 	//is -1 if no items to display on the tile.
 	int displayIndex;
+	//whether or not this tile can be walked on
+	bool isObstacle;
 	//the occupants in the tile. The last item
 	//should be checked if solid.
 	std::vector<Entity*> occupants;

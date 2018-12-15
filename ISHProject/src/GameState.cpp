@@ -89,7 +89,7 @@ PlayState::PlayState(AssetHandler* assetHandler, GameState* previous)
 		true, "Player");
 	player->addSprite(assetHandler->GetSprite("Assets/Lemon.png", 0, TILE_SIZE));
 
-	environmentCamera = new Camera(vec2(0, 0), 128, 128);
+	environmentCamera = new Camera(vec2(0, 0), 256, 256);
 	GameState::initializeRenderSurface(environmentCamera->getSize()[0], environmentCamera->getSize()[1]);
 	environmentCamera->setCenter(player->getCurrentTile()->getPixelPositionInWorld());
 

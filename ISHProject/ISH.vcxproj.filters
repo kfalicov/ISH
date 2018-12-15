@@ -10,6 +10,7 @@
     <ClCompile Include="src\AssetHandler.cpp" />
     <ClCompile Include="src\Util.cpp" />
     <ClCompile Include="src\Generator.cpp" />
+    <ClCompile Include="src\FastNoise.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Game.h" />
@@ -20,5 +21,6 @@
     <ClInclude Include="include\AssetHandler.h" />
     <ClInclude Include="include\Util.h" />
     <ClInclude Include="include\Generator.h" />
+    <ClInclude Include="include\FastNoise.h" />
   </ItemGroup>
 </Project>

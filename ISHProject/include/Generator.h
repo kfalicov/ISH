@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include "FastNoise.h"
 class Environment;
 class Chunk;
 class Tile;
@@ -15,6 +16,8 @@ public:
 	int radius() {
 		return chunkLoadRadius;
 	}
+	//sets the seed for all generation
+	void setSeed(int seed) { this->seed = seed; }
 	//in the given Environment, loads new chunks in the given direction
 	//TODO deletes unloaded chunks
 	void loadChunks(Environment* e, vec2 dir);
@@ -25,4 +28,6 @@ public:
 private:
 	AssetHandler* assetHandler;
 	int chunkLoadRadius = 1;
+	int seed = -1;
+	FastNoise terrainGen;
 };
