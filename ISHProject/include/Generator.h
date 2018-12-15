@@ -11,7 +11,7 @@ class Generator {
 public:
 	Generator();
 	~Generator();
-	Generator(AssetHandler* assetHandler);
+	Generator(AssetHandler* assetHandler, int chunkLoadRadius);
 	int radius() {
 		return chunkLoadRadius;
 	}

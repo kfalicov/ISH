@@ -79,7 +79,7 @@ PlayState::PlayState(AssetHandler* assetHandler, GameState* previous)
 	this->previous = previous;
 
 	
-	OverworldGenerator = Generator(assetHandler);
+	OverworldGenerator = Generator(assetHandler, 2);
 	environment = new Environment(OverworldGenerator.radius());
 	OverworldGenerator.createAllChunks(environment, vec2(0, 0));
 
@@ -91,7 +91,7 @@ PlayState::PlayState(AssetHandler* assetHandler, GameState* previous)
 
 	environmentCamera = new Camera(vec2(0, 0), 128, 128);
 	GameState::initializeRenderSurface(environmentCamera->getSize()[0], environmentCamera->getSize()[1]);
-	environmentCamera->setCenter(player->getCurrentTile()->getPixelPositionInChunk());
+	environmentCamera->setCenter(player->getCurrentTile()->getPixelPositionInWorld());
 
 	environment->addEntity(player);
 }
@@ -99,6 +99,7 @@ PlayState::PlayState(AssetHandler* assetHandler, GameState* previous)
 PlayState::~PlayState()
 {
 	SDL_FreeSurface(environmentSurface);
+	SDL_FreeSurface(entitySurface);
 	SDL_FreeSurface(uiSurface);
 	delete environment;
 	delete environmentCamera;
@@ -163,7 +164,6 @@ void PlayState::WriteSurface(float interpolation)
 	RenderUI();
 
 	//translate the environment's surface based on camera position
-	SDL_Rect srcRect = SDL_Rect();
 	SDL_Rect destRect = SDL_Rect();
 	vec2 worldPos = CHUNK_SIZE * TILE_SIZE * environment->getTopLeft();
 
@@ -172,11 +172,11 @@ void PlayState::WriteSurface(float interpolation)
 	destRect.y = -(environmentCamera->getPos()[1] - worldPos[1]);
 	destRect.w = environmentCamera->getSize()[0];
 	destRect.h = environmentCamera->getSize()[1];
+	SDL_Rect destRect2 = SDL_Rect(destRect);
 	//TODO make camera position effect how environmentSurface is rendered to surface
-	SDL_BlitSurface(environmentSurface, &environmentSurface->clip_rect,
-		surface, &destRect);
-	SDL_BlitSurface(entitySurface, &entitySurface->clip_rect,
-		surface, &destRect);
+	SDL_BlitSurface(environmentSurface, &environmentSurface->clip_rect, surface, &destRect);
+	//std::cout << entitySurface->clip_rect.x << entitySurface->clip_rect.y << entitySurface->clip_rect.w << entitySurface->clip_rect.h << std::endl;
+	std::cout << SDL_BlitSurface(entitySurface, &entitySurface->clip_rect, surface, &destRect2) << std::endl;
 }
 
 

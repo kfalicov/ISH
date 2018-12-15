@@ -12,10 +12,10 @@ Generator::~Generator()
 {
 }
 
-Generator::Generator(AssetHandler* assetHandler)
+Generator::Generator(AssetHandler* assetHandler, int chunkLoadRadius = 1)
 {
 	this->assetHandler = assetHandler;
-	this->chunkLoadRadius = 2;
+	this->chunkLoadRadius = chunkLoadRadius;
 }
 
 //generates a new row/column of chunks in the desired direction

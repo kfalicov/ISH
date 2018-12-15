@@ -45,13 +45,13 @@ bool Entity::Update()
 				previousTile = currentTile;
 				currentTile->depart();
 				currentTile = nextTile;
-				
 				hasMoved = true;
 			}
 			else {
 				std::cout << "blocked in this direction" << std::endl;
 			}
 		}
+		
 	}
 	nextTile = nullptr;
 	updatesSinceMove++;

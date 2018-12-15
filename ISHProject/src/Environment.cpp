@@ -315,29 +315,29 @@ SDL_Surface* Chunk::RenderTerrain() {
 			SDL_BlitSurface(backgroundSprite->spriteSheet, &srcRect, terrainSurface, &destRect);
 		}
 	}
-	//TTF_Font* font = TTF_OpenFont("Assets/opensans.ttf", 12);
-	//std::stringstream out;
-	//if (neighbors[NORTH] != NULL) {
-	//	out << "^";
-	//}if (neighbors[WEST] != NULL) {
-	//	out << "< ";
-	//}
-	//out << chunkPos;
-	//if (neighbors[EAST] != NULL) {
-	//	out << " >";
-	//}
-	//if (neighbors[SOUTH] != NULL) {
-	//	out << "v";
-	//}
-	//std::string coords = out.str();
-	//const char* coord = coords.c_str();
-	//SDL_Color fontColor = { 255, 0, 0 };
-	//SDL_Surface* coordinateSurface = TTF_RenderText_Solid(font, coord, fontColor);
-	//TTF_CloseFont(font);
-	//SDL_Rect destRect = SDL_Rect();
-	////returns it whether or not it has had to update
-	//SDL_BlitSurface(coordinateSurface, &coordinateSurface->clip_rect, terrainSurface, &coordinateSurface->clip_rect);
-	//SDL_FreeSurface(coordinateSurface);
+	TTF_Font* font = TTF_OpenFont("Assets/opensans.ttf", 12);
+	std::stringstream out;
+	if (neighbors[NORTH] != NULL) {
+		out << "^";
+	}if (neighbors[WEST] != NULL) {
+		out << "< ";
+	}
+	out << chunkPos;
+	if (neighbors[EAST] != NULL) {
+		out << " >";
+	}
+	if (neighbors[SOUTH] != NULL) {
+		out << "v";
+	}
+	std::string coords = out.str();
+	const char* coord = coords.c_str();
+	SDL_Color fontColor = { 255, 0, 0 };
+	SDL_Surface* coordinateSurface = TTF_RenderText_Solid(font, coord, fontColor);
+	TTF_CloseFont(font);
+	SDL_Rect destRect = SDL_Rect();
+	//returns it whether or not it has had to update
+	SDL_BlitSurface(coordinateSurface, &coordinateSurface->clip_rect, terrainSurface, &coordinateSurface->clip_rect);
+	SDL_FreeSurface(coordinateSurface);
 	return terrainSurface;
 }
 
@@ -393,6 +393,8 @@ void Environment::moveEast(std::deque<Chunk*> newChunks)
 
 		newChunks.pop_front();
 	}
+	//TODO check if this works, just added
+	delete loadedChunks.front();
 	loadedChunks.pop_front();
 
 	//sets neighbors of last item
@@ -414,6 +416,8 @@ void Environment::moveSouth(std::deque<Chunk*> newChunks)
 
 		loadedChunks.push_back(newChunks.front());
 		newChunks.pop_front();
+		//TODO verify that memory leak is gone
+		delete loadedChunks.front();
 		loadedChunks.pop_front();
 	}
 	needsGroundRender = true;
@@ -478,8 +482,8 @@ SDL_Surface * Environment::RenderTerrain()
 }
 SDL_Surface * Environment::RenderEntities(float interpolation)
 {
-
-		//Put sprite onto environment surface
+	SDL_FillRect(entitySurface, &entitySurface->clip_rect,
+		SDL_MapRGBA(entitySurface->format, 0, 0, 0, 0));
 	for(auto e: entities){
 		Sprite* backgroundSprite = e->getDisplaySprite();
 		SDL_Rect destRect = SDL_Rect();
@@ -498,5 +502,6 @@ SDL_Surface * Environment::RenderEntities(float interpolation)
 
 		SDL_BlitSurface(backgroundSprite->spriteSheet, &srcRect, entitySurface, &destRect);
 	}
+	
 	return entitySurface;
 }
