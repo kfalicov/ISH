@@ -315,29 +315,29 @@ SDL_Surface* Chunk::RenderTerrain() {
 			SDL_BlitSurface(backgroundSprite->spriteSheet, &srcRect, terrainSurface, &destRect);
 		}
 	}
-	TTF_Font* font = TTF_OpenFont("Assets/opensans.ttf", 12);
-	std::stringstream out;
-	if (neighbors[NORTH] != NULL) {
-		out << "^";
-	}if (neighbors[WEST] != NULL) {
-		out << "< ";
-	}
-	out << chunkPos;
-	if (neighbors[EAST] != NULL) {
-		out << " >";
-	}
-	if (neighbors[SOUTH] != NULL) {
-		out << "v";
-	}
-	std::string coords = out.str();
-	const char* coord = coords.c_str();
-	SDL_Color fontColor = { 255, 0, 0 };
-	SDL_Surface* coordinateSurface = TTF_RenderText_Solid(font, coord, fontColor);
-	TTF_CloseFont(font);
-	SDL_Rect destRect = SDL_Rect();
-	//returns it whether or not it has had to update
-	SDL_BlitSurface(coordinateSurface, &coordinateSurface->clip_rect, terrainSurface, &coordinateSurface->clip_rect);
-	SDL_FreeSurface(coordinateSurface);
+	//TTF_Font* font = TTF_OpenFont("Assets/opensans.ttf", 12);
+	//std::stringstream out;
+	//if (neighbors[NORTH] != NULL) {
+	//	out << "^";
+	//}if (neighbors[WEST] != NULL) {
+	//	out << "< ";
+	//}
+	//out << chunkPos;
+	//if (neighbors[EAST] != NULL) {
+	//	out << " >";
+	//}
+	//if (neighbors[SOUTH] != NULL) {
+	//	out << "v";
+	//}
+	//std::string coords = out.str();
+	//const char* coord = coords.c_str();
+	//SDL_Color fontColor = { 255, 0, 0 };
+	//SDL_Surface* coordinateSurface = TTF_RenderText_Solid(font, coord, fontColor);
+	//TTF_CloseFont(font);
+	//SDL_Rect destRect = SDL_Rect();
+	////returns it whether or not it has had to update
+	//SDL_BlitSurface(coordinateSurface, &coordinateSurface->clip_rect, terrainSurface, &coordinateSurface->clip_rect);
+	//SDL_FreeSurface(coordinateSurface);
 	return terrainSurface;
 }
 
@@ -436,6 +436,8 @@ void Environment::moveWest(std::deque<Chunk*> newChunks)
 		//setting neighbors
 		Chunk::pairHorizontal(newChunks.front(), loadedChunks[i+1]);
 	}
+	//TODO verify no memory leak
+	delete loadedChunks.back();
 	loadedChunks.pop_back();
 	needsGroundRender = true;
 }
@@ -452,6 +454,8 @@ void Environment::moveNorth(std::deque<Chunk*> newChunks)
 		Chunk::pairVertical(newChunks.back(), loadedChunks[loadDistX]);
 
 		newChunks.pop_back();
+		//TODO verify no memory leak
+		delete loadedChunks.back();
 		loadedChunks.pop_back();
 	}
 	needsGroundRender = true;
