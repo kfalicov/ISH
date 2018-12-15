@@ -77,6 +77,11 @@ vec2 Tile::getPixelPositionInChunk() {
 	return this->pos * TILE_SIZE;
 }
 
+vec2 Tile::getPixelPositionInWorld()
+{
+	return this->getPositionInWorld()*TILE_SIZE;
+}
+
 Sprite* Tile::getSprite() {
 	return sprite;
 }

@@ -34,6 +34,8 @@ public:
 
 	//gets the pixel position for Chunk's render
 	vec2 getPixelPositionInChunk();
+	//gets the pixel position for render relative to world
+	vec2 getPixelPositionInWorld();
 	//returns the position of the tile in world space
 	vec2 getPositionInWorld();
 	//returns the position of the tile within the chunk

@@ -95,8 +95,6 @@ private:
 
 	Entity* player;
 
-	//renders the environment to the EnvironmentSurface
-	void RenderEnvironment();
 	//renders the entities to the 
 	void RenderEntities(float interpolation);
 	//render a single entity (helper function)
