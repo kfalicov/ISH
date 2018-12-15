@@ -87,7 +87,7 @@ public:
 	~Camera() {};
 
 	void Update() {
-		if ((getCenter() - target).length2() < 1) {
+		if ((getCenter() - target).length2() < 2) {
 			setCenter(target);
 		}
 		else {

@@ -1,3 +1,4 @@
+#pragma once
 #include <string>
 #include <vector>
 
@@ -47,6 +48,7 @@ public:
 	int getUpdatesPerMove() { return updatesPerMove; }
 	int getVisualMoveDuration() { return visualMoveDuration; }
 
+
 	//asset handler uses this to make all entities update animations simultaneously
 	void queueAnimationChange();
 
@@ -79,12 +81,12 @@ private:
 	bool shouldChangeAnimation = false;
 
 	//Number of updates to visually transition from currentTile to nextTile
-	int visualMoveDuration = 8;
+	int visualMoveDuration = 4;
 	//Elapsed updates since last move.
 	int updatesSinceMove = 0;
 	//Number of updates after a move before an entity can move again. 
 	//Must be >= visualMoveDuration. "Time entity takes to move," lower = faster.
-	int updatesPerMove = 10;
+	int updatesPerMove = 5;
 
 	//The tile that the entity is on.
 	Tile* currentTile;

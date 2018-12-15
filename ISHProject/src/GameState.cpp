@@ -24,6 +24,11 @@ SDL_Surface* GameState::Render(float interpolation, bool forceReRender) {
 	return surface;
 }
 
+void GameState::initializeRenderSurface(int width, int height) {
+	surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
+	SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGBA(surface->format, 0, 0, 0, 0));
+}
+
 /*
 
 	MENU GAMESTATE
@@ -84,13 +89,11 @@ PlayState::PlayState(AssetHandler* assetHandler, GameState* previous)
 		true, "Player");
 	player->addSprite(assetHandler->GetSprite("Assets/Lemon.png", 0, TILE_SIZE));
 
-	environmentCamera = new Camera(vec2(0, 0), 256, 256);
+	environmentCamera = new Camera(vec2(0, 0), 128, 128);
+	GameState::initializeRenderSurface(environmentCamera->getSize()[0], environmentCamera->getSize()[1]);
 	environmentCamera->setCenter(player->getCurrentTile()->getPixelPositionInChunk());
 
-	environmentSurface = SDL_CreateRGBSurface(0,
-		int(environmentCamera->getSize()[0]),
-		int(environmentCamera->getSize()[1]),
-		32, 0, 0, 0, 0);
+	environment->addEntity(player);
 }
 
 PlayState::~PlayState()
@@ -143,6 +146,8 @@ GameState* PlayState::Update(SDL_Event event)
 	
 	//Make the camera track to the player
 	double playerLerpTime = player->getUpdatesSinceMove() / double(player->getUpdatesPerMove());
+	vec2 playerCurrentPos = lerp(player->getPreviousTile()->getPixelPositionInWorld(), player->getCurrentTile()->getPixelPositionInWorld(), playerLerpTime);
+	environmentCamera->TrackTo(playerCurrentPos + vec2(TILE_SIZE / 2, TILE_SIZE / 2));
 	
 	needsRender = true;
 	return this;
@@ -151,43 +156,29 @@ GameState* PlayState::Update(SDL_Event event)
 void PlayState::WriteSurface(float interpolation)
 {
 	//Render World (background, items, entities) to environmentSurface
-	environmentSurface = environment->Render();
+	environmentSurface = environment->RenderTerrain();
 	//Render the entities of the world
-	RenderEntities(interpolation);
+	entitySurface = environment->RenderEntities(interpolation);
 	//Render UI to uiSurface
 	RenderUI();
 
-	//somehow do the math to translate the environment's surface so that the camera is the focus
-	SDL_BlitSurface(environmentSurface, &environmentSurface->clip_rect,
-		surface, &surface->clip_rect);
-}
-
-void PlayState::RenderEntities(float interpolation) {
-	//Render the player
-	RenderEntity(player, interpolation);
-}
-
-void PlayState::RenderEntity(Entity* e, float interpolation) {
-	//Put sprite onto environment surface
-	Sprite* backgroundSprite = e->getDisplaySprite();
+	//translate the environment's surface based on camera position
+	SDL_Rect srcRect = SDL_Rect();
 	SDL_Rect destRect = SDL_Rect();
-	SDL_Rect srcRect = backgroundSprite->frames[backgroundSprite->currentFrameIndex];
-	destRect.w = srcRect.w;
-	destRect.h = srcRect.h;
-
-	//double currentRenderX = e->getPreviousTile()->getPixelPositionInChunk()+e->getPreviousTile()->
-
-	vec2 renderPos = lerp(e->getPreviousTile()->getPixelPositionInWorld(),
-		e->getCurrentTile()->getPixelPositionInWorld(),
-		(e->getUpdatesSinceMove() + interpolation) / double(e->getVisualMoveDuration()));
-	
 	vec2 worldPos = CHUNK_SIZE * TILE_SIZE * environment->getTopLeft();
-	environmentCamera->TrackTo(renderPos);
-	destRect.x = int(worldPos[0] - (environmentCamera->getPos()[0] - renderPos[0]) );
-	destRect.y = int(worldPos[1] - (environmentCamera->getPos()[1] - renderPos[1]));
 
-	SDL_BlitSurface(backgroundSprite->spriteSheet, &srcRect, environmentSurface, &destRect);
+	
+	destRect.x = -(environmentCamera->getPos()[0] - worldPos[0]);
+	destRect.y = -(environmentCamera->getPos()[1] - worldPos[1]);
+	destRect.w = environmentCamera->getSize()[0];
+	destRect.h = environmentCamera->getSize()[1];
+	//TODO make camera position effect how environmentSurface is rendered to surface
+	SDL_BlitSurface(environmentSurface, &environmentSurface->clip_rect,
+		surface, &destRect);
+	SDL_BlitSurface(entitySurface, &entitySurface->clip_rect,
+		surface, &destRect);
 }
+
 
 void PlayState::RenderUI() {
 	//TODO blit stuff to uiSurface

@@ -15,7 +15,7 @@ Generator::~Generator()
 Generator::Generator(AssetHandler* assetHandler)
 {
 	this->assetHandler = assetHandler;
-	this->chunkLoadRadius = 1;
+	this->chunkLoadRadius = 2;
 }
 
 //generates a new row/column of chunks in the desired direction

@@ -12,7 +12,8 @@ Entity::Entity(Tile* spawnTile, bool solid, std::string name) {
 	this->nextAnimationIndex = 0;
 	this->currentTile = spawnTile;
 	this->previousTile = spawnTile;
-	this->updatesPerMove = 20;
+	this->visualMoveDuration = 8;
+	this->updatesPerMove = 10;
 	this->updatesSinceMove = updatesPerMove;
 	this->nextTile = nullptr;
 	this->facingTile = spawnTile;

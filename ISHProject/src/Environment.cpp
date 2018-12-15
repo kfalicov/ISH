@@ -112,8 +112,8 @@ void Tile::setSprite(Sprite* sprite) {
 Chunk::Chunk(const vec2 pos)
 {
 	this->chunkPos = pos;
-	this->renderSurface = SDL_CreateRGBSurface(0, CHUNK_SIZE*TILE_SIZE, CHUNK_SIZE*TILE_SIZE, 32, 0, 0, 0, 0);
-	SDL_SetColorKey(renderSurface, SDL_TRUE, SDL_MapRGBA(renderSurface->format, 0, 0, 0, 0));
+	this->terrainSurface = SDL_CreateRGBSurface(0, CHUNK_SIZE*TILE_SIZE, CHUNK_SIZE*TILE_SIZE, 32, 0, 0, 0, 0);
+	SDL_SetColorKey(terrainSurface, SDL_TRUE, SDL_MapRGBA(terrainSurface->format, 0, 0, 0, 0));
 	neighbors = std::vector<Chunk*>(4);
 }
 
@@ -124,7 +124,7 @@ Chunk::~Chunk()
 		delete tileGrid[i];
 	}
 
-	SDL_FreeSurface(renderSurface);
+	SDL_FreeSurface(terrainSurface);
 	//TODO chunk destructor
 	//is there anything more that needs to be deleted?
 }
@@ -289,7 +289,7 @@ std::deque<vec2> Chunk::AStarPath(vec2 & a, vec2 & b)
 	return path;
 }
 
-SDL_Surface* Chunk::Render() {
+SDL_Surface* Chunk::RenderTerrain() {
 	for (Tile* t : tileGrid) {
 		if (t != nullptr)
 			//std::cout << t.getPosition() << std::endl;
@@ -311,43 +311,48 @@ SDL_Surface* Chunk::Render() {
 			destRect.y = int(renderPos[1]);
 
 			//std::cout << "x: " << destRect.x << ", y: " << destRect.y << std::endl;
-			SDL_BlitSurface(backgroundSprite->spriteSheet, &srcRect, renderSurface, &destRect);
+			//TODO this blit doesn't always need to happen, and frames can be saved if nothing is supposed to change
+			SDL_BlitSurface(backgroundSprite->spriteSheet, &srcRect, terrainSurface, &destRect);
 		}
 	}
-	TTF_Font* font = TTF_OpenFont("Assets/opensans.ttf", 12);
-	std::stringstream out;
-	if (neighbors[NORTH] != NULL) {
-		out << "^";
-	}if (neighbors[WEST] != NULL) {
-		out << "< ";
-	}
-	out << chunkPos;
-	if (neighbors[EAST] != NULL) {
-		out << " >";
-	}
-	if (neighbors[SOUTH] != NULL) {
-		out << "v";
-	}
-	std::string coords = out.str();
-	const char* coord = coords.c_str();
-	SDL_Color fontColor = { 255, 0, 0 };
-	SDL_Surface* coordinateSurface = TTF_RenderText_Solid(font, coord, fontColor);
-	TTF_CloseFont(font);
-	SDL_Rect destRect = SDL_Rect();
-	//returns it whether or not it has had to update
-	SDL_BlitSurface(coordinateSurface, &coordinateSurface->clip_rect, renderSurface, &coordinateSurface->clip_rect);
-	SDL_FreeSurface(coordinateSurface);
-	return renderSurface;
+	//TTF_Font* font = TTF_OpenFont("Assets/opensans.ttf", 12);
+	//std::stringstream out;
+	//if (neighbors[NORTH] != NULL) {
+	//	out << "^";
+	//}if (neighbors[WEST] != NULL) {
+	//	out << "< ";
+	//}
+	//out << chunkPos;
+	//if (neighbors[EAST] != NULL) {
+	//	out << " >";
+	//}
+	//if (neighbors[SOUTH] != NULL) {
+	//	out << "v";
+	//}
+	//std::string coords = out.str();
+	//const char* coord = coords.c_str();
+	//SDL_Color fontColor = { 255, 0, 0 };
+	//SDL_Surface* coordinateSurface = TTF_RenderText_Solid(font, coord, fontColor);
+	//TTF_CloseFont(font);
+	//SDL_Rect destRect = SDL_Rect();
+	////returns it whether or not it has had to update
+	//SDL_BlitSurface(coordinateSurface, &coordinateSurface->clip_rect, terrainSurface, &coordinateSurface->clip_rect);
+	//SDL_FreeSurface(coordinateSurface);
+	return terrainSurface;
 }
 
 Environment::Environment(int radius) {
 	//set everything to null
 	loadDistX = (radius * 2) + 1;
 	loadDistY = loadDistX;
+	needsGroundRender = true;
+	needsEntityRender = true;
 
-	renderSurface = SDL_CreateRGBSurface(0, loadDistX*CHUNK_SIZE*TILE_SIZE, loadDistY*CHUNK_SIZE*TILE_SIZE, 32, 0, 0, 0, 0);
-	SDL_SetColorKey(renderSurface, SDL_TRUE, SDL_MapRGBA(renderSurface->format, 0, 0, 0, 0));
-
+	terrainSurface = SDL_CreateRGBSurface(0, loadDistX*CHUNK_SIZE*TILE_SIZE, loadDistY*CHUNK_SIZE*TILE_SIZE, 32, 0, 0, 0, 0);
+	SDL_SetColorKey(terrainSurface, SDL_TRUE, SDL_MapRGBA(terrainSurface->format, 0, 0, 0, 0));
+	
+	entitySurface = SDL_CreateRGBSurface(0, loadDistX*CHUNK_SIZE*TILE_SIZE, loadDistY*CHUNK_SIZE*TILE_SIZE, 32, 0, 0, 0, 0);
+	SDL_SetColorKey(entitySurface, SDL_TRUE, SDL_MapRGBA(entitySurface->format, 0, 0, 0, 0));
 }
 
 Environment::~Environment() {
@@ -395,6 +400,7 @@ void Environment::moveEast(std::deque<Chunk*> newChunks)
 	newChunks.front()->setWest(loadedChunks.back());
 
 	loadedChunks.push_back(newChunks.front());
+	needsGroundRender = true;
 }
 
 void Environment::moveSouth(std::deque<Chunk*> newChunks)
@@ -410,6 +416,7 @@ void Environment::moveSouth(std::deque<Chunk*> newChunks)
 		newChunks.pop_front();
 		loadedChunks.pop_front();
 	}
+	needsGroundRender = true;
 }
 
 void Environment::moveWest(std::deque<Chunk*> newChunks)
@@ -426,6 +433,7 @@ void Environment::moveWest(std::deque<Chunk*> newChunks)
 		Chunk::pairHorizontal(newChunks.front(), loadedChunks[i+1]);
 	}
 	loadedChunks.pop_back();
+	needsGroundRender = true;
 }
 
 void Environment::moveNorth(std::deque<Chunk*> newChunks)
@@ -442,23 +450,53 @@ void Environment::moveNorth(std::deque<Chunk*> newChunks)
 		newChunks.pop_back();
 		loadedChunks.pop_back();
 	}
+	needsGroundRender = true;
 }
 
-SDL_Surface * Environment::Render()
+SDL_Surface * Environment::RenderTerrain()
 {
-	for (int i = 0; i < loadedChunks.size();i++) {
-		Chunk* c = loadedChunks[i];
-		if (c != nullptr) {
-			SDL_Surface* chunkSurface = c->Render();
-			SDL_Rect destRect = SDL_Rect();
-			SDL_Rect srcRect = chunkSurface->clip_rect;
-			destRect.w = srcRect.w;
-			destRect.h = srcRect.h;
+	//TODO if new chunks haven't been loaded since last render, just use the current renderSurface instead of re-making it
+	if (needsGroundRender) {
+		for (int i = 0; i < loadedChunks.size(); i++) {
+			Chunk* c = loadedChunks[i];
+			if (c != nullptr) {
+				SDL_Surface* chunkSurface = c->RenderTerrain();
+				SDL_Rect destRect = SDL_Rect();
+				SDL_Rect srcRect = chunkSurface->clip_rect;
+				destRect.w = srcRect.w;
+				destRect.h = srcRect.h;
 
-			destRect.x = int((i%loadDistX)*CHUNK_SIZE*TILE_SIZE);
-			destRect.y = int(floor(i/loadDistX)*CHUNK_SIZE*TILE_SIZE);
-			SDL_BlitSurface(chunkSurface, &chunkSurface->clip_rect, renderSurface, &destRect);
+				destRect.x = int((i%loadDistX)*CHUNK_SIZE*TILE_SIZE);
+				destRect.y = int(floor(i / loadDistX)*CHUNK_SIZE*TILE_SIZE);
+				SDL_BlitSurface(chunkSurface, &chunkSurface->clip_rect, terrainSurface, &destRect);
+			}
 		}
+		needsGroundRender = false;
 	}
-	return renderSurface;
+
+	return terrainSurface;
+}
+SDL_Surface * Environment::RenderEntities(float interpolation)
+{
+
+		//Put sprite onto environment surface
+	for(auto e: entities){
+		Sprite* backgroundSprite = e->getDisplaySprite();
+		SDL_Rect destRect = SDL_Rect();
+		SDL_Rect srcRect = backgroundSprite->frames[backgroundSprite->currentFrameIndex];
+		destRect.w = srcRect.w;
+		destRect.h = srcRect.h;
+
+		vec2 renderPos = lerp(e->getPreviousTile()->getPixelPositionInWorld(),
+			e->getCurrentTile()->getPixelPositionInWorld(),
+			(e->getUpdatesSinceMove() + interpolation) / double(e->getVisualMoveDuration()));
+
+		vec2 worldPos = CHUNK_SIZE * TILE_SIZE * getTopLeft();
+		vec2 relativePos = renderPos - worldPos;
+		destRect.x = int(relativePos[0]);
+		destRect.y = int(relativePos[1]);
+
+		SDL_BlitSurface(backgroundSprite->spriteSheet, &srcRect, entitySurface, &destRect);
+	}
+	return entitySurface;
 }

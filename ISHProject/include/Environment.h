@@ -72,7 +72,7 @@ public:
 
 	void setTiles(std::vector<Tile*> tileGrid);
 
-	SDL_Surface* Render();
+	SDL_Surface* RenderTerrain();
 
 	vec2 chunkPos; // the chunk coordinate
 
@@ -108,7 +108,8 @@ private:
 	enum dir { NORTH, EAST, SOUTH, WEST };
 	std::vector<Chunk*> neighbors;
 	std::vector<Tile*> tileGrid; // all of the tiles in the current Chunk
-	SDL_Surface* renderSurface;
+	SDL_Surface* terrainSurface;
+	
 	//Tile*** tileGrid;
 };
 
@@ -140,12 +141,23 @@ public:
 	void moveNorth(std::deque<Chunk*> newChunks);
 	vec2 getTopLeft() { return loadedChunks.front()->chunkPos; }
 	vec2 getBottomRight() { return loadedChunks.back()->chunkPos; }
-	SDL_Surface* Render();
+	SDL_Surface* RenderTerrain();
+	SDL_Surface* RenderEntities(float interpolation);
+	void addEntity(Entity* e) { entities.push_back(e); }
 private:
 	int loadDistX;
 	int loadDistY;
 	std::deque<Chunk*> loadedChunks;
-	SDL_Surface* renderSurface;
+	//the ground of the environment
+	SDL_Surface* terrainSurface;
+	//all of the entities of the environment
+	SDL_Surface* entitySurface;
+	//set to true if loadedChunks changes
+	bool needsGroundRender;
+	//set to true if entities have moved
+	bool needsEntityRender;
+
+	std::vector<Entity*> entities;
 };
 
 //HELPER FUNCTIONS FOR PATHFINDING

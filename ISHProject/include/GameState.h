@@ -57,10 +57,7 @@ protected:
 	bool needsRender;
 
 	//sets up the render surface
-	void initializeRenderSurface(int width, int height) {
-		surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
-		SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGBA(surface->format, 0, 0, 0, 0));
-	}
+	void initializeRenderSurface(int width, int height);
 };
 
 class MenuState : public GameState
@@ -91,14 +88,11 @@ private:
 	Generator OverworldGenerator;
 
 	SDL_Surface* environmentSurface;
+	SDL_Surface* entitySurface;
 	SDL_Surface* uiSurface;
 
 	Entity* player;
 
-	//renders the entities to the 
-	void RenderEntities(float interpolation);
-	//render a single entity (helper function)
-	void RenderEntity(Entity* e, float interpolation);
 	//renders the UI to the UISurface
 	void RenderUI();
 };
