@@ -72,7 +72,7 @@ div{
     float: left;
     margin-left: 0px;
 }
-.nav:hover .menutoggle{
+.nav:hover .menutoggle, .nav:active .menutoggle{
     opacity:0;
 }
 .current-page{
