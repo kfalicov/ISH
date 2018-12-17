@@ -1,7 +1,7 @@
 #include "Environment.h"
 #include "AssetHandler.h"
 #include "Generator.h"
-
+#include <iostream>
 
 Generator::Generator()
 {
@@ -38,6 +38,7 @@ void Generator::loadChunks(Environment* e, vec2 dir) {
 			freshChunks.push_back(eastChunk);
 		}
 		e->moveEast(freshChunks);
+		std::cout << "loaded chunks east" << std::endl;
 	}
 	if (dir == vec2::SOUTH) {
 		for (int x = upperLeftBound[0]; x <= lowerRightBound[0]; x++) {
@@ -49,6 +50,7 @@ void Generator::loadChunks(Environment* e, vec2 dir) {
 			freshChunks.push_back(southChunk);
 		}
 		e->moveSouth(freshChunks);
+		std::cout << "loaded chunks south" << std::endl;
 	}
 	if (dir == vec2::WEST) {
 		for (int y = upperLeftBound[1]; y <= lowerRightBound[1]; y++) {
@@ -60,6 +62,7 @@ void Generator::loadChunks(Environment* e, vec2 dir) {
 			freshChunks.push_back(westChunk);
 		}
 		e->moveWest(freshChunks);
+		std::cout << "loaded chunks west" << std::endl;
 	}
 	if (dir == vec2::NORTH) {
 		for (int x = upperLeftBound[0]; x <= lowerRightBound[0]; x++) {
@@ -71,6 +74,8 @@ void Generator::loadChunks(Environment* e, vec2 dir) {
 			freshChunks.push_back(northChunk);
 		}
 		e->moveNorth(freshChunks);
+
+		std::cout << "loaded chunks north" << std::endl;
 	}
 }
 

@@ -176,7 +176,7 @@ void PlayState::WriteSurface(float interpolation)
 	//TODO make camera position effect how environmentSurface is rendered to surface
 	SDL_BlitSurface(environmentSurface, &environmentSurface->clip_rect, surface, &destRect);
 	//std::cout << entitySurface->clip_rect.x << entitySurface->clip_rect.y << entitySurface->clip_rect.w << entitySurface->clip_rect.h << std::endl;
-	std::cout << SDL_BlitSurface(entitySurface, &entitySurface->clip_rect, surface, &destRect2) << std::endl;
+	SDL_BlitSurface(entitySurface, &entitySurface->clip_rect, surface, &destRect2);
 }
 
 
