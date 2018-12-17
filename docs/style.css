@@ -81,8 +81,8 @@ div{
 }
 #pagecenter{
     margin: 0 auto;
+    padding: 0 80px;
     max-width: 1000px;
-    min-width: 1000px;
 }
 #header{
     position: relative;
@@ -134,4 +134,7 @@ div{
 .div_toggle{
     cursor:pointer;
 
+}
+.m_content{
+    line-height: normal;
 }
